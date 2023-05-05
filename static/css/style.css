@@ -45,8 +45,8 @@ label{
 }
 /*-----start-header----*/
 .logo h3 {
-	font-size: 2.5em;
-	color: #007DD3;
+	font-size: 2em;
+	color: #feffff;
 	font-weight: 500;
 	font-family: 'Oxygen', sans-serif;
 }
@@ -63,7 +63,8 @@ label{
   box-shadow: 0px 0px 12px -1px rgba(215,215,215,0.44);
 }
 .header {
-	 background: #fff;
+	 background: #bf4c4c;
+	 color: rgb(248, 68, 100);
 	 padding:1em;
 	 display: flex;
 	 justify-content: space-between;
@@ -168,7 +169,7 @@ div#OR {
 }
 .navbar-default {
 	border: none;
-	background: #003b64;
+	background: rgb(51, 53, 69);
 }
 .navbar {
 	border-radius: 0px;
@@ -216,7 +217,7 @@ div#OR {
 	background: #FFF;
 }
 .btn {
-  padding: 10px 20px;
+  padding: 10px 10px;
     font-family: 'Open Sans', sans-serif;
 }
 h3.other-nw {
@@ -272,6 +273,8 @@ a.btn.btn-danger {
 .modal-content {
 	border-radius:0;
 	box-shadow:none;
+	width: 85%;
+	margin: auto;
 }
 .modal-dialog {
     margin: 16em auto 0;
@@ -349,7 +352,7 @@ a.btn { text-align: center; text-decoration: none;}
 }
 .search2 input[type="text"] {
 	outline: none;
-	color: #D8D8D8;
+	color: #776f6f;
 	background: none;
 	font-size: 0.9em;
 	border: none;
@@ -988,6 +991,9 @@ ul.mov_list li a:hover {
 	background-color: #fff;
 	padding: 14px;
 }
+.top-movies-in-india a{
+	color: #000;
+}
 .top-movies-in-india h4 {
    color: #007DD3;
    margin-bottom: 20px;
@@ -1084,7 +1090,7 @@ a.post-title:hover {
 }
 /*-- footer --*/
 .footer{
-	background-color:#fff;
+	background-color:rgb(49, 48, 53);
 	padding:1em;
 	  margin-top: 3em;
 	    -webkit-box-shadow: 0px 0px 12px -1px rgba(215,215,215,0.44);
@@ -1096,7 +1102,7 @@ a.post-title:hover {
   width: 100%;
   font-size: 1.1em;
   font-weight: 700;
-  color: #000;
+  color: #ffffff;
   font-family: 'Oxygen', sans-serif;
   margin-bottom: 0.7em;
 }
@@ -1136,7 +1142,7 @@ a.post-title:hover {
 h5.f-head {
 	  font-size: 1.1em;
   font-weight: 600;
-  color: #000;
+  color: #ffffff;
   font-family: 'Oxygen', sans-serif;
       margin-bottom: 0.7em;
 }
@@ -1183,7 +1189,7 @@ ul.social-icons li i.fa:hover {
 	outline: none;
 	float: left;
 	font-family: 'Open Sans', sans-serif;
-	color:#D8D8D8;
+	color:#776f6f;
 }
 .subscribe input[type="submit"] {
 	border:none;

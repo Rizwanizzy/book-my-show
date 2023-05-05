@@ -66,7 +66,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		  <div class="main-content">
 			<div class="header">
 				<div class="logo">
-					<a href="index.html"><h3>Book My Show</h3></a>
+					<a href="{% url 'home' %}"><h3>Book My Show</h3></a>
 				</div>
 				<div class="search">
 					<div class="search2">
@@ -76,6 +76,9 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					  </form>
 					</div>
 				</div>
+				{% if user.is_authenticated %}
+				<h3 style="color:white">Hello {{user.username}}</h3>
+				{% endif%}
 				<div class="clearfix"></div>
                 <div class="select-location">
                         <a class="play-icon popup-with-zoom-anim" href="#small-dialog1">Select a Region</a>
@@ -108,8 +111,13 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 });
                         </script>
                         <!-- Large modal -->
+		{% if user.is_authenticated %}
+		<a href="{% url 'logout' %} " class="btn btn-danger">Logout</a>
+		{% else %}
         <button class="btn btn-primary" data-toggle="modal" data-target="#myModal">
             Login</button>
+		<button class="btn btn-primary" data-toggle="modal" data-target="#myModalSignup">
+			SignUp</button>
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -126,90 +134,41 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs">
                                     <li class="active"><a href="#Login" data-toggle="tab">Login</a></li>
-                                    <li><a href="#Registration" data-toggle="tab">Registration</a></li>
                                 </ul>
                                 <!-- Tab panes -->
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="Login">
-                                        <form role="form" class="form-horizontal">
-                                        <div class="form-group">
-                                            <label for="email" class="col-sm-2 control-label">
-                                                Email</label>
-                                            <div class="col-sm-10">
-                                                <input type="email" class="form-control" id="email1" placeholder="Email" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="exampleInputPassword1" class="col-sm-2 control-label">
-                                                Password</label>
-                                            <div class="col-sm-10">
-                                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="password" />
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <button type="submit" class="btn btn-primary btn-sm">
-                                                    Submit</button>
-                                                <a href="javascript:;">Forgot your password?</a>
-                                            </div>
-                                        </div>
+                                        <form role="form" method="post" class="form-horizontal">
+											{% csrf_token %}
+											<div class="form-group">
+												<label for="username" class="col-sm-2 control-label">
+													Username</label>
+												<div class="col-sm-10">
+													<input type="username" class="form-control" id="username" name="username" placeholder="Username" />
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="exampleInputPassword1" class="col-sm-2 control-label">
+													Password</label>
+												<div class="col-sm-10">
+													<input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="password" />
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-sm-2">
+												</div>
+												<div class="col-sm-10">
+													<button type="submit" name="login-submit" class="btn btn-primary btn-sm">
+														Login</button>
+													<a href="javascript:;">Forgot your password?</a>
+												</div>
+											</div>
                                         </form>
+										
                                     </div>
-                                    <div class="tab-pane" id="Registration">
-                                        <form role="form" class="form-horizontal">
-                                        <div class="form-group">
-                                            <label for="email" class="col-sm-2 control-label">
-                                                Name</label>
-                                            <div class="col-sm-10">
-                                                <div class="row">
-                                                    <div class="col-md-3">
-                                                        <select class="form-control">
-                                                            <option>Mr.</option>
-                                                            <option>Ms.</option>
-                                                            <option>Mrs.</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-md-9">
-                                                        <input type="text" class="form-control" placeholder="Name" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="email" class="col-sm-2 control-label">
-                                                Email</label>
-                                            <div class="col-sm-10">
-                                                <input type="email" class="form-control" id="email" placeholder="Email" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="mobile" class="col-sm-2 control-label">
-                                                Mobile</label>
-                                            <div class="col-sm-10">
-                                                <input type="email" class="form-control" id="mobile" placeholder="Mobile" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="password" class="col-sm-2 control-label">
-                                                Password</label>
-                                            <div class="col-sm-10">
-                                                <input type="password" class="form-control" id="password" placeholder="Password" />
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-2">
-                                            </div>
-                                            <div class="col-sm-10">
-                                                <button type="button" class="btn btn-primary btn-sm">
-                                                    Save & Continue</button>
-                                                <button type="button" class="btn btn-default btn-sm">
-                                                    Cancel</button>
-                                            </div>
-                                        </div>
-                                        </form>
-                                    </div>
+									{% for message in messages%}
+											{{message}}
+									{% endfor %}
                                 </div>
                                 <div id="OR" class="hidden-xs">
                                     OR</div>
@@ -233,143 +192,129 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 </div>
             </div>
         </div>
+		<div class="modal fade" id="myModalSignup" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            If you don't have an Account, Register now!</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-8" style="border-right: 1px dotted #C2C2C2;padding-right: 30px;">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#Registration" data-toggle="tab">Registration</a></li>
+                                </ul>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane" id="Registration">
+                                        <form role="form"  method="POST" class="form-horizontal">
+											{% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="email" class="col-sm-2 control-label">
+                                                Name</label>
+                                            <div class="col-sm-10">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" placeholder="First Name" name="first_name"/>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+										<div class="form-group">
+                                            <label for="username" class="col-sm-2 control-label">
+                                                Username</label>
+                                            <div class="col-sm-10">
+                                                <input type="username" class="form-control" id="username" name="username" placeholder="Username" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email" class="col-sm-2 control-label">
+                                                Email</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" name="email" class="form-control" id="email" placeholder="Email" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mobile" class="col-sm-2 control-label">
+                                                Mobile</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control" id="mobile" placeholder="Mobile" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password" class="col-sm-2 control-label">
+                                                Password</label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="password" class="form-control" id="password" placeholder="Password" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                            </div>
+                                            <div class="col-sm-10">
+                                                <button type="submit" name="signup-submit" class="btn btn-primary btn-sm">
+                                                    SignUp</button>
+                                                <button type="button" class="btn btn-default btn-sm">
+                                                    Cancel</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+									{% for message in messages%}
+										{{message}}
+									{% endfor %}
+                                </div>
+                                <div id="OR" class="hidden-xs">
+                                    OR</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row text-center sign-with">
+                                    <div class="col-md-12">
+                                        <h3 class="other-nw">
+                                            Sign in with</h3>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="btn-group btn-group-justified">
+                                            <a href="#" class="btn btn-primary">Facebook</a> <a href="#" class="btn btn-danger">
+                                                Google +</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		{% endif %}
         <script>
         $('#myModal').modal('show');
         </script>
     </div>
 			</div>
+			
 	<div class="bootstrap_container">
             <nav class="navbar navbar-default w3_megamenu" role="navigation">
                 <div class="navbar-header">
-          			<button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="index.html" class="navbar-brand"><i class="fa fa-home"></i></a>
+          			<button type="button" data-toggle="collapse" data-target="#defaultmenu" class="navbar-toggle"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="{% url 'home' %}" class="navbar-brand"><i class="fa fa-home"></i></a>
 				</div><!-- end navbar-header -->
         
             <div id="defaultmenu" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.html">Home</a></li>	
+                    <li class="active"><a href="{% url 'home' %}">Home</a></li>	
                     <!-- Mega Menu -->
-					<li class="dropdown w3_megamenu-fw"><a href="movies.html" data-toggle="dropdown" class="dropdown-toggle">Movies<b class="caret"></b></a>
-                        <ul class="dropdown-menu fullwidth">
-                            <li class="w3_megamenu-content">
-                                <div class="row">
-								<h5 class="movies-page">for movies page - <a href="movies.html">Click here</a> </h5>
-                                    <div class="col-sm-4">
-                                  		<h3 class="title">Now Showing</h3>
-										<ul class="mov_list">
-						<li>99%</li>
-						<li><a href="movie-single.html">Baahubali (Telugu) (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li>100%</li>
-						<li><a href="movie-single.html">Baahubali (Hindi) (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li>98%</li>
-						<li><a href="movie-single.html">Baahubali (English) (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li>80%</li>
-						<li><a href="movie-single.html">Jurassic World (3D Hindi) (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li>65%</li>
-						<li><a href="movie-single.html">Hamari Adhuri Kahani (U)</a></li>
-					</ul>
-                                    </div><!-- end col-4 -->
-                                    <div class="col-sm-4 movie-dd">
-                                  		<h3 class="title">Next Change</h3>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-                                    </div><!-- end col-4 -->
-                                    <div class="col-sm-4 movie-dd">
-                                  		<h3 class="title">Comming Soon</h3>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>
-										<p><a href="movie-single.html">ABCD 2 (3D) (4DX)</a><span>... (Tomorrow, 19 Jun)</span></p>                                    		
-                                    </div><!-- end col-4 -->
-									<div class="clearfix"></div>
-									<div class="menu-featured-movies">
-										<h3 class="title">Featured Trailers</h3>
-										<div class="col-md-2 menu-featured-movies-img">
-											<a href="movie-single.html"><img src="{% static 'images//mf1.jpg' %}" alt="" /></a>
-										</div>
-										<div class="col-md-2 menu-featured-movies-img">
-											<a href="movie-single.html"><img src="{% static 'images//mf2.jpg' %}" alt="" /></a>
-										</div>
-										<div class="col-md-2 menu-featured-movies-img">
-											<a href="movie-single.html"><img src="{% static 'images//mf3.jpg' %}" alt="" /></a>
-										</div>
-										<div class="col-md-2 menu-featured-movies-img">
-											<a href="movie-single.html"><img src="{% static 'images//mf3.jpg' %}" alt="" /></a>
-										</div>
-										<div class="col-md-2 menu-featured-movies-img">
-											<a href="movie-single.html"><img src="{% static 'images//mf3.jpg' %}" alt="" /></a>
-										</div>
-										<div class="col-md-2 menu-featured-movies-img">
-											<a href="movie-single.html"><img src="{% static 'images//mf3.jpg' %}" alt="" /></a>
-										</div>
-										<div class="clearfix"></div>
-									</div>
-                                </div><!-- end row -->
-                                <hr>
-                    
-							</li>
-                        </ul>
+					<li class="dropdown w3_megamenu-fw"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Movies</a>
+                        
                     </li>
-					<li class="dropdown w3_megamenu-fw"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Events<b class="caret"></b></a>
-                        <ul class="dropdown-menu half">
-                            <li class="w3_megamenu-content withdesc">
-                                <div class="row">
-					<h5 class="movies-page">for events page - <a href="events.html">Click here</a> </h5>
-								<h3 class="title">Featured Events</h3>
-                                    <div class="col-sm-3">
-                                    	<div class="e-movie">
-								<div class="e-movie-img">
-									<a href="events.html"><img src="{% static 'images//f2.jpg' %}" alt="" /></a>
-								</div>
-								<div class="e-buy-tickets">
-									<a href="event-payment.html">BUY TICKETS</a>
-								</div>
-							</div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                    	<div class="e-movie">
-								<div class="e-movie-img">
-									<a href="events.html"><img src="{% static 'images//f3.jpg' %}" alt=""></a>
-								</div>
-								<div class="e-buy-tickets">
-									<a href="event-payment.html">BUY TICKETS</a>
-								</div>
-							</div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                    	<div class="e-movie">
-								<div class="e-movie-img">
-									<a href="events.html"><img src="{% static 'images//f4.jpg' %}" alt="" /></a>
-								</div>
-								<div class="e-buy-tickets">
-									<a href="event-payment.html">BUY TICKETS</a>
-								</div>
-							</div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                    	<div class="e-movie">
-								<div class="e-movie-img">
-									<a href="events.html"><img src="{% static 'images//f1.jpg' %}" alt="" /></a>
-								</div>
-								<div class="e-buy-tickets">
-									<a href="event-payment.html">BUY TICKETS</a>
-								</div>
-							</div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+					<li class="dropdown w3_megamenu-fw"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Cinemas<b class="caret"></b></a>
 					</li>
 					<li class="dropdown w3_megamenu-fw"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Plays<b class="caret"></b></a>
                         <ul class="dropdown-menu half3">

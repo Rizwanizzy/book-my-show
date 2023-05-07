@@ -1,0 +1,113 @@
+{% extends 'base1.html' %}
+{% block theatre_register %}
+<div class="modal fade" id="theatreRegister" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            Theatre Register Here</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-8" style="border-right: 1px dotted #C2C2C2;padding-right: 30px;">
+                                <!-- Nav tabs -->
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#Registration" data-toggle="tab">Registration</a></li>
+                                </ul>
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane" id="Registration">
+                                        <form role="form"  method="POST" class="form-horizontal">
+											{% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="email" class="col-sm-2 control-label">
+                                                Name</label>
+                                            <div class="col-sm-10">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" placeholder="First Name" name="first_name"/>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+										<div class="form-group">
+                                            <label for="username" class="col-sm-2 control-label">
+                                                Username</label>
+                                            <div class="col-sm-10">
+                                                <input type="username" class="form-control" id="username" name="username" placeholder="Username" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email" class="col-sm-2 control-label">
+                                                Email</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" name="email" class="form-control" id="email" placeholder="Email" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="is_theatre" class="col-sm-2 control-label">
+                                                Is_Theatre</label>
+                                            <div class="col-sm-10">
+                                                <input type="checkbox" name="is_theatre" class="form-control" id="is_theatre" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mobile" class="col-sm-2 control-label">
+                                                Mobile</label>
+                                            <div class="col-sm-10">
+                                                <input type="email" class="form-control" id="mobile" placeholder="Mobile" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password" class="col-sm-2 control-label">
+                                                Password</label>
+                                            <div class="col-sm-10">
+                                                <input type="password" name="password" class="form-control" id="password" placeholder="Password" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2">
+                                            </div>
+                                            <div class="col-sm-10">
+                                                <button type="submit" name="signup-submit" class="btn btn-primary btn-sm">
+                                                    SignUp</button>
+                                                <button type="button" class="btn btn-default btn-sm">
+                                                    Cancel</button>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+									{% for message in messages%}
+										{{message}}
+									{% endfor %}
+                                </div>
+                                <div id="OR" class="hidden-xs">
+                                    OR</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row text-center sign-with">
+                                    <div class="col-md-12">
+                                        <h3 class="other-nw">
+                                            Sign in with</h3>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="btn-group btn-group-justified">
+                                            <a href="#" class="btn btn-primary">Facebook</a> <a href="#" class="btn btn-danger">
+                                                Google +</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+		{% endif %}
+{% endblock %}

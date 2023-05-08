@@ -5,6 +5,8 @@ from django.contrib import auth
 from django.contrib import messages
 from theatre.models import UserProfile
 from django.urls import reverse
+from theatre.models import *
+from admin_dashboard.models import *
 # Create your views here.
 
 def home(request):
@@ -35,6 +37,7 @@ def home(request):
             username=request.POST['username']
             email = request.POST['email']
             password = request.POST['password']
+            is_theatre=request.POST.get('type')=='theatre'
             if User.objects.filter(username=username).exists():
                 messages.info(request, 'username is taken')
                 return redirect('home')
@@ -45,10 +48,17 @@ def home(request):
                 user = User.objects.create_user(username=username, password=password, email=email,
                                                 first_name=first_name,
                                                 last_name=last_name)
-                user.save()
+                profile=UserProfile(user=user,is_theatre=is_theatre)
+                profile.save()
+                
                 messages.success(request, 'Your account has been created. Please log in.')
                 return redirect('home')
-    return render(request,'home/home.html')
+    movies=Movies.objects.all()
+    return render(request,'home/home.html',{'movies':movies})
+
+def movie(request,id):
+    mov=Movies.objects.get(id=id)
+    return render(request,'home/movie.html',{'mov':mov})
 
 def logout(request):
     auth.logout(request)

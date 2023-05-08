@@ -20,6 +20,7 @@ class Movies(models.Model):
     description=models.TextField()
     genre=models.CharField(max_length=50)
     image=models.ImageField(upload_to="movie_images")
+    poster=models.ImageField(upload_to="movie_images",blank=True)
     release_date=models.DateField(_("Date"), default=datetime.date.today)
     language=models.ForeignKey(All_Languages,on_delete=models.CASCADE)
     trailer=models.URLField(max_length=300)

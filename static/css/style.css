@@ -1534,7 +1534,7 @@ a.m-orange:hover {
 }
 .article-img iframe {
 	width: 100%;
-	min-height: 400px;
+	min-height: 600px;
 }
 .article-time-strip-left p i.fa.fa-clock-o {
 	color: #6C6C6C;
@@ -1657,7 +1657,7 @@ p.info strong {
   float: right;
   margin-right: 0%;
   width: 38%;
-  margin-top: 8em;
+  margin-top: -25em;
 }
 .reviews-tabs {
 	min-height: 900px;

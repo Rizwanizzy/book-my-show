@@ -242,13 +242,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                                 <input type="email" name="email" class="form-control" id="email" placeholder="Email" />
                                             </div>
                                         </div>
-										<div class="form-group">
-                                            <label for="is_theatre" class="col-sm-2 control-label">
-                                                Is_Theatre</label>
-                                            <div class="col-sm-2">
-                                                <input type="checkbox" name="is_theatre" class="form-control" id="is_theatre" />
-                                            </div>
-                                        </div>
+										<div class="form-group" style="display:flex">
+											<label for="is_user" class="col-sm-2 control-label">
+												User</label>
+											
+												<input type="radio" name="type" value="user" checked="checked" id="is_user">
+												{% comment %} <input type="radio" name="is_user" class="form-control" id="is_user" /> {% endcomment %}
+											
+											<label for="is_theatre" class="col-sm-2 control-label">
+												Theatre</label>
+											
+												<input type="radio" name="type" value="theatre" id="is_theatre">
+												{% comment %} <input type="checkbox" name="is_theatre" class="form-control" id="is_theatre" /> {% endcomment %}
+											
+										</div><br>
                                         <div class="form-group">
                                             <label for="mobile" class="col-sm-2 control-label">
                                                 Mobile</label>

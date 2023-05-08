@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="m-single-article">
+	{% if mov %}
+	<div class="article-center">
+		<h3>{{mov.title}} Trailer ||<span> <i class="fa fa-heart"></i> 99%</span></h3>
+		<p><a class="m-green" href="#">Action</a><a class="m-green" href="#">Thriller</a><a class="m-orange" href="#">{{mov.language}}</a></p>
+		<div class="clearfix"></div>
+		<div class="article-time-strip">
+			<div class="article-time-strip-left">
+				<p>Duration <span><i class="fa fa-clock-o"></i>{{mov.runtime}}</span>  &nbsp;&nbsp; Release Date <span><i class="fa fa-calendar"></i>{{mov.release_date}}</span></p>
+			</div>
+			<div class="clearfix"></div>
+			<div class="article-img">
+				{% comment %} {% set video_id = "https://youtu.be/FWOrQcdvuM0" | split("/") | last %}
+
+				{% set embed_link = "https://www.youtube.com/embed/" + video_id %} {% endcomment %}
+
+				<iframe src="{{mov.trailer}}" frameborder="0" allowfullscreen></iframe>
+
+			</div>
+			<div class="review-info">
+				<h6 class="span88">{{mov.title}}</h6>
+				<p class="dirctr"><a href="">Reagan Gavin Rasquinha, </a>TNN, Mar 12, 2015, 12.47PM IST</p>								
+				<p class="ratingview">Critic's Rating:</p>
+				<div class="rating">
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+				</div>
+				<p class="ratingview">
+				&nbsp;3.5/5  
+				</p>
+				<div class="clearfix"></div>
+				<p class="ratingview c-rating">Avg Readers' Rating:</p>
+				<div class="rating c-rating">
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+					<span>☆</span>
+				</div> 	
+				<p class="ratingview c-rating">								
+				&nbsp; 3.3/5</p>
+				<div class="clearfix"></div>
+				<div class="yrw">
+					<div class="dropdown-button">           			
+						<select class="dropdown" tabindex="9" data-settings="{&quot;wrapperClass&quot;:&quot;flat&quot;}">
+						<option value="0">Your rating</option>	
+						<option value="1">1.Poor</option>
+						<option value="2">1.5(Below average)</option>
+						<option value="3">2.Average</option>
+						<option value="4">2.5(Above average)</option>
+						<option value="5">3.Watchable</option>
+						<option value="6">3.5(Good)</option>
+						<option value="7">4.5(Very good)</option>
+						<option value="8">5.Outstanding</option>
+						</select>
+					</div>
+					<div class="rtm text-center">
+						<a href="#">REVIEW THIS MOVIE</a>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<p class="info"><strong>CAST</strong>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Prabhas, Rana Daggubati, Anushka, Tamannaah.</p>
+				<p class="info"><strong>DIRECTION</strong>: &nbsp;&nbsp;&nbsp;&nbsp;S.S. Rajamouli.</p>
+				<p class="info"><strong>STORY</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V. Vijayendra Prasad.</p>
+				<p class="info"><strong>DURATION</strong>:&nbsp;&nbsp;&nbsp; &nbsp; 2 hour 30 minutes.</p>
+			</div>
+		</div>
+	</div>
+	<div class="article-right">
+		<div class="grid_3 grid_5">
+			   <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+		<ul id="myTab" class="nav nav-tabs" role="tablist">
+		  <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">Tue-30</a></li>
+		  <li role="presentation"><a href="#profile" role="tab" id="profile-tab" data-toggle="tab" aria-controls="profile">WED-1</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+		  <div role="tabpanel" class="tab-pane fade in active" id="home" aria-labelledby="home-tab">				  
+			 <p class="m-s-t">INOX: Lorem Mall, Chicago</p>
+			 <a class="show-time" href="movie-select-show.html">06:30 PM</a>
+			 <div class="clearfix"></div>
+			  <a class="more-show-time" href="movie-select-show.html">More Show Times</a>
+		  </div>
+		  <div role="tabpanel" class="tab-pane fade" id="profile" aria-labelledby="profile-tab">
+			 <p class="m-s-t">INOX: Lorem Mall, Chicago</p>
+			 <a class="show-time" href="movie-select-show.html">12:45 PM</a><a class="show-time" href="movie-select-show.html">06:30 PM</a>
+			 <div class="clearfix"></div>
+			 <a class="more-show-time" href="movie-select-show.html">More Show Times</a>
+		  </div>
+		</div>
+	   </div>
+	  </div>
+	</div>
+	<div class="clearfix"></div>
+	{% endif %}
+</div>
+<div class="footer-top-strip">
+	<p><span>Showing in cities : </span><a href="movies.html">Bengaluru</a>, <a href="movies.html">Hyderabad</a>, <a href="movies.html">Khammam</a>, <a href="movies.html">Kurnool</a>, <a href="movies.html">Nizamabad</a>, <a href="movies.html">Vijayawada</a>, <a href="#">Vizag</a>, <a href="movies.html">Vizianagaram</a>, <a href="movies.html">Warangal</a></p>
+	<p><span>Cinemas Nearby : </span><a href="movie-single.html"> INOX: Jyoti Mall, Kurnool </a>|
+		<p><span>Next Change <i>(Friday, 19 Jun) </i>: </span><a href="movie-single.html">Disney's ABCD 2 (3D) (U)</a>, <a href="movie-single.html"> 2 Premi Premache</a> , <a href="movie-single.html">Dekh Ke (Bhojpuri)</a> , <a href="movie-single.html">Disney's ABCD 2 (2D) (U)</a>, <a href="movie-single.html">Dekh Ke (Bhojpuri)</a></p>
+		<p><span>Coming Soon :</span><a href="movie-single.html"> 2 Premi Premache</a>, <a href="movie-single.html">Acharam, Dekh Ke (Bhojpuri)</a>, <a href="movie-single.html">Entourage</a>, <a href="movie-single.html">Kuttram Kadithal</a></p>
+</div>
+</div>
+{% endblock %}

@@ -13,14 +13,14 @@
                     {% for movie in movies %}
                     <div class="col-sm-12 col-xl-5">
                         <div class="col">
-                            <div class="card">
-                              <img src="{{movie.poster.url}}" class="card-img-top" alt="...">
-                              <div class="card-body">
-                                <h5 class="card-title">{{movie.title}}</h5>
-                                <p class="card-text">{{movie.description}}</p>
-                              </div>
-                            </div>
-                          </div>
+                            <a href="update_movie/{{movie.id}}"><div class="card">
+                                    <img src="{{movie.poster.url}}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                      <h5 class="card-title">{{movie.title}}</h5>
+                                      <p class="card-text" style='color:black'>{{movie.description}}</p>
+                                    </div></a>
+                                                                </div>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>

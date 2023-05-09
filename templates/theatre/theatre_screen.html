@@ -1,0 +1,31 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block admin_page %}
+
+            <!-- Table Start -->
+            
+            <div class="container-fluid pt-4 px-4" style="min-height:80vh">
+                <div align="Right">
+                    <a href="{% url 'add_screen' %}" class="btn btn-primary" style="position:fixed;margin-left:-8rem">Add Screens</a>
+                </div>
+                <div class="row g-4">
+                    
+                    {% for screen in screens %}
+                    <div class="col-sm-12 col-xl-5">
+                        <div class="col">
+                            <a href="edit_screen/{{screen.id}}"><div class="card">
+                                    <img src="{{screen.movies.poster.url}}" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                      <h5 class="card-title">{{screen.movies.title}}</h5>
+                                      <p class="card-text" style='color:black'>{{screen.name}}</p>
+                                    </div></a>
+                                                                </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Table End -->
+
+{% endblock %}

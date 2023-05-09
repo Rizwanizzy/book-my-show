@@ -1,0 +1,49 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block admin_page %}
+            <!-- Table Start -->
+            <div class="container-fluid pt-4 px-2" style="min-height:80vh;margin-left:-20px">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="bg-light rounded h-100 p-4">
+                            <h6 class="mb-4">Users List</h6>
+                            <div class="table-responsive">
+                                <table class="table" style="text-align:center">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">First Name</th>
+                                            <th scope="col">Last Name</th>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">Email</th>
+                                            <th scope="col">Date Joined</th>
+                                            <th scope="col">Last Login</th>
+                                            <th scope="col">Actions</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users %}
+                                        <tr>
+                                            <th scope="row">{{user.id}}</th>
+                                            <td>{{user.first_name}}</td>
+                                            <td>{{user.last_name}}</td>
+                                            <td>{{user.username}}</td>
+                                            <td>{{user.email}}</td>
+                                            <td>{{user.date_joined|date:"F j, Y"}}</td>
+                                            <td>{{user.last_login|date:"F j, Y"}}</td>
+                                            <td><button type="button" class="btn btn-warning">Block</button>
+                                                <button type="button" class="btn btn-danger">Delete</button></td>
+                                            
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Table End -->
+
+{% endblock %}

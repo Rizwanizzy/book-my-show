@@ -19,7 +19,7 @@ class Movies(models.Model):
     title=models.CharField(max_length=50)
     description=models.TextField()
     genre=models.CharField(max_length=50)
-    image=models.ImageField(upload_to="movie_images")
+    image=models.ImageField(upload_to="movie_images",blank=True)
     poster=models.ImageField(upload_to="movie_images",blank=True)
     release_date=models.DateField(_("Date"), default=datetime.date.today)
     language=models.ForeignKey(All_Languages,on_delete=models.CASCADE)
@@ -27,3 +27,6 @@ class Movies(models.Model):
     runtime=models.DurationField()
     rating=models.DecimalField(max_digits=3, decimal_places=1,null=True,blank=True)
     comments=models.ForeignKey(All_Comments,on_delete=models.CASCADE,null=True,blank=True)
+
+    def __str__(self):
+        return self.title

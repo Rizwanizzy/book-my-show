@@ -10,9 +10,9 @@
             <section class="slider" style="width:97%">
 				<div class="flexslider">
 						<ul class="slides">
-							{% for movie in movies %}
+							{% for banner in banners %}
 								<li>
-									<img src="{{movie.poster.url}}" class="img-responsive" alt="" />
+									<img src="{{banner.poster.url}}" class="img-responsive" alt="" />
 								</li>
 								{% comment %} <li>
 									<img src="{% static 'images//pic2.jpg'%}" class="img-responsive" alt="" />
@@ -53,7 +53,7 @@
 		<ul id="flexiselDemo1">
 			{% for i in movies %}
 			<li>
-				<a href="movies.html"><img src="{{i.image.url}}" alt=""/></a>
+				<a href="movie/{{i.id}}"><img src="{{i.image.url}}" alt=""/></a>
 				<div class="slide-title"><h4>{{i.title}} </div>
 				<div class="date-city">
 					<h4>{{i.release_date}}</h4>
@@ -107,54 +107,23 @@
 							<div class="resp-tabs-container">
 							    <div class="tab-1 resp-tab-content" aria-labelledby="tab_item-0">
 									<ul class="tab_img">
+										{% for i in now %}
 									  <li>
 										<div class="view view-first">
-					   		  			  <a href="movie-select-show.html"> <img src="{% static 'images//pic-1.jpg' %}" class="img-responsive" alt=""/></a>
-										   <div class="info1"> </div>
-											 <div class="mask">
-						                     </div>
-								              <div class="tab_desc">
-													<a href="movie-select-show.html">Book Now</a>
-													<div class="percentage-w-t-s">
-														<h5>97</h5>
-														<p>% <br> Want to see</p>
-														<div class="clearfix"></div>
+					   		  			  	<a href="movie/{{i.id}}"> <img src="{{i.image.url}}" class="img-responsive" alt=""/></a>
+												<div class="info1"> </div>
+													<div class="mask"></div>
+													<div class="tab_desc">
+														<a href="movie/{{i.id}}">Book Now</a>
+														<div class="percentage-w-t-s">
+															<h5>97</h5>
+															<p>% <br> Want to see</p>
+															<div class="clearfix"></div>
+														</div>
 													</div>
-											  </div>
-										  </div>
+												</div>
 										</li>
-									  <li>
-										<div class="view view-first">
-					   		  			   <a href="movie-select-show.html"><img src="{% static 'images//pic-2.jpg' %}" class="img-responsive" alt=""/></a>
-										   <div class="info1"> </div>
-											 <div class="mask">
-						                     </div>
-								              <div class="tab_desc">
-													<a href="movie-select-show.html">Book Now</a>
-													<div class="percentage-w-t-s">
-														<h5>98</h5>
-														<p>% <br> Want to see</p>
-														<div class="clearfix"></div>
-													</div>
-											  </div>
-										  </div>
-										</li>
-									  <li>
-										<div class="view view-first">
-					   		  			   <a href="movie-select-show.html"><img src="{% static 'images//pic-10.jpg' %}" class="img-responsive" alt=""/></a>
-											 <div class="mask">
-						                        <div class="info1"> </div>
-								              </div>
-								                <div class="tab_desc">
-													<a href="movie-select-show.html">Book Now</a>
-													<div class="percentage-w-t-s">
-														<h5>100</h5>
-														<p>% <br> Want to see</p>
-														<div class="clearfix"></div>
-													</div>
-											  </div>
-										  </div>
-										</li>
+										{% endfor %}
 										<div class="clearfix"></div>
 									</ul>
 							     </div>	
@@ -311,56 +280,14 @@
 			<div class="right-side-bar">
 				<div class="top-movies-in-india">
 					<h4>Top Movies in India</h4>
+					{% for i in movies %}
 					<ul class="mov_list">
 						<li><i class="fa fa-star"></i></li>
 						<li>77%</li>
-						<li><a href="movie-single.html">Jurassic World (3D) (U/A)</a></li>
+						<li><a href="movie/{{i.id}}">{{i.title}}</a></li>
 					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>80%</li>
-						<li><a href="movie-single.html">Jurassic World (3D Hindi) (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>69%</li>
-						<li><a href="movie-single.html">Dil Dhadakne Do (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>65%</li>
-						<li><a href="movie-single.html">Hamari Adhuri Kahani (U)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>83%</li>
-						<li><a href="movie-single.html">Premam (U)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>87%</li>
-						<li><a href="movie-single.html">Tanu Weds Manu Returns (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>71%</li>
-						<li><a href="movie-single.html">Romeo Juliet (U)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>81%</li>
-						<li><a href="movie-single.html">Jurassic World (IMAX 3D) (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>80%</li>
-						<li><a href="movie-single.html">Jurassic World (2D Hindi) (U/A)</a></li>
-					</ul>
-					<ul class="mov_list">
-						<li><i class="fa fa-star"></i></li>
-						<li>89%</li>
-						<li><a href="movie-single.html">Kaaka Muttai (U)</a></li>
-					</ul>
+					{% endfor %}
+					
 				</div>
 				<div class="quick-pay">
 					<h3>Quick Pay</h3>

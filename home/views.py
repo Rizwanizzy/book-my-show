@@ -6,6 +6,7 @@ from django.contrib import messages
 from theatre.models import *
 from django.urls import reverse
 from theatre.models import *
+from .models import *
 from admin_dashboard.models import *
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -22,8 +23,8 @@ def home(request):
             user = authenticate(request, username=username, password=password)
             if user is not  None:
                 try:
-                    profile = Theatre.objects.get(user=user)
-                except Theatre.DoesNotExist:
+                    profile = UserProfile.objects.get(user=user)
+                except UserProfile.DoesNotExist:
                     profile = None
                 if profile is not None and profile.is_theatre:
                     request.session['theatre']=username
@@ -55,9 +56,8 @@ def home(request):
                 return redirect('home')
             else:
                 user = User.objects.create_user(username=username, password=password, email=email,
-                                                first_name=first_name,
-                                                last_name=last_name)
-                profile=Theatre(user=user,is_theatre=is_theatre)
+                                                first_name=first_name,last_name=last_name)
+                profile=UserProfile(user=user,is_theatre=is_theatre)
                 profile.save()
                 
                 messages.success(request, 'Your account has been created. Please log in.')

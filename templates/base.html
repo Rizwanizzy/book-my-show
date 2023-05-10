@@ -144,14 +144,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 												<label for="username" class="col-sm-2 control-label">
 													Username</label>
 												<div class="col-sm-10">
-													<input type="username" class="form-control" id="username" name="username" placeholder="Username" />
+													<input type="username" class="form-control" id="username" name="username" placeholder="Username" required/>
 												</div>
 											</div>
 											<div class="form-group">
 												<label for="exampleInputPassword1" class="col-sm-2 control-label">
 													Password</label>
 												<div class="col-sm-10">
-													<input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="password" />
+													<input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="password" required/>
 												</div>
 											</div>
 											<div class="row">
@@ -160,15 +160,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 												<div class="col-sm-10">
 													<button type="submit" name="login-submit" class="btn btn-primary btn-sm">
 														Login</button>
-													<a href="javascript:;">Forgot your password?</a>
+													<button type="button" class="btn btn-default btn-sm" data-dismiss="modal" aria-hidden="true">
+														Cancel</button>
+													<a href="javascript:;" style="color:rgb(248, 68, 100)">Forgot your password?</a>
 												</div>
 											</div>
                                         </form>
 										
                                     </div>
+									<div class="messages" style="margin:37px 120px;width:70%">
 									{% for message in messages%}
 											{{message}}
 									{% endfor %}
+									</div>
                                 </div>
                                 <div id="OR" class="hidden-xs">
                                     OR</div>
@@ -232,14 +236,14 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                             <label for="username" class="col-sm-2 control-label">
                                                 Username</label>
                                             <div class="col-sm-10">
-                                                <input type="username" class="form-control" id="username" name="username" placeholder="Username" />
+                                                <input type="username" class="form-control" id="username" name="username" placeholder="Username" required/>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="email" class="col-sm-2 control-label">
                                                 Email</label>
                                             <div class="col-sm-10">
-                                                <input type="email" name="email" class="form-control" id="email" placeholder="Email" />
+                                                <input type="email" name="email" class="form-control" id="email" placeholder="Email" required/>
                                             </div>
                                         </div>
 										<div class="form-group" style="display:flex">
@@ -267,7 +271,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                             <label for="password" class="col-sm-2 control-label">
                                                 Password</label>
                                             <div class="col-sm-10">
-                                                <input type="password" name="password" class="form-control" id="password" placeholder="Password" />
+                                                <input type="password" name="password" class="form-control" id="password" placeholder="Password" required/>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -276,7 +280,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                             <div class="col-sm-10">
                                                 <button type="submit" name="signup-submit" class="btn btn-primary btn-sm">
                                                     SignUp</button>
-                                                <button type="button" class="btn btn-default btn-sm">
+                                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" aria-hidden="true">
                                                     Cancel</button>
                                             </div>
                                         </div>

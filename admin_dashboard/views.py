@@ -4,6 +4,7 @@ from .models import *
 from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from theatre.models import *
+from home.models import *
 # Create your views here.
 
 
@@ -106,7 +107,7 @@ def admin_theatres(request):
     if 'theatre' in request.session:
         return redirect('theatre_home')
     if 'admin' in request.session:
-        theatre=Theatre.objects.filter(is_theatre=True).order_by('id')
+        theatre=UserProfile.objects.filter(is_theatre=True).order_by('id')
         return render(request,'admin_panel/admin_theatres.html',{'theatres':theatre})
     else:
         return redirect('home')
@@ -117,7 +118,7 @@ def admin_users(request):
     if 'theatre' in request.session:
         return redirect('theatre_home')
     if 'admin' in request.session:
-        users=User.objects.filter(theatre__is_theatre=False)
+        users=User.objects.filter(userprofile__is_theatre=False)
         return render(request,'admin_panel/admin_users.html',{'users':users})
     else:
         return redirect('home')

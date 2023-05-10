@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from .models import *
 from django.contrib.auth.decorators import login_required
 from admin_dashboard.models import *
+from home.models import UserProfile
 # Create your views here.
 
 def theatre_home(request): 
@@ -48,7 +49,7 @@ def add_screen(request):
     if 'theatre' in request.session:
         if request.method=='POST':
             # print('logged in username:',request.user)
-            theatre=Theatre.objects.get(user=request.user)
+            theatre=UserProfile.objects.get(user=request.user)
             name=request.POST['name']
             price1=request.POST['price1']
             price2=request.POST['price2']
@@ -73,7 +74,7 @@ def edit_screen(request,id):
     if 'theatre' in request.session:
         screen=Screen.objects.get(id=id)
         if request.method=='POST':
-            theatre=Theatre.objects.get(user=request.user)
+            theatre=UserProfile.objects.get(user=request.user)
             name=request.POST['name']
             price1=request.POST['price1']
             price2=request.POST['price2']

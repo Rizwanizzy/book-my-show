@@ -224,12 +224,12 @@ h3.other-nw {
 	margin: 16px 0;
 }
 button.btn.btn-primary {
-	  background-color: #003b64;
-  padding: 3px 16px 5px;
-  font-weight: 500;
-  border: none;
-  border-radius: 0;
-  font-family: 'Open Sans', sans-serif;
+	background-color: #003b64;
+	padding: 3px 16px 5px;
+	font-weight: 500;
+	border: none;
+	border-radius: 0;
+	font-family: 'Open Sans', sans-serif;
 }
 button.btn.btn-primary.btn-sm,button.btn.btn-default.btn-sm {
 	  background-color: #003b64;
@@ -2262,6 +2262,11 @@ p.artext {
     line-height: 1.8em;
     font-weight: 400;
 }
+
+.messages{
+	text-align: center;
+}
+
 .client-message{
 	color: #D2D2D2;
     font-size: 1em;

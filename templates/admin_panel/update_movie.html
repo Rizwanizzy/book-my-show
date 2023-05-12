@@ -20,7 +20,7 @@
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Description</label>
                                             <textarea class="form-control" name="description" placeholder="Movie Description"
-                                                id="floatingTextarea" style="height: 124px;" required>{{movies.description}}</textarea>
+                                                id="floatingTextarea" style="height: 124px;">{{movies.description}}</textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Movie Trailer</label>
@@ -42,21 +42,22 @@
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Genre</label>
                                             <input type="text" class="form-control" id="title" name="genre" placeholder="Movie Genre" value="{{movies.genre}}"
-                                                aria-describedby="emailHelp" required>
+                                                aria-describedby="emailHelp" >
                                         </div>
                                         <div class="mb-3">
                                             <label for="formFile" class="form-label">Image</label>
-                                            
-                                            <input class="form-control" type="file" id="formFile" name="image" required> 
+                                            <p>{{movies.image.url}}</p>
+                                            <input class="form-control" type="file" id="formFile" name="image" value="/{{movies.image.url}}" required> 
                                         </div>
                                         <div class="mb-3">
                                             <label for="formFile" class="form-label">Poster</label>
-                                            <input class="form-control" type="file" id="formFile" name="poster" value="{{movies.poster.url}}" required>
+                                            <p>{{movies.poster.url}}</p>
+                                            <input class="form-control" type="file" id="formFile" name="poster" value="/{{movies.poster.url}}" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Run Time</label>
                                             <input type="text" class="form-control" id="runtime" name="runtime" value="{{movies.runtime}}"
-                                                aria-describedby="emailHelp" required>
+                                                aria-describedby="emailHelp" >
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Release Date</label>

@@ -17,14 +17,14 @@ class All_Comments(models.Model):
 
 class Movies(models.Model):
     title=models.CharField(max_length=50)
-    description=models.TextField()
-    genre=models.CharField(max_length=50)
+    description=models.TextField(blank=True)
+    genre=models.CharField(max_length=50,blank=True)
     image=models.ImageField(upload_to="movie_images",blank=True)
     poster=models.ImageField(upload_to="movie_images",blank=True)
     release_date=models.DateField(_("Date"), default=datetime.date.today)
     language=models.ForeignKey(All_Languages,on_delete=models.CASCADE)
-    trailer=models.URLField(max_length=300)
-    runtime=models.DurationField()
+    trailer=models.URLField(max_length=300,blank=True)
+    runtime=models.DurationField(blank=True)
     rating=models.DecimalField(max_digits=3, decimal_places=1,null=True,blank=True)
     comments=models.ForeignKey(All_Comments,on_delete=models.CASCADE,null=True,blank=True)
 

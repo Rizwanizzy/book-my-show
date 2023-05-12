@@ -50,10 +50,10 @@ def add_screen(request):
         if request.method=='POST':
             # print('logged in username:',request.user)
             theatre=UserProfile.objects.get(user=request.user)
-            name=request.POST['name']
-            price1=request.POST['price1']
-            price2=request.POST['price2']
-            price3=request.POST['price3']
+            name=request.POST.get('name')
+            price1=request.POST.get('price1')
+            price2=request.POST.get('price2') or None
+            price3=request.POST.get('price3') or None
             movies_id=request.POST.get('movie')
             movies=Movies.objects.get(id=movies_id)
             screen=Screen.objects.create(theatre=theatre,name=name,price1=price1,price2=price2,price3=price3,movies=movies)
@@ -66,30 +66,30 @@ def add_screen(request):
         return redirect('home')
 
 
-def edit_screen(request,id):
+def update_screen(request,id):
     if 'user' in request.session:
-        return redirect('home')
+            return redirect('home')
     if 'admin' in request.session:
         return redirect('admin_home')
     if 'theatre' in request.session:
         screen=Screen.objects.get(id=id)
         if request.method=='POST':
             theatre=UserProfile.objects.get(user=request.user)
-            name=request.POST['name']
-            price1=request.POST['price1']
-            price2=request.POST['price2']
-            price3=request.POST['price3']
+            name=request.POST.get('name')
+            price1=request.POST.get('price1')
+            price2=request.POST.get('price2') or None
+            price3=request.POST.get('price3') or None
             movies_id=request.POST.get('movie')
             movies=Movies.objects.get(id=movies_id)
             screen=Screen(id=id,theatre=theatre,name=name,price1=price1,price2=price2,price3=price3,movies=movies)
             screen.save()
             return redirect('theatre_screen')
         else:
-            movies=Movies.objects.all()
-            return render(request,'theatre/edit_screen.html',{'screens':screen,'movies':movies})
+            movies = Movies.objects.all()
+            return render(request,'theatre/update_screen.html',{'screens':screen,'movies':movies})
     else:
         return redirect('home')
-
+        
 def delete_screen(request,id):
     if 'user' in request.session:
         return redirect('home')

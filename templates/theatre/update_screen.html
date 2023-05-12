@@ -12,7 +12,7 @@
                     <div class="col-sm-12 col-xl-7" style="margin-left:13%">
                         <div class="bg-light rounded h-100 p-4" style="width:100%">
                             <h6 class="mb-4">Add Screen</h6>
-                            <form action="{% url 'add_screen' %}" method="post" enctype="multipart/form-data">
+                            <form action="" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {% if screens %}
                                 <div style="display:flex">
@@ -20,27 +20,27 @@
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">NAME</label>
                                             <input type="text" class="form-control" id="title" name="name" placeholder="Screen Name"
-                                                aria-describedby="emailHelp" value="{{screens.name}}">
+                                                aria-describedby="emailHelp" value="{{screens.name}}" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">NORMAL</label>
                                             <input type="text" class="form-control" id="title" name="price1" placeholder="Normal Price"
-                                                aria-describedby="emailHelp" value="{{screens.price1}}">
+                                                aria-describedby="emailHelp" value="{{screens.price1}}" required>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">EXECUTIVE</label>
                                             <input type="text" class="form-control" id="title" name="price2" placeholder="Executive Price"
-                                                aria-describedby="emailHelp" value="{{screens.price2}}">
+                                                aria-describedby="emailHelp" {% if screens.price2 is None%} value="" {% else %} value="{{screens.price2}}" {% endif %}>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">PREMIUM</label>
                                             <input type="text" class="form-control" id="title" name="price3" placeholder="Premium Price"
-                                                aria-describedby="emailHelp" value="{{screens.price3}}">
+                                                aria-describedby="emailHelp" {% if screens.price3 is None%} value="" {% else %} value="{{screens.price3}}" {% endif%}>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">MOVIE</label>
                                             <select class="form-select" id="floatingSelect" name="movie"
-                                                aria-label="Floating label select example">
+                                                aria-label="Floating label select example" required>
                                                 <option selected></option>
                                                 {% for mov in movies%}
                                                 <option value="{{mov.id}}" {% if screens.movies.id == mov.id %} selected {% endif %}>{{mov.title}}</option>

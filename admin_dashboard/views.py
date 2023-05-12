@@ -81,6 +81,7 @@ def update_movie(request,id):
                 return redirect('admin_movies')
         else:
             languages=All_Languages.objects.all()
+            print('image url',movies.image)
             return render(request,'admin_panel/update_movie.html',{'movies':movies,'languages':languages})
     else:
         return redirect('home')

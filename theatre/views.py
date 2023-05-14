@@ -36,7 +36,10 @@ def theatre_screen(request):
     if 'admin' in request.session:
         return redirect('admin_home')
     if 'theatre' in request.session:
-        screens=Screen.objects.all()
+        # screens=Screen.objects.filter(theatre_id=request.user.id)
+        user_profile=UserProfile.objects.get(user=request.user)
+        screens=Screen.objects.filter(theatre=user_profile)
+        print('theatre_id',request.user.id)
         return render(request,'theatre/theatre_screen.html',{'screens':screens})
     else:
         return redirect('home')

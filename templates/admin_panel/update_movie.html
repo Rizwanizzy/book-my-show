@@ -20,7 +20,7 @@
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Description</label>
                                             <textarea class="form-control" name="description" placeholder="Movie Description"
-                                                id="floatingTextarea" style="height: 124px;">{{movies.description}}</textarea>
+                                                id="floatingTextarea" style="height: 124px;">{% if movies.description is None%}{% else %}{{movies.description}}{% endif %}</textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Movie Trailer</label>
@@ -41,7 +41,7 @@
                                     <div class="col-sm-12 col-xl-4">
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Genre</label>
-                                            <input type="text" class="form-control" id="title" name="genre" placeholder="Movie Genre" value="{{movies.genre}}"
+                                            <input type="text" class="form-control" id="title" name="genre" placeholder="Movie Genre" {% if movies.genere is None%} value="" {% else%} value="{{movies.genre}}" {% endif %}
                                                 aria-describedby="emailHelp" >
                                         </div>
                                         <div class="mb-3">
@@ -56,7 +56,7 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">Run Time</label>
-                                            <input type="text" class="form-control" id="runtime" name="runtime" value="{{movies.runtime}}"
+                                            <input type="text" class="form-control" id="runtime" name="runtime" {% if movies.runtime is None %} value="" {% else %} value="{{movies.runtime}}" {% endif %}
                                                 aria-describedby="emailHelp" >
                                         </div>
                                         <div class="mb-3">

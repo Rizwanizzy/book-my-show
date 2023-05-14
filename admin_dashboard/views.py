@@ -39,14 +39,14 @@ def add_movie(request):
     if 'admin' in request.session:
         if request.method=='POST':
             title=request.POST.get('title')
-            description=request.POST.get('description')
-            genre=request.POST.get('genre')
+            description=request.POST.get('description') or None
+            genre=request.POST.get('genre') or None
             image=request.FILES.get('image')
             poster=request.FILES.get('poster')
             release_date=request.POST.get('release_date')
             language_id=request.POST.get('language')
             trailer=request.POST.get('trailer')
-            runtime=request.POST.get('runtime')
+            runtime=request.POST.get('runtime') or None
             language = All_Languages.objects.get(id=language_id)
             movie=Movies.objects.create(title=title,description=description,genre=genre,image=image,poster=poster,release_date=release_date,language=language,trailer=trailer,runtime=runtime)
             movie.save()
@@ -67,14 +67,14 @@ def update_movie(request,id):
         movies=Movies.objects.get(id=id)
         if request.method=='POST':
                 title=request.POST.get('title')
-                description=request.POST.get('description')
-                genre=request.POST.get('genre')
+                description=request.POST.get('description') or None
+                genre=request.POST.get('genre') or None
                 image=request.FILES.get('image')
                 poster=request.FILES.get('poster')
                 release_date=request.POST.get('release_date')
                 language_id=request.POST.get('language')
                 trailer=request.POST.get('trailer')
-                runtime=request.POST.get('runtime')
+                runtime=request.POST.get('runtime') or None
                 language = All_Languages.objects.get(id=language_id)
                 movie=Movies(id=id,title=title,description=description,genre=genre,image=image,poster=poster,release_date=release_date,language=language,trailer=trailer,runtime=runtime)
                 movie.save()

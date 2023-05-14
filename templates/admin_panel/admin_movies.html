@@ -17,7 +17,7 @@
                                     <img src="{{movie.poster.url}}" class="card-img-top" alt="...">
                                     <div class="card-body">
                                       <h5 class="card-title">{{movie.title}}</h5>
-                                      <p class="card-text" style='color:black'>{{movie.description}}</p>
+                                      <p class="card-text" style='color:black'>{% if movie.description is None%} {% else %} {{movie.description}} {% endif %}</p>
                                     </div></a>
                                                                 </div>
                         </div>

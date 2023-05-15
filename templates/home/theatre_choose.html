@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="now-showing-list">
+	<div class="col-md-4 movies-by-category movie-booking">
+		<div class="movie-ticket-book">
+			{% if mov %}
+			<div class="clearfix"></div>
+			<img src="{{mov.image.url}}" alt="" />
+			<div class="bahubali-details">
+				<h4>Movie Title:</h4>
+				<p>{{mov.title}}</p>
+				<h4>Release Date:</h4>
+				<p>{{mov.release_date}}</p>
+				<h4>Duration:</h4>
+				<p>{{mov.runtime}}</p>
+				<h4>Director:</h4>
+				<p></p>
+				<h4>Language:</h4>
+				<p>{{mov.language}}</p>
+				<h4>Genre:</h4>
+				<p>{{mov.genre}}</p>
+				<h4>Description :</h4>
+				<p>{{mov.description}}</p>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	<div class="col-md-8 movies-dates">	
+		<div id="horizontalTab" style="display: block; width: 100%; margin: 0px;">
+			<ul class="resp-tabs-list" style="margin-left:12px">
+				{% for date in date_range %}
+				<li class="resp-tab-item" aria-controls="tab_item-5" role="tab"><span>{{ date|date:"D" }} {{ date|date:"d" }}</span></li>
+				{% endfor %}
+				<div class="clearfix"></div>
+			</ul><br>
+			{% for i in theatres %}
+			<div class="movie-date-selection">
+				
+				<ul>
+					<li class="location">
+						<a href="pic-a-movie.html"><i class="fa fa-map-marker"></i>{{i.theatre.user.username}}: Location</a>
+					</li>
+					<li class="time">
+						<input type="button" href="" class="btn btn-success" value="11:00 AM">
+					</li>
+					<li class="time">
+						<input type="button" href="" class="btn btn-warning" value="3:00 PM">
+					</li>
+					<li class="time">
+						<input type="button" href="" class="btn btn-danger" value="6:00 PM">
+					</li>
+					<li class="time">
+						<input type="button" href="" class="btn btn-success" value="9:00 PM">
+					</li>
+				</ul>
+			</div>
+			{% endfor %}
+			
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+</div>
+{% endblock %}

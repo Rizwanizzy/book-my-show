@@ -24,7 +24,10 @@
 
 			</div>
 			<div class="review-info">
-				<h6 class="span88">{{mov.title}}</h6>
+				<div style="display:flex">
+				<h6 class="span88">{{mov.title}}</h6> &nbsp;&nbsp;&nbsp;
+				<a href="{% url 'theatre_choose' mov.id %}" ><button type="button" class="btn btn-danger">Book Tickets</button></a>
+				</div><br>
 				<p class="dirctr"><a href="">Reagan Gavin Rasquinha, </a>TNN, Mar 12, 2015, 12.47PM IST</p>								
 				<p class="ratingview">Critic's Rating:</p>
 				<div class="rating">

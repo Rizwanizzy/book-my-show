@@ -8,6 +8,8 @@ from django.urls import reverse
 from theatre.models import *
 from .models import *
 from admin_dashboard.models import *
+from datetime import datetime, timedelta
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -71,6 +73,17 @@ def home(request):
 def movie(request,id):
     mov=Movies.objects.get(id=id)
     return render(request,'home/movie.html',{'mov':mov})
+
+def theatre_choose(request,id):
+    mov=Movies.objects.get(id=id)
+    current_date = timezone.now().date()
+    upto_six = current_date + timedelta(days=5)
+    date_range=[]
+    while current_date <= upto_six:
+        date_range.append(current_date)
+        current_date += timedelta(days=1)
+    theatre=Screen.objects.filter(movies_id=id)
+    return render(request,'home/theatre_choose.html',{'mov':mov,'theatres':theatre,'date_range':date_range})
 
 
 def user_logout(request):

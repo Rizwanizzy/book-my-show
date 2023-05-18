@@ -3,5 +3,5 @@ from .models import *
 
 # Register your models here.
 
-# admin.site.register(UserProfile)
+admin.site.register(Show_Time)
 admin.site.register(Screen)

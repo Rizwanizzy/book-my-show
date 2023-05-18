@@ -86,6 +86,22 @@ def theatre_choose(request,id):
     return render(request,'home/theatre_choose.html',{'mov':mov,'theatres':theatre,'date_range':date_range})
 
 
+def seat_selection(request,theatre_id,screen_id,show_time_id,selected_date):
+    screens = Screen.objects.get(id=screen_id)
+    show_time=Show_Time.objects.get(id=show_time_id)
+    selected_date=selected_date
+    date = datetime.strptime(selected_date, '%Y-%m-%d')
+    formatted_date = date.strftime('%b %d')
+    context = {
+        'theatres': screens,
+        'times': show_time,
+        'selected_date': formatted_date,
+        'screen_id':screen_id
+    }
+
+    return render(request,'home/seat_selection.html',context)
+
+
 def user_logout(request):
     if 'user' in request.session:
         request.session.flush()

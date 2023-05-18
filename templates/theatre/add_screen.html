@@ -1,6 +1,7 @@
 {% extends 'base1.html' %}
 {% load static %}
 {% block admin_page %}
+
 <style>
     .form-control{
         width:140%;
@@ -41,10 +42,17 @@
                                             <select class="form-select" id="floatingSelect" name="movie"
                                                 aria-label="Floating label select example" required>
                                                 <option selected></option>
-                                                {% for mov in movies%}
+                                                {% for mov in movies %}
                                                 <option value="{{mov.id}}">{{mov.title}}</option>
                                                 {% endfor %}
                                             </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">SHOW TIMES</label><br>
+                                            {% for show in shows %}
+                                                <input type="checkbox" name="show_times" value="{{ show.id }}">
+                                                <label>{{ show.time }}</label><br>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                 </div>

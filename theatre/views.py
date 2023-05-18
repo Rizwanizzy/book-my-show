@@ -58,13 +58,18 @@ def add_screen(request):
             price2=request.POST.get('price2') or None
             price3=request.POST.get('price3') or None
             movies_id=request.POST.get('movie')
+            show_times = request.POST.getlist('show_times')
             movies=Movies.objects.get(id=movies_id)
             screen=Screen.objects.create(theatre=theatre,name=name,price1=price1,price2=price2,price3=price3,movies=movies)
+            for show_time_id in show_times:
+                show_time = Show_Time.objects.get(id=show_time_id)
+                screen.show_times.add(show_time)
             screen.save()
             return redirect('theatre_screen')
         else:
             movies=Movies.objects.all()
-            return render(request,'theatre/add_screen.html',{'movies':movies})
+            shows=Show_Time.objects.all()
+            return render(request,'theatre/add_screen.html',{'movies':movies,'shows':shows})
     else:
         return redirect('home')
 
@@ -83,13 +88,18 @@ def update_screen(request,id):
             price2=request.POST.get('price2') or None
             price3=request.POST.get('price3') or None
             movies_id=request.POST.get('movie')
+            show_times = request.POST.getlist('show_times')
             movies=Movies.objects.get(id=movies_id)
             screen=Screen(id=id,theatre=theatre,name=name,price1=price1,price2=price2,price3=price3,movies=movies)
+            for show_time_id in show_times:
+                show_time = Show_Time.objects.get(id=show_time_id)
+                screen.show_times.add(show_time)
             screen.save()
             return redirect('theatre_screen')
         else:
             movies = Movies.objects.all()
-            return render(request,'theatre/update_screen.html',{'screens':screen,'movies':movies})
+            shows = Show_Time.objects.all()
+            return render(request,'theatre/update_screen.html',{'screens':screen,'movies':movies,'shows':shows})
     else:
         return redirect('home')
         

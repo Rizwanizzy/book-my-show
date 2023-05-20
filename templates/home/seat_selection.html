@@ -8,7 +8,9 @@
 			<div id="seat-map">
 				<div class="front">SCREEN</div>					
 			</div>
-			<div class="booking-details">
+			<br><br>
+			<div id="legend"></div>
+			<div class="booking-details" style="width:75%">
 				<ul class="book-left">
 					<li>Movie </li>
 					<li>Time </li>
@@ -20,38 +22,40 @@
 					<li>: {{theatres.movies.title}}</li>
 					<li>: {{times}}  {{selected_date}}</li>
 					<li>: <span id="counter">0</span></li>
-					<li>: <b><i>$</i><span id="total">0</span></b></li>
+					<li>: <b><i>₹</i><span id="total"></span></b></li>
 				</ul>
 				<div class="clear"></div>
-				<ul id="selected-seats" class="scrollbar scrollbar1"></ul>
+				<ul id="selected-seats" class="" style="display:flex;width:100%"></ul>
 			
 						
 				<button class="checkout-button">Book Now</button>	
-				<div id="legend"></div>
+				
 			</div>
 			<div style="clear:both"></div>
 	    </div>
+		
 
 			<script type="text/javascript">
-				var price = 10; //price
+				var price = {{theatres.price1}}; //price
+				var rows = Number("{{ rows }}");
+				var columns = Number("{{ columns }}");
 				$(document).ready(function() {
 					var $cart = $('#selected-seats'), //Sitting Area
 					$counter = $('#counter'), //Votes
 					$total = $('#total'); //Total money
 					
+					var seatingChart = [];
+
+					for (var row = 1; row <= rows; row++) {
+						var rowArr = '';
+						for (var col = 1; col <= columns; col++) {
+							rowArr += 'a';// Available seat
+						}
+						seatingChart.push(rowArr);
+					}
+
 					var sc = $('#seat-map').seatCharts({
-						map: [  //Seating chart
-							'aaaaaaaaaa',
-							'aaaaaaaaaa',
-							'aaaaaaaaaa',
-							'__aaaaaa__',
-							'aaaaaaaaaa',
-							'aaaaaaaaaa',
-							'aaaaaaaaaa',
-							'aaaaaaaaaa',
-							'aaaaaaaaaa',
-							'__aaaaaa__'
-						],
+						map: seatingChart,
 						naming : {
 							top : false,
 							getLabel : function (character, row, column) {

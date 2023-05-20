@@ -96,9 +96,12 @@ def seat_selection(request,theatre_id,screen_id,show_time_id,selected_date):
         'theatres': screens,
         'times': show_time,
         'selected_date': formatted_date,
-        'screen_id':screen_id
+        'screen_id':screen_id,
+        'rows':screens.total_seat_rows,
+        'columns':screens.total_seat_columns,
     }
-
+    # print('total rows:',screens.total_seat_rows)
+    # print('total columns:',screens.total_seat_columns)
     return render(request,'home/seat_selection.html',context)
 
 

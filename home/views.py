@@ -92,6 +92,8 @@ def seat_selection(request,theatre_id,screen_id,show_time_id,selected_date):
     selected_date=selected_date
     date = datetime.strptime(selected_date, '%Y-%m-%d')
     formatted_date = date.strftime('%b %d')
+    unavailable_seats = [str(i) for i in screens.unavailable_seats]
+    unavailable_seats=''.join(unavailable_seats).split(',')
     context = {
         'theatres': screens,
         'times': show_time,
@@ -99,10 +101,15 @@ def seat_selection(request,theatre_id,screen_id,show_time_id,selected_date):
         'screen_id':screen_id,
         'rows':screens.total_seat_rows,
         'columns':screens.total_seat_columns,
+        'unavailable_seats':unavailable_seats
     }
     # print('total rows:',screens.total_seat_rows)
-    # print('total columns:',screens.total_seat_columns)
+    
+    print('unavailable_seats:',unavailable_seats)
     return render(request,'home/seat_selection.html',context)
+
+def payment(request):
+    return render(request,'home/payment.html')
 
 
 def user_logout(request):

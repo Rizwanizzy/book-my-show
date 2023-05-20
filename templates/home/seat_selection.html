@@ -28,7 +28,7 @@
 				<ul id="selected-seats" class="" style="display:flex;width:100%"></ul>
 			
 						
-				<button class="checkout-button">Book Now</button>	
+				<a href="{% url 'payment' %}" ><button class="checkout-button">Book Now</button>	<a/>
 				
 			</div>
 			<div style="clear:both"></div>
@@ -39,6 +39,8 @@
 				var price = {{theatres.price1}}; //price
 				var rows = Number("{{ rows }}");
 				var columns = Number("{{ columns }}");
+				var unavailableSeats = {{ unavailable_seats|safe }};
+				console.log(unavailableSeats)
 				$(document).ready(function() {
 					var $cart = $('#selected-seats'), //Sitting Area
 					$counter = $('#counter'), //Votes
@@ -49,7 +51,9 @@
 					for (var row = 1; row <= rows; row++) {
 						var rowArr = '';
 						for (var col = 1; col <= columns; col++) {
-							rowArr += 'a';// Available seat
+							
+								rowArr += 'a';// Available seat
+							
 						}
 						seatingChart.push(rowArr);
 					}
@@ -66,7 +70,7 @@
 							node : $('#legend'),
 							items : [
 								[ 'a', 'available',   'Available' ],
-								[ 'a', 'unavailable', 'Sold'],
+								[ 'u', 'unavailable', 'Sold'],
 								[ 'a', 'selected', 'Selected']
 							]					
 						},
@@ -99,7 +103,7 @@
 						}
 					});
 					//sold seat
-					sc.get(['1_2', '4_4','4_5','6_6','6_7','8_5','8_6','8_7','8_8', '10_1', '10_2']).status('unavailable');
+					sc.get(unavailableSeats).status('unavailable');
 						
 				});
 				//sum total money

@@ -7,6 +7,7 @@ urlpatterns = [
     path('movie/<int:id>', views.movie, name='movie'),
     path('theatre_choose/<int:id>', views.theatre_choose, name='theatre_choose'),
     path('seat_selection/<int:theatre_id>/<int:screen_id>/<int:show_time_id>/<str:selected_date>/', views.seat_selection, name='seat_selection'),
+    path('payment/', views.payment, name='payment'),
     path('user_logout/', views.user_logout, name='user_logout'),
 
 ]

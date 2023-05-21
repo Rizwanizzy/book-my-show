@@ -25,98 +25,154 @@
 					<li>: <b><i>₹</i><span id="total"></span></b></li>
 				</ul>
 				<div class="clear"></div>
-				<ul id="selected-seats" class="" style="display:flex;width:100%"></ul>
-			
-						
-				<a href="{% url 'payment' %}" ><button class="checkout-button">Book Now</button>	<a/>
-				
+				<form method="post" action="{% url 'payment' %}">
+					{% csrf_token %}
+					<ul id="selected-seats" class="" style="display:flex;width:100%"></ul>
+					
+					<!-- Hidden input fields for theater information -->
+					<input type="hidden" name="theatre_name" value="{{ theatres.theatre }}">
+					<input type="hidden" name="screen_name" value="{{ theatres }}">
+					<input type="hidden" name="movie_title" value="{{ theatres.movies.title }}">
+					<input type="hidden" name="time" value="{{ times }}">
+					<input type="hidden" name="selected_date" value="{{ selected_date }}">
+
+					<!-- Hidden input fields for seat count and total price -->
+					<input type="hidden" name="seat_count" value="{{ seat_count }}">
+					<input type="hidden" name="total_price" value="{{ theatres.price1 }}">
+					<button class="checkout-button">Book Now</button>
+				</form>
 			</div>
 			<div style="clear:both"></div>
 	    </div>
 		
 
 			<script type="text/javascript">
-				var price = {{theatres.price1}}; //price
+				var price = {{ theatres.price1 }};
 				var rows = Number("{{ rows }}");
 				var columns = Number("{{ columns }}");
 				var unavailableSeats = {{ unavailable_seats|safe }};
-				console.log(unavailableSeats)
-				$(document).ready(function() {
-					var $cart = $('#selected-seats'), //Sitting Area
-					$counter = $('#counter'), //Votes
-					$total = $('#total'); //Total money
-					
-					var seatingChart = [];
+				var selectedSeats = [];
 
-					for (var row = 1; row <= rows; row++) {
-						var rowArr = '';
-						for (var col = 1; col <= columns; col++) {
-							
-								rowArr += 'a';// Available seat
-							
-						}
-						seatingChart.push(rowArr);
+				// Function to update seat count and total price
+				function updateBookingDetails(count, total) {
+					$('#seat-count').val(count);
+					$('#total-price').val(total);
+				  }
+
+				$(document).ready(function() {
+				var $cart = $('#selected-seats');
+				var $counter = $('#counter');
+				var $total = $('#total');
+
+				var seatingChart = [];
+				for (var row = 1; row <= rows; row++) {
+					var rowArr = '';
+					for (var col = 1; col <= columns; col++) {
+					rowArr += 'a'; // Available seat
+					}
+					seatingChart.push(rowArr);
+				}
+
+				var sc = $('#seat-map').seatCharts({
+					map: seatingChart,
+					naming: {
+					top: false,
+					getLabel: function(character, row, column) {
+						return column;
+					}
+					},
+					legend: {
+					node: $('#legend'),
+					items: [
+						['a', 'available', 'Available'],
+						['u', 'unavailable', 'Sold'],
+						['a', 'selected', 'Selected']
+					]
+					},
+					click: function() {
+					if (this.status() == 'available') {
+						$('<li>Row' + (this.settings.row + 1) + ' Seat' + this.settings.label + '</li>')
+						.attr('id', 'cart-item-' + this.settings.id)
+						.data('seatId', this.settings.id)
+						.appendTo($cart);
+						var seatId = (this.settings.row + 1) + '_' + this.settings.label;
+						selectedSeats.push(seatId);
+						$counter.text(selectedSeats.length);
+						$total.text(recalculateTotal());
+						return 'selected';
+					} else if (this.status() == 'selected') {
+						$('#cart-item-' + this.settings.id).remove();
+						var seatId = (this.settings.row + 1) + '_' + this.settings.label;
+						selectedSeats = selectedSeats.filter(function(seat) {
+						return seat !== seatId;
+						});
+						$counter.text(selectedSeats.length);
+						$total.text(recalculateTotal());
+						return 'available';
+					} else if (this.status() == 'unavailable') {
+						return 'unavailable';
+					} else {
+						return this.style();
 					}
 
-					var sc = $('#seat-map').seatCharts({
-						map: seatingChart,
-						naming : {
-							top : false,
-							getLabel : function (character, row, column) {
-								return column;
-							}
-						},
-						legend : { //Definition legend
-							node : $('#legend'),
-							items : [
-								[ 'a', 'available',   'Available' ],
-								[ 'u', 'unavailable', 'Sold'],
-								[ 'a', 'selected', 'Selected']
-							]					
-						},
-						click: function () { //Click event
-							if (this.status() == 'available') { //optional seat
-								$('<li>Row'+(this.settings.row+1)+' Seat'+this.settings.label+'</li>')
-									.attr('id', 'cart-item-'+this.settings.id)
-									.data('seatId', this.settings.id)
-									.appendTo($cart);
-
-								$counter.text(sc.find('selected').length+1);
-								$total.text(recalculateTotal(sc)+price);
-											
-								return 'selected';
-							} else if (this.status() == 'selected') { //Checked
-									//Update Number
-									$counter.text(sc.find('selected').length-1);
-									//update totalnum
-									$total.text(recalculateTotal(sc)-price);
-										
-									//Delete reservation
-									$('#cart-item-'+this.settings.id).remove();
-									//optional
-									return 'available';
-							} else if (this.status() == 'unavailable') { //sold
-								return 'unavailable';
-							} else {
-								return this.style();
-							}
-						}
-					});
-					//sold seat
-					sc.get(unavailableSeats).status('unavailable');
-						
+					// Update seat count and total price values
+					var seatCount = sc.find('selected').length;
+					var totalPrice = recalculateTotal(sc) + price;
+					updateBookingDetails(seatCount, totalPrice);
+					}
 				});
-				//sum total money
-				function recalculateTotal(sc) {
-					var total = 0;
-					sc.find('selected').each(function () {
-						total += price;
+
+				sc.get(unavailableSeats).status('unavailable');
+				});
+
+				function recalculateTotal() {
+					var totalPrice = 0;
+					selectedSeats.forEach(function (seat) {
+						totalPrice += price;
 					});
-							
-					return total;
+					return totalPrice;
 				}
+				
+
+
+
+				function updateSelectedSeats() {
+					// Clear the existing list of selected seats
+					$('#selected-seats').empty();
+				
+					// Append the updated list of selected seats
+					selectedSeats.forEach(function (seat) {
+						$('<li>').text(seat).appendTo('#selected-seats');
+					});
+				
+					console.log(selectedSeats); // Print selected seats in the console
+				}
+				
+			
+			// Redirect to payment page with selected seats
+				$('form').on('submit', function() {
+					var selectedSeatsQueryParam = selectedSeats.join(',');
+
+					// Create a hidden input field dynamically
+					var seatsInput = $('<input>')
+					.attr('type', 'hidden')
+					.attr('name', 'seats')
+					.val(selectedSeatsQueryParam);
+
+				$(this).append(seatsInput);
+				});
+
+				$('.checkout-button').click(function() {
+					// Trigger the form submission
+					$('form').submit();
+				});
+
+
+
 			</script>
+			
 	</div>
+	
 	
 </div>
 <script src="{% static 'js2/jquery.nicescroll.js' %}"></script>

@@ -1,3 +1,4 @@
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
@@ -86,30 +87,59 @@ def theatre_choose(request,id):
     return render(request,'home/theatre_choose.html',{'mov':mov,'theatres':theatre,'date_range':date_range})
 
 
-def seat_selection(request,theatre_id,screen_id,show_time_id,selected_date):
+def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
     screens = Screen.objects.get(id=screen_id)
-    show_time=Show_Time.objects.get(id=show_time_id)
-    selected_date=selected_date
+    show_time = Show_Time.objects.get(id=show_time_id)
+    selected_date = selected_date
     date = datetime.strptime(selected_date, '%Y-%m-%d')
     formatted_date = date.strftime('%b %d')
     unavailable_seats = [str(i) for i in screens.unavailable_seats]
-    unavailable_seats=''.join(unavailable_seats).split(',')
+    unavailable_seats = ''.join(unavailable_seats).split(',')
+
     context = {
         'theatres': screens,
         'times': show_time,
         'selected_date': formatted_date,
-        'screen_id':screen_id,
-        'rows':screens.total_seat_rows,
-        'columns':screens.total_seat_columns,
-        'unavailable_seats':unavailable_seats
+        'screen_id': screen_id,
+        'rows': screens.total_seat_rows,
+        'columns': screens.total_seat_columns,
+        'unavailable_seats': unavailable_seats,
     }
-    # print('total rows:',screens.total_seat_rows)
-    
-    print('unavailable_seats:',unavailable_seats)
-    return render(request,'home/seat_selection.html',context)
+    return render(request, 'home/seat_selection.html', context)
 
 def payment(request):
-    return render(request,'home/payment.html')
+    if request.method == 'POST':
+        selected_seats_str = request.POST.get('seats')
+        selected_seats = selected_seats_str.split(',') if selected_seats_str else []
+        theatre = request.POST.get('theatre_name')
+        screen = request.POST.get('screen_name')
+        movie_title = request.POST.get('movie_title')
+        time = request.POST.get('time')
+        selected_date = request.POST.get('selected_date')
+        seat_count = len(selected_seats)
+        price = float(request.POST.get('total_price', 0.0))
+        total_price=price*seat_count
+        tax=42.00
+        grand_total=total_price+tax
+        context={
+            'selected_seats': selected_seats,
+            'theatre': theatre,
+            'screen': screen,
+            'movie_title': movie_title,
+            'time': time,
+            'selected_date': selected_date,
+            'seat_count': seat_count,
+            'total_price': total_price,
+            'grand_total':grand_total
+        }
+        return render(request, 'home/payment.html', context)
+    else:
+        return HttpResponseBadRequest("Invalid request method.")
+
+
+def payment_successful(request):
+    return render(request,'home/payment_successful.html')
+
 
 
 def user_logout(request):

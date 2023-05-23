@@ -21,26 +21,26 @@
 			
 			<div class="movie-ticket-book">
 					<div class="clearfix"></div>
-					<img src="{% static 'images/movie-show.jpg' %}" alt="" />
+					<img src="{{screen_id.movies.image.url}}" alt="" />
 					
 			</div>
 		</div>
 		<div class="col-md-8 movies-dates">	
-			<div class="movie-date-selection">
+			<div class="movie-date-selection" style="display: flex;flex-direction: column;">
 				<div class="payment-right">
 					<h3>Booking Details</h3>
-					<h6><span>Movie-Name:</span>Baahubali</h6>
+					<h6><span>Movie-Name:</span>{{movie_title}}</h6>
 					<p><span>Booking ID:</span> A9B8C7D6E5F4G3H2I1J0 </p>
-					<p><span>Theatre:</span> Lorem Ipsum </p>
+					<p><span>Theatre:</span> {{theatre}} </p>
 					<p><span>Lake:</span> Kerala</p>
 					<p><span>Location:</span> Trivandrum, Trivandrum</p>
-					<p><span>Date:</span> Sat, 8 Aug, 2015</p>
-					<p><span>Time:</span> 11:30am</p>
-					<p><span>Seat Info:</span> Balkani-s12(a)</p>
-					<p><span>Qty:</span> 4</p>
-					<h4><span>Total :</span>Rs. 150.00</h4>
+					<p><span>Date:</span> {{selected_date}}</p>
+					<p><span>Time:</span> {{time}}</p>
+					<p><span>Seat Info:</span> {{selected_seats}}</p>
+					<p><span>Qty:</span> {{seat_count}}</p>
+					<h4><span>Total :</span>Rs. {{total_price}}</h4>
 					<p>+ (Internet handling fees : Rs. 42.00 (incl. of Service Tax))</p>
-					<h5>Total Amount Paid :Rs. 192.00</h5>
+					<h5>Total Amount Paid :Rs. {{grand_total}}</h5>
 				</div>
 			</div>
 			

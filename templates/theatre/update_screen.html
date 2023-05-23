@@ -58,11 +58,6 @@
                                                 aria-describedby="emailHelp" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">Unavailable Seats</label>
-                                            <input type="text" class="form-control" id="title" name="blocked" value="{{screens.unavailable_seats}}" placeholder="List all Unavailable Seats"
-                                                aria-describedby="emailHelp">
-                                        </div>
-                                        <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">SHOW TIMES</label><br>
                                             {% for show in shows %}
                                                 <input type="checkbox" name="show_times" value="{{ show.id }}" {% if show in screens.show_times.all %}checked{% endif %}>

@@ -20,13 +20,23 @@ class Screen(models.Model):
     show_times=models.ManyToManyField(Show_Time)
     total_seat_rows=models.IntegerField(default=None)
     total_seat_columns=models.IntegerField(default=None)
-    unavailable_seats = models.CharField(max_length=255,default=None)
 
-    def set_unavailable_seats(self, integer_list):
-        self.unavailable_seats = ','.join(str(i) for i in integer_list)
+    def __str__(self) -> str:
+        return f"{self.name} - {self.theatre.user}"
 
-    def get_unavailable_seats(self):
-        return [int(i) for i in self.unavailable_seats.split(',')]
+class BookedSeat(models.Model):
+    screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
+    booked_seats = models.CharField(max_length=255,default=None)
+    date = models.CharField(max_length=20)
+    time = models.CharField(max_length=255, default='')
+    # Additional fields can be added here, such as customer details, booking status, etc.
+
+
+    def set_booked_seats(self, integer_list):
+        self.booked_seats = ','.join(str(i) for i in integer_list)
+
+    def get_booked_seats(self):
+        return [int(i) for i in self.booked_seats.split(',')]
 
     def __str__(self):
-        return str(self.name)
+        return str(self.screen)

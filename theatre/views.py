@@ -60,14 +60,12 @@ def add_screen(request):
             movies_id=request.POST.get('movie')
             rows=request.POST.get('rows')
             columns=request.POST.get('columns')
-            blocked=request.POST.get('blocked')
             show_times = request.POST.getlist('show_times')
             movies=Movies.objects.get(id=movies_id)
             screen=Screen.objects.create(theatre=theatre,name=name,
                                          price1=price1,price2=price2,
                                          price3=price3,movies=movies,
-                                         total_seat_rows=rows,total_seat_columns=columns,
-                                         unavailable_seats=blocked)
+                                         total_seat_rows=rows,total_seat_columns=columns)
             for show_time_id in show_times:
                 show_time = Show_Time.objects.get(id=show_time_id)
                 screen.show_times.add(show_time)
@@ -97,14 +95,12 @@ def update_screen(request,id):
             movies_id=request.POST.get('movie')
             rows=request.POST.get('rows')
             columns=request.POST.get('columns')
-            blocked=request.POST.get('blocked')
             show_times = request.POST.getlist('show_times')
             movies=Movies.objects.get(id=movies_id)
             screen=Screen(id=id,theatre=theatre,name=name,
                           price1=price1,price2=price2,
                           price3=price3,movies=movies,
-                          total_seat_rows=rows,total_seat_columns=columns,
-                          unavailable_seats=blocked)
+                          total_seat_rows=rows,total_seat_columns=columns)
             for show_time_id in show_times:
                 show_time = Show_Time.objects.get(id=show_time_id)
                 screen.show_times.add(show_time)

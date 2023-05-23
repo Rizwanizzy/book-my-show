@@ -5,3 +5,4 @@ from .models import *
 
 admin.site.register(Show_Time)
 admin.site.register(Screen)
+admin.site.register(BookedSeat)

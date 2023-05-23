@@ -25,7 +25,7 @@
 					<li>: <b><i>₹</i><span id="total"></span></b></li>
 				</ul>
 				<div class="clear"></div>
-				<form method="post" action="{% url 'payment' %}">
+				<form method="post" action="">
 					{% csrf_token %}
 					<ul id="selected-seats" class="" style="display:flex;width:100%"></ul>
 					
@@ -38,8 +38,10 @@
 
 					<!-- Hidden input fields for seat count and total price -->
 					<input type="hidden" name="seat_count" value="{{ seat_count }}">
-					<input type="hidden" name="total_price" value="{{ theatres.price1 }}">
-					<button class="checkout-button">Book Now</button>
+					<input type="hidden" type"number" name="total_price" value="{{ theatres.price1 }}">
+					<input type="hidden" name="screen_id" value="{{ screen_id }}">
+					<button id="book_now_button" type="submit" class="checkout-button">Book Now</button>
+					
 				</form>
 			</div>
 			<div style="clear:both"></div>
@@ -50,13 +52,22 @@
 				var price = {{ theatres.price1 }};
 				var rows = Number("{{ rows }}");
 				var columns = Number("{{ columns }}");
-				var unavailableSeats = {{ unavailable_seats|safe }};
+				var bookedSeats = {{ bookseat|safe }};
 				var selectedSeats = [];
 
 				// Function to update seat count and total price
+				
 				function updateBookingDetails(count, total) {
 					$('#seat-count').val(count);
+					$('#counter').text(count);
 					$('#total-price').val(total);
+
+					var bookNowButton = $('#book_now_button');
+					if (selectedSeats.length > 0) {
+						bookNowButton.prop('disabled', false);
+					} else {
+						bookNowButton.prop('disabled', true);
+					}
 				  }
 
 				$(document).ready(function() {
@@ -119,10 +130,13 @@
 					var seatCount = sc.find('selected').length;
 					var totalPrice = recalculateTotal(sc) + price;
 					updateBookingDetails(seatCount, totalPrice);
+
+					var bookNowButton = $('#book-now-button');
+					
 					}
 				});
 
-				sc.get(unavailableSeats).status('unavailable');
+				sc.get(bookedSeats).status('unavailable');
 				});
 
 				function recalculateTotal() {

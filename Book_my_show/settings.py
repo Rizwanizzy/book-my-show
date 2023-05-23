@@ -137,5 +137,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # SECURE_CROSS_ORIGIN_OPENER_POLICY='same-origin-allow-popups'
 
-KEY='rzp_test_Jq8LFKkk9CYVtv'
-SECRET='11G8pO5X0PMF8iSIGgp6Vs1p'
+KEY='rzp_test_KNUCestYQGMbax'
+SECRET='Mvpv0tKy9oBzh0WLhosWaGKl'

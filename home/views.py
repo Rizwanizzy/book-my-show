@@ -77,6 +77,24 @@ def movie(request,id):
     mov=Movies.objects.get(id=id)
     return render(request,'home/movie.html',{'mov':mov})
 
+
+def cinemas(request):
+    cinemas=UserProfile.objects.filter(is_theatre=True)
+    return render(request,'home/cinemas.html',{'cinemas':cinemas})
+
+
+def list_movies(request,id):
+    current_date = timezone.now().date()
+    upto_six = current_date + timedelta(days=5)
+    date_range=[]
+    while current_date <= upto_six:
+        date_range.append(current_date)
+        current_date += timedelta(days=1)
+    screens=Screen.objects.filter(theatre=id)
+    return render(request,'home/list_movies.html',{'screens':screens,'date_range':date_range})
+
+
+
 def theatre_choose(request,id):
     mov=Movies.objects.get(id=id)
     current_date = timezone.now().date()
@@ -157,13 +175,20 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
     else:
         return render(request, 'home/seat_selection.html', context)
 
+client = razorpay.Client(auth=(KEY, SECRET))
 def payment(request):
-    # client = razorpay.Client(auth=(KEY,SECRET))
-    # amount= 100,
-    # currency="INR",
-    # payment_booking=client.order.create(dict(amount=amount,currency=currency,payment_capture=1))
-    # print('payment_booking',payment_booking)
-    # payment_booking_id=payment_booking['id']
+    DATA = {
+        "amount": 5000,
+        "currency": "INR",
+        "receipt": "receipt#1",
+        "payment_capture":'1'
+        }
+    payment_order=client.order.create(data=DATA)
+    payment_order_id=payment_order['id']
+    context={
+            'api_key':KEY,
+            'order_id':payment_order_id
+             }
     if request.method == 'POST':
         selected_seats_list = request.POST.get('selected_seats')
         
@@ -175,6 +200,7 @@ def payment(request):
         movie_title = request.POST.get('movie_title')
         time = request.POST.get('time')
         selected_date = request.POST.get('selected_date')
+        payment_id = request.POST.get('payment_id')
         seat_list = [seat.strip("' ") for seat in selected_seats.split(",")]
         seat_count = len(seat_list)
         print('seat_count',seat_count)
@@ -204,11 +230,13 @@ def payment(request):
             'selected_date': selected_date,
             'seat_count': seat_count,
             'total_price': total_price,
-            'grand_total':grand_total
+            'grand_total':grand_total,
+            'payment_id':payment_id,
+            
         }
         return render(request,'home/payment_successful.html',items)
     else:
-        return render(request, 'home/payment.html')
+        return render(request, 'home/payment.html',context)
 
 
 def payment_successful(request):

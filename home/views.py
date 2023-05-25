@@ -153,13 +153,6 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
         total_price=price*seat_count
         tax=42.00
         grand_total=total_price+tax
-        # booked = BookedSeat(
-        #     screen=Screen.objects.get(id=screen_id),
-        #     booked_seats=', '.join(selected_seats),
-        #     date=selected_date,
-        #     time=time
-        # )
-        # booked.save()
         items={
             'selected_seats': selected_seats,
             'theatre': theatre,
@@ -169,7 +162,7 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
             'selected_date': selected_date,
             'seat_count': seat_count,
             'total_price': total_price,
-            'grand_total':grand_total
+            'grand_total':grand_total,
         }
         return render(request,'home/payment.html',items)
     else:
@@ -177,18 +170,6 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
 
 client = razorpay.Client(auth=(KEY, SECRET))
 def payment(request):
-    DATA = {
-        "amount": 5000,
-        "currency": "INR",
-        "receipt": "receipt#1",
-        "payment_capture":'1'
-        }
-    payment_order=client.order.create(data=DATA)
-    payment_order_id=payment_order['id']
-    context={
-            'api_key':KEY,
-            'order_id':payment_order_id
-             }
     if request.method == 'POST':
         selected_seats_list = request.POST.get('selected_seats')
         
@@ -236,6 +217,18 @@ def payment(request):
         }
         return render(request,'home/payment_successful.html',items)
     else:
+        DATA = {
+        "amount": 5000,
+        "currency": "INR",
+        "receipt": "receipt#1",
+        "payment_capture":'1',
+        }
+        payment_order=client.order.create(data=DATA)
+        payment_order_id=payment_order['id']
+        context={
+                'api_key':KEY,
+                'order_id':payment_order_id,
+                }
         return render(request, 'home/payment.html',context)
 
 

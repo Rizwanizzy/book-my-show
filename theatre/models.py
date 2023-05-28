@@ -2,13 +2,17 @@ from django.db import models
 from django.contrib.auth.models import User
 from admin_dashboard.models import *
 from home.models import *
+from django.utils import timezone
+from datetime import datetime
+import uuid
 # Create your models here.
     
 class Show_Time(models.Model):
     time=models.TimeField()
 
     def __str__(self):
-        return str(self.time)
+        time_obj = datetime.strptime(self.time, "%H:%M:%S").time()
+        return time_obj.strftime("%I:%M%p")
 
 class Screen(models.Model):
     theatre=models.ForeignKey(UserProfile,on_delete=models.CASCADE)
@@ -23,15 +27,31 @@ class Screen(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name} - {self.theatre.user}"
+    
+def get_default_booked_time():
+    return timezone.now().time()
+
+def get_default_booked_date():
+    return timezone.now().date()
 
 class BookedSeat(models.Model):
-    screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
+    booking_id=models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    user=models.CharField(max_length=255,default=None)
+    movie=models.CharField(max_length=30, default=None)
+    movie_poster=models.ImageField(upload_to="booked_movie_images",blank=True)
+    email=models.EmailField(max_length=50)
+    phone = PhoneNumberField(null=True, blank=False,default=None)
+    theatre=models.CharField(max_length=255,default=None)
+    screen = models.CharField(max_length=255,default=None)
     booked_seats = models.CharField(max_length=255,default=None)
+    count = models.PositiveIntegerField(default=0)
+    price=models.IntegerField(default=None)
     date = models.CharField(max_length=20)
-    time = models.CharField(max_length=255, default='')
-    # Additional fields can be added here, such as customer details, booking status, etc.
-
-
+    show_time = models.CharField(max_length=255, default='')
+    payment_id=models.CharField(max_length=100)
+    booked_date = models.DateField(default=get_default_booked_date)
+    booked_time = models.TimeField(default=get_default_booked_time)
+    
     def set_booked_seats(self, integer_list):
         self.booked_seats = ','.join(str(i) for i in integer_list)
 
@@ -39,4 +59,4 @@ class BookedSeat(models.Model):
         return [int(i) for i in self.booked_seats.split(',')]
 
     def __str__(self):
-        return str(self.screen)
+        return str(self.booking_id)

@@ -5,12 +5,33 @@
     
 <!-- AddThis Smart Layers END -->
 			 
-		<div class="e-payment-section" style="background-image: url({% static 'images/payment_background.jpg' %});">
+		<div class="e-payment-section">
 			<div class="col-md-8 payment-left">
 				<div class="confirm-details">
 					<h3>Confirm Your Contact Details</h3>
-					<input type="text" value="Email address" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email address';}">
-					<input type="text" value="Mobile number" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile number';}">
+					<form id="payment-form" method="post" action="{% url 'payment' %}">
+						{% csrf_token %}
+						
+						<!-- Hidden input fields for theater information -->
+						<input type="hidden" name="theatre_name" value="{{theatre}}">
+						<input type="hidden" name="screen_name" value="{{ screen }}">
+						<input type="hidden" name="movie_title" value="{{ movie_title }}">
+						<input type="hidden" name="time" value="{{ time }}">
+						<input type="hidden" name="selected_date" value="{{ selected_date }}">
+
+						<!-- Hidden input fields for seat count and total price -->
+						<input type="text" id="email-input" placeholder="Enter your Email" name="email" value="" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email address';}" required>
+						<input type="text" id="mobile-input" placeholder="Enter your Mobile" name="mobile" value="" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile number';}" required>
+						<input type="hidden" name="seat_count" value="{{ seat_count }}">
+						<input type="hidden" name="selected_seats" value="{{ selected_seats }}">
+						<input type="hidden" name="total_price" value="{{ total_price }}">
+						{% comment %} <input type="hidden" name="payment_id" value="{{ order_id }}"> {% endcomment %}
+						<input type="hidden" name="screen_id" value="{{ screen_id }}">
+						{% comment %} <button id="submit-button" class="btn btn-success">Make Payment</button> {% endcomment %}
+						
+					</form>
+					
+
 					<p><i>Your number will be used for transaction confirmations & none of those painful promotions.</i></p>
 					<div class="c-lang">
 						<input type="checkbox" id="c1" name="cc">
@@ -127,24 +148,7 @@
 								<option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option><option value="2019">2019</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option><option value="2027">2027</option><option value="2028">2028</option><option value="2029">2029</option><option value="2030">2030</option><option value="2031">2031</option><option value="2032">2032</option><option value="2033">2033</option><option value="2034">2034</option><option value="2035">2035</option><option value="2036">2036</option><option value="2037">2037</option><option value="2038">2038</option><option value="2039">2039</option><option value="2040">2040</option><option value="2041">2041</option><option value="2042">2042</option><option value="2043">2043</option><option value="2044">2044</option><option value="2045">2045</option><option value="2046">2046</option><option value="2047">2047</option><option value="2048">2048</option><option value="2049">2049</option><option value="2050">2050</option><option value="2051">2051</option><option value="2052">2052</option><option value="2053">2053</option><option value="2054">2054</option><option value="2055">2055</option><option value="2056">2056</option><option value="2057">2057</option><option value="2058">2058</option><option value="2059">2059</option><option value="2060">2060</option><option value="2061">2061</option><option value="2062">2062</option><option value="2063">2063</option><option value="2064">2064</option><option value="2065">2065</option><option value="2066">2066</option><option value="2067">2067</option><option value="2068">2068</option><option value="2069">2069</option><option value="2070">2070</option><option value="2071">2071</option><option value="2072">2072</option><option value="2073">2073</option><option value="2074">2074</option></select>
 								<input type="text" class="cvv" value="cvv" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'cvv';}">
 								</p>
-							<form id="payment-form" method="post" action="{% url 'payment' %}">
-								{% csrf_token %}
-								
-								<!-- Hidden input fields for theater information -->
-								<input type="hidden" name="theatre_name" value="{{theatre}}">
-								<input type="hidden" name="screen_name" value="{{ screen }}">
-								<input type="hidden" name="movie_title" value="{{ movie_title }}">
-								<input type="hidden" name="time" value="{{ time }}">
-								<input type="hidden" name="selected_date" value="{{ selected_date }}">
-
-								<!-- Hidden input fields for seat count and total price -->
-								<input type="hidden" name="seat_count" value="{{ seat_count }}">
-								<input type="hidden" name="selected_seats" value="{{ selected_seats }}">
-								<input type="hidden" name="total_price" value="{{ total_price }}">
-								<input type="hidden" name="screen_id" value="{{ screen_id }}">
-								<button id="submit-button" class="btn btn-success">Make Payment</button>
-								
-							</form>
+							
 														
 						</div>
 						
@@ -229,16 +233,14 @@
 		rzp1.on('payment.failed', function (response){
 				alert(response.error.code);
 				alert(response.error.description);
-				//alert(response.error.source);
-				//alert(response.error.step);
-				//alert(response.error.reason);
-				//alert(response.error.metadata.order_id);
-				//alert(response.error.metadata.payment_id);
 		});
+
 		document.getElementById('submit-button').onclick = function(e){
-			rzp1.open();
+
 			e.preventDefault();
-		}
+			rzp1.open();
+		
+		};
 		
 		</script>
 		

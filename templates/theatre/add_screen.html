@@ -2,6 +2,8 @@
 {% load static %}
 {% block admin_page %}
 
+
+
 <style>
     .form-control{
         width:140%;
@@ -61,7 +63,9 @@
                                             <label for="exampleInputEmail1" class="form-label">SHOW TIMES</label><br>
                                             {% for show in shows %}
                                                 <input type="checkbox" name="show_times" value="{{ show.id }}">
+                                                
                                                 <label>{{ show.time }}</label><br>
+                                                
                                             {% endfor %}
                                         </div>
                                     </div>

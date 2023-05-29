@@ -1,0 +1,57 @@
+{% extends 'base1.html' %}
+{% load static %}
+{% block admin_page %}
+
+<!-- Table Start -->
+<div class="container-fluid pt-4 px-2" style="min-height:80vh;margin-left:-20px">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">Booking Details</h6>
+                <div class="table-responsive">
+                    <table class="table" style="text-align:center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Booking ID</th>
+                                <th scope="col">Username</th>
+                                {% comment %} <th scope="col">Email</th> {% endcomment %}
+                                <th scope="col">Movie</th>
+                                <th scope="col">Theatre</th>
+                                <th scope="col">Screen</th>
+                                <th scope="col">Seats</th>
+                                <th scope="col">Show</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Payment ID</th>
+                                <th scope="col">Booked</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in bookings %}
+                            <tr>
+                                <th scope="row">{{booking.booking_id}}</th>
+                                <td>{{booking.user}}</td>
+                                {% comment %} <td>{{booking.email}}</td> {% endcomment %}
+                                <td>{{booking.movie}}</td>
+                                <td>{{booking.theatre}}</td>
+                                <td>{{booking.screen}}</td>
+                                <td>{{booking.booked_seats}}</td>
+                                <td>{{booking.show_time}}</td>
+                                <td>{{booking.date}}</td>
+                                <td>{{booking.payment_id}}</td>
+                                <td>{{booking.booked_date}}</td>
+                                {% comment %} <td><button type="button" class="btn btn-warning">Block</button>
+                                    <button type="button" class="btn btn-danger">Delete</button></td> {% endcomment %}
+                                
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Table End -->
+
+{% endblock %}

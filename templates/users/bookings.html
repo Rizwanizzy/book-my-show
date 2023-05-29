@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    body{
+        
+        }
+        .panel-order .row {
+            border-bottom: 1px solid #ccc;
+        }
+        .panel-order .row:last-child {
+            border: 0px;
+        }
+        .panel-order .row .col-md-1  {
+            text-align: center;
+            padding-top: 15px;
+        }
+        .panel-order .row .col-md-1 img {
+            width: 50px;
+            max-height: 50px;
+        }
+        .panel-order .row .row {
+            border-bottom: 0;
+        }
+        .panel-order .row .col-md-11 {
+            border-left: 1px solid #ccc;
+        }
+        .panel-order .row .row .col-md-12 {
+            padding-top: 7px;
+            padding-bottom: 7px; 
+        }
+        .panel-order .row .row .col-md-12:last-child {
+            font-size: 11px; 
+            color: #555;  
+            background: #efefef;
+        }
+        .panel-order .btn-group {
+            margin: 0px;
+            padding: 0px;
+        }
+        .panel-order .panel-body {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
+        .panel-order .panel-deading {
+            margin-bottom: 0;
+        }   
+</style>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+<div class="container bootdey">
+    <div class="panel panel-default panel-order" style="width:97%">
+        <div class="panel-heading">
+            <strong>Order history</strong>
+            <div class="btn-group pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">Filter history <i class="fa fa-filter"></i></button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li><a href="#">Approved orders</a></li>
+                        <li><a href="#">Pending orders</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% for booking in booking_details %}
+            <div class="panel-body">
+                <br>
+                <div class="row">
+                    <div class="col-md-2"><img src="{{booking.movie_poster.url}}" class="media-object img-thumbnail" />
+                        <span><strong>{{booking.movie}}</strong></span>
+                    </div>
+                    
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right" style="margin:60px 267px">
+                                    <span><strong>Booking Status</strong><br>
+                                    <label class="label label-danger">rejected</label>
+                                </div>
+                                <span><strong>Booking id:</strong></span> <span class="label label-info">{{booking.booking_id}}</span><br /><br>
+                                <strong>Payment id:</strong>{{booking.payment_id}} <br>
+                                <strong>Theatre Name:</strong>{{booking.screen}} <br> <strong>Seat No:</strong>{{booking.booked_seats}} <br><strong>Quantity :</strong> {{booking.count}}<br> <strong>price:</strong> ₹{{booking.price}} <br />
+                                <strong>Booking date:</strong>{{booking.date}}   <br><strong>Booking time:</strong>{{booking.show_time}}<br><br>
+                                <input type="button" style="padding:5px 8px" class="btn btn-danger btn-xs" value="Cancel">
+                            </div>
+                            <div class="col-md-12">booked on: {{booking.booked_date}} </div>
+                        </div>
+                    </div>
+                </div>
+            </div><br><hr>
+        {% endfor %}
+    </div>
+        
+    </div>
+</div>
+
+{% endblock %}

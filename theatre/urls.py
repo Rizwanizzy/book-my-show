@@ -9,6 +9,7 @@ urlpatterns = [
     path('add_screen', views.add_screen,name='add_screen'),
     path('update_screen/<int:id>', views.update_screen,name='update_screen'),
     path('delete_screen/<int:id>', views.delete_screen,name='delete_screen'),
+    path('theatre_side_booking', views.theatre_side_booking,name='theatre_side_booking'),
     path('theatre_logout/', views.theatre_logout, name='theatre_logout'),
 
 ]

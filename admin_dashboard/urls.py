@@ -11,6 +11,7 @@ urlpatterns = [
     path('delete_movie/<int:id>/', views.delete_movie,name='delete_movie'),
     path('admin_theatres', views.admin_theatres,name='admin_theatres'),
     path('admin_users', views.admin_users,name='admin_users'),
+    path('admin_side_booking', views.admin_side_booking,name='admin_side_booking'),
     path('admin_logout/', views.admin_logout, name='admin_logout'),
 
 ]

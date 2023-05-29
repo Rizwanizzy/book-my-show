@@ -250,10 +250,12 @@ def payment(request):
             tax=42.00
             grand_total=total_price+tax
             screen_id=Screen.objects.get(id=screen_id_selected)
+            screen=Screen.objects.get(id=screen_id_selected)
+            screen_name=screen.name.split(' - ')[0]
             movie=Movies.objects.get(title=movie_title)
             movie_poster=movie.image
             booked = BookedSeat(
-                screen=Screen.objects.get(id=screen_id_selected),
+                screen=screen_name,
                 user=request.user,email=email,movie=movie_title,movie_poster=movie_poster,phone=mobile,
                 theatre=theatre,booked_seats=selected_seats,count=seat_count,
                 price=grand_total,date=selected_date,show_time=time,payment_id=payment_id

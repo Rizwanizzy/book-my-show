@@ -123,6 +123,10 @@ def admin_users(request):
         return render(request,'admin_panel/admin_users.html',{'users':users})
     else:
         return redirect('home')
+    
+def admin_side_booking(request):
+    bookings=BookedSeat.objects.all()
+    return render(request,'admin_panel/admin_side_booking.html',{'bookings':bookings})
 
 
 def admin_logout(request):

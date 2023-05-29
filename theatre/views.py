@@ -129,6 +129,10 @@ def delete_screen(request,id):
         return redirect('home')
 
 
+def theatre_side_booking(request):
+    bookings=BookedSeat.objects.filter(theatre=request.user)
+    return render(request,'theatre/theatre_side_booking.html',{'bookings':bookings})
+
 def theatre_logout(request):
     if 'theatre' in request.session:
         request.session.flush()

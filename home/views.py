@@ -15,6 +15,9 @@ from django.contrib.auth.decorators import login_required
 import razorpay
 import json
 from Book_my_show.settings import KEY,SECRET
+from django.core.mail import send_mail
+from django.conf import settings
+
 # Create your views here.
 
 def home(request):
@@ -262,6 +265,24 @@ def payment(request):
             )
             booked.save()
             booked_details=BookedSeat.objects.get(payment_id=payment_id)
+            subject = 'Booking Confirmation'
+            message = f'Thank you for your payment. Your booking has been confirmed.\n\n'
+            message += f'Booking Details:\n'
+            message += f'Booking ID: {booked_details.booking_id}\n'
+            message += f'Movie: {booked_details.movie}\n'
+            message += f'Screen: {booked_details.screen}\n'
+            message += f'Theatre: {booked_details.theatre}\n'
+            message += f'Booked Seats: {booked_details.booked_seats}\n'
+            message += f'Total Seats: {booked_details.count}\n'
+            message += f'Price: {booked_details.price}\n'
+            message += f'Date: {booked_details.date}\n'
+            message += f'Time: {booked_details.show_time}\n'
+            message += f'Payment ID: {booked_details.payment_id}\n'
+            message += '\nThank you for choosing our service. Enjoy the show!'
+            email_host_user = settings.EMAIL_HOST_USER
+            from_email = email_host_user
+            recipient_list = [booked_details.email]
+            send_mail(subject,message,from_email,recipient_list,fail_silently=False)
             return render(request,'home/payment_successful.html',{'booked_details':booked_details})
         else:
             return render(request, 'home/payment.html',context)

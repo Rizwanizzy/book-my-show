@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processor.user_profile_details',
             ],
         },
     },
@@ -140,3 +141,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 KEY='rzp_test_Uzu8dsz4QYiWYJ'
 SECRET='wwWygBYTWBvC0LkzcLvVYu6G'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'mohammedrizwanizzy@gmail.com'
+EMAIL_HOST_PASSWORD = "grezfoxtvdpdrert"
+EMAIL_USE_TLS = True

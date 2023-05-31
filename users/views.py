@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from theatre.models import *
 from django.http import JsonResponse
 from theatre.models import *
@@ -6,7 +6,43 @@ from .models import *
 
 # Create your views here.
 def user_profile(request):
-    return render(request,'users/user_profile.html')
+    if 'admin' in request.session:
+        return redirect('admin_home')
+    if 'theatre' in request.session:
+        return redirect('theatre_home')
+    if 'user' in request.session:
+        user = User.objects.get(username=request.user)
+        user_profile = UserProfile.objects.get(user=user)
+        if request.method == 'POST':
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            profile_pic=request.FILES['image']
+            username = request.POST['username']
+            email = request.POST['email']
+            phone = request.POST['phone']
+            address = request.POST['address']
+            location = request.POST['location']
+
+            # Update the user details
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.save()
+
+            # Update the user profile details
+            user_profile.profile_image=profile_pic
+            user_profile.phone = phone
+            user_profile.address = address
+            user_profile.location = location
+            user_profile.save()
+
+            return redirect('user_profile')
+        else:
+            context={'user_profile': user_profile}
+            return render(request, 'users/user_profile.html', context)
+    else:
+        return redirect('home')
 
 def update_booking_cancellation_request(booking, theatre, user, reason, status):
     booking_cancellation_request, created = BookingCancellationRequest.objects.get_or_create(booking=booking)

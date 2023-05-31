@@ -53,33 +53,41 @@
 <div class="container rounded bg-white mt-5 mb-5">
     <div class="row">
         <div class="col-md-3 border-right">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><br>
-                <span class="font-weight-bold">first name  last name</span><br>
-            <span class="font-weight-bold">username</span><br>
-            <span class="text-black-50">email</span><br>
-            <span>phone no</span><br>
-            <span>address</span><br>
-            <span>location</span><br>
+            {% if user_profile.profile_image %}
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" style="border-radius:50%" src="{{user_profile.profile_image.url}}"><br>
+            {% else %}
+                <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><br>
+            {% endif %}<br>
+            <strong><span class="font-weight-bold">{{user_profile.user.first_name}}  {{user_profile.user.last_name}}</span><br></strong>
+            <span class="font-weight-bold">{{user_profile.user.username}}</span><br>
+            <span class="text-black-50">{{user_profile.user.email}}</span><br>
+            <span>{{user_profile.phone}}</span><br>
+            <span>{{user_profile.address}}</span><br>
+            <span>{{user_profile.location}}</span><br>
         </div>
         </div>
         <div class="col-md-5 border-right">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-5">
-                    <h4 class="">Profile Settings</h4>
-                </div><br><br>
-                <div class="row mt-5">
-                    <div class="col-md-6"><label class="labels">First Name</label><input type="text" class="form-control" placeholder="first name" value=""></div>
-                    <div class="col-md-6"><label class="labels">Last Name</label><input type="text" class="form-control" value="" placeholder="surname"></div>
-                </div><br>
-                <div class="row mt-3">
-                    <div class="col-md-12"><label class="labels">User Name</label><input type="text" class="form-control" placeholder="Username" value=""></div>
-                    <div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control" placeholder="enter email id" value=""></div>
-                    <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="enter phone number" value=""></div>
-                    <div class="col-md-12"><label class="labels">Address</label><input type="text" class="form-control" placeholder="enter address " value=""></div>
-                    <div class="col-md-12"><label class="labels">Location</label><input type="text" class="form-control" placeholder="enter location" value=""></div>
-                </div><br>
-                <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="button">Update Profile</button></div>
-            </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <h4 class="">Profile Settings</h4>
+                    </div><br><br>
+                    <div class="row mt-5">
+                        <div class="col-md-6"><label class="labels">First Name</label><input type="text" class="form-control" placeholder="first name" name="first_name" value="{{user_profile.user.first_name}}"></div>
+                        <div class="col-md-6"><label class="labels">Last Name</label><input type="text" class="form-control" value="{{user_profile.user.last_name}}" name="last_name" placeholder="last name"></div>
+                    </div><br>
+                    <div class="row mt-3">
+                        <div class="col-md-6"><label class="labels">Profile Picture</label><input type="file" class="form-control" name="image"></div>
+                        <div class="col-md-12"><label class="labels">User Name</label><input type="text" class="form-control" placeholder="Username" value="{{user_profile.user.username}}" name="username"></div>
+                        <div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control" placeholder="enter email id" value="{{user_profile.user.email}}" name="email"></div>
+                        <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="enter phone number" value="{{user_profile.phone}}" name="phone"></div>
+                        <div class="col-md-12"><label class="labels">Address</label><input type="text" class="form-control" placeholder="enter address " value="{{user_profile.address}}" name="address"></div>
+                        <div class="col-md-12"><label class="labels">Location</label><input type="text" class="form-control" placeholder="enter location" value="{{user_profile.location}}" name="location"></div>
+                    </div><br>
+                    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Update Profile</button></div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

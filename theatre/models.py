@@ -5,6 +5,7 @@ from home.models import *
 from django.utils import timezone
 from datetime import datetime
 import uuid
+from .models import *
 # Create your models here.
     
 class Show_Time(models.Model):
@@ -60,3 +61,4 @@ class BookedSeat(models.Model):
 
     def __str__(self):
         return str(self.booking_id)
+    

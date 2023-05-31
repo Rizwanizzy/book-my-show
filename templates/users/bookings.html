@@ -76,13 +76,30 @@
                             <div class="col-md-12">
                                 <div class="pull-right" style="margin:60px 267px">
                                     <span><strong>Booking Status</strong><br>
-                                    <label class="label label-danger">rejected</label>
+                                    <label class="label label-success">Successful</label><br><br><br>
+                                    <span id="cancel-request-{{ booking.id }}"></span>
+
+                                    {% if cancel_requests %}
+                                        {% for cancel_request in cancel_requests %}
+                                            {% if cancel_request.booking_id == booking.id %}
+                                                <span><strong>Cancel Request</strong><br>            
+                                                <label class="label label-danger">{{ cancel_request.status }}</label>
+                                            {% endif %}
+                                            {% empty %}
+                                                {% comment %} Hide the cancel button if there are no cancellation requests {% endcomment %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% comment %} Hide the cancel button if there are no cancellation requests {% endcomment %}
+                                    {% endif %}
                                 </div>
                                 <span><strong>Booking id:</strong></span> <span class="label label-info">{{booking.booking_id}}</span><br /><br>
                                 <strong>Payment id:</strong>{{booking.payment_id}} <br>
-                                <strong>Theatre Name:</strong>{{booking.screen}} <br> <strong>Seat No:</strong>{{booking.booked_seats}} <br><strong>Quantity :</strong> {{booking.count}}<br> <strong>price:</strong> ₹{{booking.price}} <br />
+                                <strong>Theatre Name:</strong>{{booking.theatre}} <br> 
+                                <strong>Screen Name:</strong>{{booking.screen}} <br> <strong>Seat No:</strong>{{booking.booked_seats}} <br><strong>Quantity :</strong> {{booking.count}}<br> <strong>price:</strong> ₹{{booking.price}} <br />
                                 <strong>Booking date:</strong>{{booking.date}}   <br><strong>Booking time:</strong>{{booking.show_time}}<br><br>
-                                <input type="button" style="padding:5px 8px" class="btn btn-danger btn-xs" value="Cancel">
+                                
+                                <button class="cancel-button btn btn-danger btn-xs" style="padding:5px 8px" data-booking-id="{{ booking.id }}">Cancel</button><br><br>
+                             
                             </div>
                             <div class="col-md-12">booked on: {{booking.booked_date}} </div>
                         </div>
@@ -94,5 +111,41 @@
         
     </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const csrfToken = "{{ csrf_token }}";
+    $(document).ready(function() {
+        $('.cancel-button').on('click', function() {
+            var bookingId = $(this).data('booking-id');
+            var reason = prompt('Reason for cancellation:');
+            if (reason) {
+                $.ajax({
+                    url: '{% url "cancel_booking" %}',
+                    method: 'POST',
+                    data: {
+                        'booking_id': bookingId,
+                        'reason': reason
+                    },
+                    beforeSend: function(xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+                    },
+                    success: function(response) {
+                        // Handle success response
+                        if (response.status === 'success') {
+                            alert('Cancellation request sent successfully!');
+                            $('#cancel-request-' + bookingId).html('<strong>Cancel Request</strong><br><label class="label label-danger">pending</label>');
+                        } else {
+                            alert('Cancellation request already sent.');
+                        }
+                    },
+                    error: function() {
+                        // Handle error response
+                        alert('An error occurred while sending the cancellation request.');
+                    }
+                });
+            }
+        });
+    });
+</script>
 {% endblock %}
+

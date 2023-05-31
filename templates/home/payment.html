@@ -20,8 +20,8 @@
 						<input type="hidden" name="selected_date" value="{{ selected_date }}">
 
 						<!-- Hidden input fields for seat count and total price -->
-						<input type="text" id="email-input" placeholder="Enter your Email" name="email" value="" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email address';}" required>
-						<input type="text" id="mobile-input" placeholder="Enter your Mobile" name="mobile" value="" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile number';}" required>
+						<input type="text" id="email-input" placeholder="Enter your Email" name="email" value="{{email}}" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email address';}" required>
+						<input type="text" id="mobile-input" placeholder="Enter your Mobile" name="mobile" value="{{mobile}}" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Mobile number';}" required>
 						<input type="hidden" name="seat_count" value="{{ seat_count }}">
 						<input type="hidden" name="selected_seats" value="{{ selected_seats }}">
 						<input type="hidden" name="total_price" value="{{ total_price }}">
@@ -204,6 +204,8 @@
 		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 		<script>
 	 	var total={{grand_total}}*100;
+		var email = document.getElementById("email-input").value;
+		var mobile = document.getElementById("mobile-input").value;
 		var options = {
 			"key": "rzp_test_Uzu8dsz4QYiWYJ", // Enter the Key ID generated from the Dashboard
 			"name": "Book My Show",
@@ -219,8 +221,8 @@
 			},
 			"prefill": {
 				"name": "name",
-				"email": "email@gmail.com",
-				"contact": "9000090000",
+				"email": email,
+				"contact": mobile,
 			},
 			"notes": {
 				"address": "Razorpay Corporate Office"

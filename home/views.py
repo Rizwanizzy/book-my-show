@@ -147,9 +147,9 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
         show_time = Show_Time.objects.get(id=show_time_id)
         selected_date = selected_date
         date = datetime.strptime(selected_date, '%Y-%m-%d')
-        # print(show_time)
         formatted_date = date.strftime('%b %d')
-        bookseats=BookedSeat.objects.filter(screen=screens,date=formatted_date,show_time=show_time)
+        print('screen:',screens.name,'theatre:',screens.theatre.user.username,'screen_id_selected:',screen_id_selected,'date:',formatted_date,'show_time:',show_time)
+        bookseats=BookedSeat.objects.filter(screen=screens.name,theatre=screens.theatre.user.username,date=formatted_date,show_time=show_time)
         booked_seats_list = []  # Create a new list to store booked seats
         for bookseat in bookseats:
             seats = bookseat.booked_seats.split(', ')  # Split the string by comma and space

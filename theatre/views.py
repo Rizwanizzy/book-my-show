@@ -7,6 +7,8 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from admin_dashboard.models import *
 from home.models import UserProfile
+from users.models import *
+from django.http import JsonResponse
 # Create your views here.
 
 def theatre_home(request): 
@@ -130,8 +132,30 @@ def delete_screen(request,id):
 
 
 def theatre_side_booking(request):
-    bookings=BookedSeat.objects.filter(theatre=request.user)
+    bookings=BookedSeat.objects.filter(theatre=request.user).order_by('-id')
     return render(request,'theatre/theatre_side_booking.html',{'bookings':bookings})
+
+def cancellation_requests(request):  
+    user=UserProfile.objects.get(user=request.user)
+    cancellation_requests = BookingCancellationRequest.objects.filter(theatre=user,status='pending').order_by('-id')
+    return render(request, 'theatre/cancellation_requests.html', {'cancellation_requests': cancellation_requests})
+
+def update_cancellation_request(request):
+    if request.method == 'POST':
+        request_id = request.POST.get('request_id')
+        status = request.POST.get('status')
+        cancellation_request = BookingCancellationRequest.objects.get(id=request_id)
+        cancellation_request.status = status
+        cancellation_request.save()
+        print('booking_id',cancellation_request.booking.id)
+        print('status:',status)
+        if status == 'accepted':
+            booking_id = cancellation_request.booking.id
+            booked_seat = BookedSeat.objects.get(id=booking_id)
+            booked_seat.delete()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error'})
+
 
 def theatre_logout(request):
     if 'theatre' in request.session:

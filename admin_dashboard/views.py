@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib.auth.decorators import login_required
 from theatre.models import *
 from home.models import *
+from users.models import *
+
 # Create your views here.
 
 
@@ -125,8 +127,12 @@ def admin_users(request):
         return redirect('home')
     
 def admin_side_booking(request):
-    bookings=BookedSeat.objects.all()
+    bookings=BookedSeat.objects.all().order_by('-id')
     return render(request,'admin_panel/admin_side_booking.html',{'bookings':bookings})
+
+def admin_cancellation_requests(request):
+    cancellation_requests = BookingCancellationRequest.objects.all().order_by('-id')
+    return render(request,'admin_panel/admin_cancellation_requests.html',{'cancellation_requests':cancellation_requests})
 
 
 def admin_logout(request):

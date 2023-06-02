@@ -13,7 +13,9 @@ from datetime import datetime, timedelta
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 import razorpay
+from django.db.models import Q
 import json
+from django.http import JsonResponse
 from Book_my_show.settings import KEY,SECRET
 from django.core.mail import send_mail
 from django.conf import settings
@@ -77,6 +79,21 @@ def home(request):
     now_playing=Movies.objects.all()[:3]
     return render(request,'home/home.html',{'movies':movies,'banners':banners,'now':now_playing})
 
+def search(request):
+    if request.method == 'POST':
+        search_query = request.POST.get('search_query')
+        mov = Movies.objects.filter(title__icontains=search_query)
+        cinemas=UserProfile.objects.filter(user__username__icontains=search_query,is_theatre=True)
+        if mov:
+            for i in mov:
+                return movie(request,i.id)
+        elif cinemas:
+            for i in cinemas:
+                return list_movies(request,i.id)
+        else:
+            return redirect('home')
+
+
 
 def movie(request,id):
     if 'admin' in request.session:
@@ -96,7 +113,8 @@ def cinemas(request):
     if 'theatre' in request.session:
         return redirect('theatre_home')
     if 'user' in request.session:
-        cinemas=UserProfile.objects.filter(is_theatre=True)
+        screens = Screen.objects.all()
+        cinemas = UserProfile.objects.filter(screen__in=screens, is_theatre=True).distinct()
         return render(request,'home/cinemas.html',{'cinemas':cinemas})
     else:
         return redirect('home')

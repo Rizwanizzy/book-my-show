@@ -12,6 +12,7 @@ urlpatterns = [
     path('theatre_side_booking', views.theatre_side_booking,name='theatre_side_booking'),
     path('cancellation_requests', views.cancellation_requests,name='cancellation_requests'),
     path('update_cancellation_request', views.update_cancellation_request,name='update_cancellation_request'),
+    path('theatre_profile', views.theatre_profile,name='theatre_profile'),
     path('theatre_logout/', views.theatre_logout, name='theatre_logout'),
 
 ]

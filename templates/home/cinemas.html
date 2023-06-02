@@ -3,28 +3,26 @@
 
 {% block content %}
 
-	<div class="cinemas-list">
+	<div class="cinemas-list" style="height: 100%;padding: 1.5rem;">
 		<h3>Cinemas List</h3>
-		{% for cinema in cinemas %}
-		<div class="col-md-6">
-			<div style="display:flex">
 			
-			
-				<div class="cinema-list-grid">
-					<div class="cinema-list-grid-img">
-						<a href="{% url 'list_movies' cinema.id %}" ><img src="{% static 'images/150x50.jpg' %}" alt="" /></a>
+				{% for cinema in cinemas %}
+				<div class="col-md-6">
+					
+					<div style="display:flex">
+						<div class="cinema-list-grid">
+							<div class="cinema-list-grid-img">
+								<a href="{% url 'list_movies' cinema.id %}" ><img src="{% static 'images/150x50.jpg' %}" alt="" /></a>
+							</div>
+							<div class="cinema-list-grid-text">
+								<a href="{% url 'list_movies' cinema.id %}">{{cinema.user.username}}</a>
+								<p>MARY ROE, MEGASYSTEMS INC, SUITE 5A-1204, 799 E DRAGRAM, TUCSON AZ 85705, USA Landmark/Nearby -V.R. Road</p>
+							</div>
+							<div class="clearfix"></div>
+						</div>
 					</div>
-					<div class="cinema-list-grid-text">
-						<a href="{% url 'list_movies' cinema.id %}">{{cinema.user.username}}</a>
-						<p>MARY ROE, MEGASYSTEMS INC, SUITE 5A-1204, 799 E DRAGRAM, TUCSON AZ 85705, USA Landmark/Nearby -V.R. Road</p>
-					</div>
-					<div class="clearfix"></div>
 				</div>
-			
-			
-			</div>
-		</div>
-		{% endfor %}
+				{% endfor %}
 		<div class="clearfix"></div>
 	</div>
 </div>

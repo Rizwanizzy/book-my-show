@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'users.context_processor.user_profile_details',
+                'theatre.context_processor.theatre_profile_details',
             ],
         },
     },

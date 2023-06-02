@@ -9,6 +9,7 @@ from admin_dashboard.models import *
 from home.models import UserProfile
 from users.models import *
 from django.http import JsonResponse
+from home.forms import *
 # Create your views here.
 
 def theatre_home(request): 
@@ -155,6 +156,45 @@ def update_cancellation_request(request):
             booked_seat.delete()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
+
+def theatre_profile(request):
+    user = User.objects.get(username=request.user)
+    user_profile = UserProfile.objects.get(user=user)
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            profile_pic=form.cleaned_data['profile_image']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            phone = form.cleaned_data['phone']
+            address = form.cleaned_data['address']
+            location = form.cleaned_data['location']
+
+            # Update the user details
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.save()
+
+            # Update the user profile details
+            user_profile.profile_image=profile_pic
+            user_profile.phone = phone
+            user_profile.address = address
+            user_profile.location = location
+            user_profile.save()
+            return redirect('theatre_profile')
+    else:
+        user_data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+            'email': user.email,
+        }
+        form = UserProfileForm(instance=user_profile,initial=user_data)
+        return render(request, 'theatre/theatre_profile.html', {'form':form,'user_profile':user_profile})
 
 
 def theatre_logout(request):

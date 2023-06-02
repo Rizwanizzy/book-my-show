@@ -3,6 +3,7 @@ from theatre.models import *
 from django.http import JsonResponse
 from theatre.models import *
 from .models import *
+from home.forms import UserProfileForm
 
 # Create your views here.
 def user_profile(request):
@@ -14,33 +15,41 @@ def user_profile(request):
         user = User.objects.get(username=request.user)
         user_profile = UserProfile.objects.get(user=user)
         if request.method == 'POST':
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
-            profile_pic=request.FILES['image']
-            username = request.POST['username']
-            email = request.POST['email']
-            phone = request.POST['phone']
-            address = request.POST['address']
-            location = request.POST['location']
+            form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+            if form.is_valid():
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
+                profile_pic=form.cleaned_data['profile_image']
+                username = form.cleaned_data['username']
+                email = form.cleaned_data['email']
+                phone = form.cleaned_data['phone']
+                address = form.cleaned_data['address']
+                location = form.cleaned_data['location']
 
-            # Update the user details
-            user.first_name = first_name
-            user.last_name = last_name
-            user.username = username
-            user.email = email
-            user.save()
+                # Update the user details
+                user.first_name = first_name
+                user.last_name = last_name
+                user.username = username
+                user.email = email
+                user.save()
 
-            # Update the user profile details
-            user_profile.profile_image=profile_pic
-            user_profile.phone = phone
-            user_profile.address = address
-            user_profile.location = location
-            user_profile.save()
+                # Update the user profile details
+                user_profile.profile_image=profile_pic
+                user_profile.phone = phone
+                user_profile.address = address
+                user_profile.location = location
+                user_profile.save()
 
-            return redirect('user_profile')
+                return redirect('user_profile')
         else:
-            context={'user_profile': user_profile}
-            return render(request, 'users/user_profile.html', context)
+            user_data = {
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'username': user.username,
+                'email': user.email,
+            }
+            form = UserProfileForm(instance=user_profile,initial=user_data)
+            return render(request, 'users/user_profile.html', {'form':form,'user_profile':user_profile})
     else:
         return redirect('home')
 

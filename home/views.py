@@ -83,7 +83,7 @@ def search(request):
     if request.method == 'POST':
         search_query = request.POST.get('search_query')
         mov = Movies.objects.filter(title__icontains=search_query)
-        cinemas=UserProfile.objects.filter(user__username__icontains=search_query,is_theatre=True)
+        cinemas=UserProfile.objects.filter(user__username__icontains=search_query,is_theatre=True,user__is_active=True)
         if mov:
             for i in mov:
                 return movie(request,i.id)
@@ -114,7 +114,7 @@ def cinemas(request):
         return redirect('theatre_home')
     if 'user' in request.session:
         screens = Screen.objects.all()
-        cinemas = UserProfile.objects.filter(screen__in=screens, is_theatre=True).distinct()
+        cinemas = UserProfile.objects.filter(user__is_active=True,screen__in=screens, is_theatre=True).distinct()
         return render(request,'home/cinemas.html',{'cinemas':cinemas})
     else:
         return redirect('home')
@@ -150,7 +150,7 @@ def theatre_choose(request,id):
         while current_date <= upto_six:
             date_range.append(current_date)
             current_date += timedelta(days=1)
-        theatre=Screen.objects.filter(movies_id=id)
+        theatre=Screen.objects.filter(movies_id=id,theatre__user__is_active=True)
         return render(request,'home/theatre_choose.html',{'mov':mov,'theatres':theatre,'date_range':date_range})
     else:
         return redirect('home')

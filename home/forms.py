@@ -21,3 +21,14 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['first_name', 'last_name','username','email', 'profile_image','phone','address','location']
+
+class AdminProfileForm(forms.ModelForm):
+    # Fields from User model
+    first_name=forms.CharField(max_length=25)
+    last_name=forms.CharField(max_length=25)
+    username=forms.CharField(max_length=25)
+    email=forms.EmailField(max_length=50)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name','username','email']

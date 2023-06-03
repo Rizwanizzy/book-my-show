@@ -11,13 +11,14 @@
                                 <table class="table" style="text-align:center">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
+                                            <th scope="col">ID</th>
                                             <th scope="col">First Name</th>
                                             <th scope="col">Last Name</th>
                                             <th scope="col">Username</th>
                                             <th scope="col">Email</th>
                                             <th scope="col">Date Joined</th>
                                             <th scope="col">Last Login</th>
+                                            <th scope="col">Status</th>
                                             <th scope="col">Actions</th>
                                             
                                         </tr>
@@ -32,8 +33,30 @@
                                             <td>{{user.email}}</td>
                                             <td>{{user.date_joined|date:"F j, Y"}}</td>
                                             <td>{{user.last_login|date:"F j, Y"}}</td>
-                                            <td><button type="button" class="btn btn-warning">Block</button>
-                                                <button type="button" class="btn btn-danger">Delete</button></td>
+                                            
+                                            <td>
+                                                {% if user.is_active %}
+                                                <span class="">Active</span>
+                                                {% else %}
+                                                <span class="">Blocked</span>
+                                                {% endif %}
+                                            </td>
+                                                
+                                            <td>
+                                                {% if user.is_active %}
+                                                    <form action="{% url 'block_user' user.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <input type="submit" class="btn btn-danger deleteBtn" title="Block" value="Block"
+                                                        onclick="return confirm('Are you sure you want to block this user?')">
+                                                    </form>
+                                                {% else %}
+                                                    <form action="{% url 'unblock_user' user.id %}" method="post">
+                                                    {% csrf_token %}
+                                                    <input type="submit" class="btn btn-info" title="Unblock" value="Unblock"
+                                                        onclick="return confirm('Are you sure you want to unblock this user?')">
+                                                    </form>
+                                                {% endif %}
+                                            </td>
                                             
                                         </tr>
                                         {% endfor %}

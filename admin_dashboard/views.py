@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from theatre.models import *
 from home.models import *
 from users.models import *
-
+from home.forms import *
 # Create your views here.
 
 
@@ -19,6 +19,33 @@ def admin_home(request):
         return render(request,'admin_panel/admin_home.html')
     else:
         return redirect('home')
+    
+def admin_profile(request):
+    user = User.objects.get(username=request.user)
+    if request.method == 'POST':
+        form = AdminProfileForm(request.POST, request.FILES,instance=user)
+        if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+
+            # Update the user details
+            user.first_name = first_name
+            user.last_name = last_name
+            user.username = username
+            user.email = email
+            user.save()
+            return redirect('admin_profile')
+    else:
+        user_data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+            'email': user.email,
+        }
+        form = AdminProfileForm(instance=user,initial=user_data)
+        return render(request, 'admin_panel/admin_profile.html', {'form':form,'user':user})
 
 
 def admin_movies(requset):
@@ -114,6 +141,22 @@ def admin_theatres(request):
         return render(request,'admin_panel/admin_theatres.html',{'theatres':theatre})
     else:
         return redirect('home')
+    
+def block_theatre(request, id):
+    if request.method == 'POST':
+        user = User.objects.get(id=id)
+        user.is_active = False
+        user.save()
+        return redirect('admin_theatres')  
+
+def unblock_theatre(request, id):
+    if request.method == 'POST':
+        user = User.objects.get(id=id)
+        user.is_active = True
+        user.save()
+        return redirect('admin_theatres')
+    else:
+        return redirect('admin_theatres')
 
 def admin_users(request):
     if 'user' in request.session:
@@ -121,10 +164,24 @@ def admin_users(request):
     if 'theatre' in request.session:
         return redirect('theatre_home')
     if 'admin' in request.session:
-        users=User.objects.filter(userprofile__is_theatre=False)
+        users=User.objects.filter(userprofile__is_theatre=False).order_by('id')
         return render(request,'admin_panel/admin_users.html',{'users':users})
     else:
         return redirect('home')
+    
+def block_user(request, id):
+    if request.method == 'POST':
+        user = User.objects.get(id=id)
+        user.is_active = False
+        user.save()
+        return redirect('admin_users')  
+
+def unblock_user(request, id):
+    if request.method == 'POST':
+        user = User.objects.get(id=id)
+        user.is_active = True
+        user.save()
+        return redirect('admin_users')
     
 def admin_side_booking(request):
     bookings=BookedSeat.objects.all().order_by('-id')

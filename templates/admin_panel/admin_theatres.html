@@ -11,12 +11,13 @@
                                 <table class="table" style="text-align:center">
                                     <thead>
                                         <tr>
-                                            <th scope="col">#</th>
+                                            <th scope="col">ID</th>
                                             <th scope="col">Name</th>
                                             <th scope="col">Location</th>
                                             <th scope="col">Address</th>
-                                            <th scope="col">Actions</th>
                                             <th scope="col">Status</th>
+                                            <th scope="col">Actions</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -26,9 +27,29 @@
                                             <td>{{theatre.user.username}}</td>
                                             <td>{{theatre.location}}</td>
                                             <td>{{theatre.address}}</td>
-                                            <td><button type="button" class="btn btn-warning">Block</button>
-                                                <button type="button" class="btn btn-danger">Delete</button></td>
-                                            <td>Status pending</td>
+                                            <td>
+                                            {% if theatre.user.is_active %}
+                                            <span class="">Active</span>
+                                            {% else %}
+                                            <span class="">Blocked</span>
+                                            {% endif %}
+                                            </td>
+                                            <td>
+                                            {% if theatre.user.is_active %}
+                                                <form action="{% url 'block_theatre' theatre.user.id %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="submit" class="btn btn-danger deleteBtn" title="Block" value="Block"
+                                                    onclick="return confirm('Are you sure you want to block this theatre?')">
+                                                </form>
+                                            {% else %}
+                                                <form action="{% url 'unblock_theatre' theatre.user.id %}" method="post">
+                                                {% csrf_token %}
+                                                <input type="submit" class="btn btn-info" title="Unblock" value="Unblock"
+                                                    onclick="return confirm('Are you sure you want to unblock this theatre?')">
+                                                </form>
+                                            {% endif %}
+                                            </td>
+                                            
                                         </tr>
                                         {% endfor %}
                                     </tbody>

@@ -52,7 +52,7 @@
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="{% static 'img1/user.jpg' %}" alt="" style="width: 40px; height: 40px;">
+                        <img class="rounded-circle" src="{% static 'images/user_profile.avif' %}" alt="" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
@@ -94,7 +94,7 @@
                             {% if theatre_user_profile.profile_image %}
                             <img class="rounded-circle me-lg-2" src="{{theatre_user_profile.profile_image.url}}" alt="" style="width: 40px; height: 40px;">
                             {% else %}
-                            <img class="rounded-circle me-lg-2" src="{% static 'images/icon1.png' %}" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle me-lg-2" src="{% static 'images/user_icon.png' %}" alt="" style="width: 40px; height: 40px;">
                             {% endif %}
                             <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                         </div>
@@ -241,11 +241,11 @@
                     <div class="nav-item dropdown">
                         {% if user.is_superuser %}
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img class="rounded-circle me-lg-2" src="{% static 'img1/user.jpg' %}" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle me-lg-2" src="{% static 'images/user_profile.avif' %}" alt="" style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex">{{user.username}}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                            <a href="#" class="dropdown-item">My Profile</a>
+                            <a href="{% url 'admin_profile' %}" class="dropdown-item">My Profile</a>
                             <a href="#" class="dropdown-item">Settings</a>
                             <a href="{% url 'admin_logout' %}" class="dropdown-item">Log Out</a>
                         </div>
@@ -254,7 +254,7 @@
                             {% if theatre_user_profile.profile_image %}
                             <img class="rounded-circle me-lg-2" src="{{theatre_user_profile.profile_image.url}}" alt="" style="width: 40px; height: 40px;">
                             {% else %}
-                            <img class="rounded-circle me-lg-2" src="{% static 'images/icon1.png' %}" alt="" style="width: 40px; height: 40px;">
+                            <img class="rounded-circle me-lg-2" src="{% static 'images/user_icon.png' %}" alt="" style="width: 40px; height: 40px;">
                             {% endif %}
                             <span class="d-none d-lg-inline-flex">{{user.username}}</span>
                         </a>

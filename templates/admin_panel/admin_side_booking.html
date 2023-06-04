@@ -23,6 +23,7 @@
                                 <th scope="col">Date</th>
                                 <th scope="col">Payment ID</th>
                                 <th scope="col">Booked</th>
+                                <th scope="col">Status</th>
                                 
                             </tr>
                         </thead>
@@ -35,11 +36,12 @@
                                 <td>{{booking.movie}}</td>
                                 <td>{{booking.theatre}}</td>
                                 <td>{{booking.screen}}</td>
-                                <td>{{booking.booked_seats}}</td>
+                                <td>{% if booking.booked_seats %}{{booking.booked_seats}} {% else %}Deselected{% endif %}</td>
                                 <td>{{booking.show_time}}</td>
                                 <td>{{booking.date}}</td>
                                 <td>{{booking.payment_id}}</td>
                                 <td>{{booking.booked_date}}</td>
+                                <td>Pending</td>
                                 {% comment %} <td><button type="button" class="btn btn-warning">Block</button>
                                     <button type="button" class="btn btn-danger">Delete</button></td> {% endcomment %}
                                 

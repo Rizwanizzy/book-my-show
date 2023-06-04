@@ -35,7 +35,7 @@
                                 {% comment %} <td>{{booking.email}}</td> {% endcomment %}
                                 <td>{{booking.movie}}</td>
                                 <td>{{booking.screen}}</td>
-                                <td>{{booking.booked_seats}}</td>
+                                <td>{% if booking.booked_seats %}{{booking.booked_seats}}{% else %}Deselected{% endif %}</td>
                                 <td>{{booking.show_time}}</td>
                                 <td>{{booking.date}}</td>
                                 <td>{{booking.payment_id}}</td>

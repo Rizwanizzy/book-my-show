@@ -26,7 +26,7 @@
                                     <p>Theatre: {{ request.booking.theatre }}</p>
                                     <p>Screen: {{ request.booking.screen }}</p>
                                     <p>On: {{ request.booking.date }} -- {{request.booking.show_time}}</p>
-                                    <p>Seats: {{ request.booking.booked_seats }}</p>
+                                    <p>Seats: {% if request.booking.booked_seats %}{{request.booking.booked_seats}} {% else %}Deselected{% endif %}</p>
                                     <p>Price: {{ request.booking.price }}/-</p>
                                 </div>
                             </div>                       

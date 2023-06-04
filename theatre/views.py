@@ -153,7 +153,8 @@ def update_cancellation_request(request):
         if status == 'accepted':
             booking_id = cancellation_request.booking.id
             booked_seat = BookedSeat.objects.get(id=booking_id)
-            booked_seat.delete()
+            booked_seat.booked_seats=""
+            booked_seat.save()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
 

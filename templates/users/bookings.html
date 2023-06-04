@@ -76,14 +76,22 @@
                             <div class="col-md-12">
                                 <div class="pull-right" style="margin:60px 267px">
                                     <span><strong>Booking Status</strong><br>
-                                    <label class="label label-success">Successful</label><br><br><br>
+                                        {% if booking.booked_seats %}
+                                            <label class="label label-success">Successful</label><br><br><br>
+                                        {% endif %}
+                                    {% for cancel_request in cancel_requests %}
+                                        {% if cancel_request.booking_id == booking.id and cancel_request.status == 'accepted' %}
+                                            <label class="label label-danger">Cancelled</label><br><br><br>
+                                        {% endif %}
+                                    {% endfor %}
+                                    
                                     <span id="cancel-request-{{ booking.id }}"></span>
 
                                     {% if cancel_requests %}
                                         {% for cancel_request in cancel_requests %}
-                                            {% if cancel_request.booking_id == booking.id %}
+                                            {% if cancel_request.booking_id == booking.id and cancel_request.status != 'accepted' %}
                                                 <span><strong>Cancel Request</strong><br>            
-                                                <label class="label label-danger">{{ cancel_request.status }}</label>
+                                                <label class="label label-danger">{{ cancel_request.status }}</label> 
                                             {% endif %}
                                             {% empty %}
                                                 {% comment %} Hide the cancel button if there are no cancellation requests {% endcomment %}
@@ -95,7 +103,7 @@
                                 <span><strong>Booking id:</strong></span> <span class="label label-info">{{booking.booking_id}}</span><br /><br>
                                 <strong>Payment id:</strong>{{booking.payment_id}} <br>
                                 <strong>Theatre Name:</strong>{{booking.theatre}} <br> 
-                                <strong>Screen Name:</strong>{{booking.screen}} <br> <strong>Seat No:</strong>{{booking.booked_seats}} <br><strong>Quantity :</strong> {{booking.count}}<br> <strong>price:</strong> ₹{{booking.price}} <br />
+                                <strong>Screen Name:</strong>{{booking.screen}} <br> <strong>Seat No:</strong>{% if booking.booked_seats %}{{booking.booked_seats}} {% else %}Deselected{% endif %}<br><strong>Quantity :</strong> {{booking.count}}<br> <strong>price:</strong> ₹{{booking.price}} <br />
                                 <strong>Booking date:</strong>{{booking.date}}   <br><strong>Booking time:</strong>{{booking.show_time}}<br><br>
                                 
                                 <button class="cancel-button btn btn-danger btn-xs" style="padding:5px 8px" data-booking-id="{{ booking.id }}">Cancel</button><br><br>

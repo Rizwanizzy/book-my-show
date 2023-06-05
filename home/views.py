@@ -19,6 +19,7 @@ from django.http import JsonResponse
 from Book_my_show.settings import KEY,SECRET
 from django.core.mail import send_mail
 from django.conf import settings
+from decimal import Decimal
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -288,6 +289,16 @@ def payment(request):
                 price=grand_total,date=selected_date,show_time=time,payment_order_id=payment_order_id,payment_id=razorpay_payment_id
             )
             booked.save()
+            
+            theatre_price=Decimal(grand_total)
+            theatre_earnings = theatre_price * Decimal('0.85')
+            admin_earnings = theatre_price * Decimal('0.15')
+            theatre_sale_report=Theatre_Sale_Report(name=theatre,booking=booked,theatre_earnings=theatre_earnings)
+            
+            theatre_sale_report.save()
+            superuser = User.objects.get(is_superuser=True)
+            admin_sale_report=Admin_Sale_Report(name=superuser,theatre_sale_report=theatre_sale_report,admin_earnings=admin_earnings)
+            admin_sale_report.save()
             booked_details=BookedSeat.objects.get(payment_order_id=payment_order_id)
             subject = 'Booking Confirmation'
             message = f'Thank you for your payment. Your booking has been confirmed.\n\n'

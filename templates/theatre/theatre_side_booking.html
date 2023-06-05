@@ -3,13 +3,19 @@
 {% block admin_page %}
 
 <!-- Table Start -->
+<style>
+    .center-align {
+        float: left;
+    }
+</style>
+
 <div class="container-fluid pt-4 px-2" style="min-height:80vh;margin-left:-20px">
     <div class="row g-4">
         <div class="col-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Booking Details</h6>
                 <div class="table-responsive">
-                    <table class="table" style="text-align:center ; width:150%">
+                    <table class="table" style="text-align:center ; width:160%">
                         <thead>
                             <tr>
                                 <th scope="col">Booking ID</th>
@@ -21,25 +27,27 @@
                                 <th scope="col">Show</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Payment ID</th>
+                                <th scope="col">Sale Amount</th>
                                 <th scope="col">Booked</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                                 
                             </tr>
                         </thead>
-                        <tbody>
-                            {% for booking in bookings %}
+                        <tbody id="sale-table-body">
+                            {% for sale_report in theatre_sale_report %}
                             <tr>
-                                <th scope="row">{{booking.booking_id}}</th>
-                                <td>{{booking.user}}</td>
+                                <th scope="row">{{sale_report.booking.booking_id}}</th>
+                                <td>{{sale_report.booking.user}}</td>
                                 {% comment %} <td>{{booking.email}}</td> {% endcomment %}
-                                <td>{{booking.movie}}</td>
-                                <td>{{booking.screen}}</td>
-                                <td>{% if booking.booked_seats %}{{booking.booked_seats}}{% else %}Deselected{% endif %}</td>
-                                <td>{{booking.show_time}}</td>
-                                <td>{{booking.date}}</td>
-                                <td>{{booking.payment_id}}</td>
-                                <td>{{booking.booked_date}}</td>
+                                <td>{{sale_report.booking.movie}}</td>
+                                <td>{{sale_report.booking.screen}}</td>
+                                <td>{% if sale_report.booking.booked_seats %}{{sale_report.booking.booked_seats}}{% else %}Deselected{% endif %}</td>
+                                <td>{{sale_report.booking.show_time}}</td>
+                                <td>{{sale_report.booking.date}}</td>
+                                <td>{{sale_report.booking.payment_id}}</td>
+                                <td>{{sale_report.theatre_earnings}}</td>
+                                <td>{{sale_report.booking.booked_date}}</td>
                                 <td>Pending</td>  
                                 <td><button type="button" class="btn btn-warning">Cancel</button></td>
                                 
@@ -52,6 +60,27 @@
         </div>
     </div>
 </div>
+<script>
+    // Calculate the total sum of sale amounts
+    var totalSum = Array.from(document.querySelectorAll("#sale-table-body td:nth-child(9)"))
+        .map(td => parseFloat(td.innerText))
+        .reduce((total, amount) => total + amount, 0);
+    
+    // Create a new row for the total sum
+    var newRow = document.createElement("tr");
+
+    newRow.classList.add("center-align");
+
+    newRow.innerHTML = `<td colspan="9"></td>
+                        <td><strong>Total Sale Amount:</strong></td>
+                        <td>${totalSum.toFixed(2)}/-</td>
+                        <td></td>
+                        <td></td>`;
+    
+    // Append the new row to the table body
+    document.getElementById("sale-table-body").appendChild(newRow);
+</script>
+
 <!-- Table End -->
 
 {% endblock %}

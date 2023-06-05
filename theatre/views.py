@@ -136,7 +136,8 @@ def delete_screen(request,id):
 
 def theatre_side_booking(request):
     bookings=BookedSeat.objects.filter(theatre=request.user).order_by('-id')
-    return render(request,'theatre/theatre_side_booking.html',{'bookings':bookings})
+    theatre_sale_report=Theatre_Sale_Report.objects.filter(name=request.user).order_by('-id')
+    return render(request,'theatre/theatre_side_booking.html',{'theatre_sale_report':theatre_sale_report})
 
 def cancellation_requests(request):  
     user=UserProfile.objects.get(user=request.user)

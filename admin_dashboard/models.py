@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 from django.utils.translation import gettext as _
+# from theatre.models import Theatre_Sale_Report
 
 # Create your models here.
 
@@ -30,3 +31,5 @@ class Movies(models.Model):
 
     def __str__(self):
         return self.title
+    
+

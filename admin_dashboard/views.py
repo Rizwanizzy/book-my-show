@@ -185,7 +185,9 @@ def unblock_user(request, id):
     
 def admin_side_booking(request):
     bookings=BookedSeat.objects.all().order_by('-id')
-    return render(request,'admin_panel/admin_side_booking.html',{'bookings':bookings})
+    admin_sale_report=Admin_Sale_Report.objects.all().order_by('-id')
+    theatres=UserProfile.objects.filter(is_theatre=True)
+    return render(request,'admin_panel/admin_side_booking.html',{'admin_sale_report':admin_sale_report,'theatres':theatres})
 
 def admin_cancellation_requests(request):
     cancellation_requests = BookingCancellationRequest.objects.all().order_by('-id')

@@ -25,7 +25,7 @@
 						<input type="hidden" name="seat_count" value="{{ seat_count }}">
 						<input type="hidden" name="selected_seats" value="{{ selected_seats }}">
 						<input type="hidden" name="total_price" value="{{ total_price }}">
-						{% comment %} <input type="hidden" name="payment_id" value="{{ order_id }}"> {% endcomment %}
+						<input type="hidden" id="razorpay_payment_id" name="razorpay_payment_id" value="">
 						<input type="hidden" name="screen_id" value="{{ screen_id }}">
 						{% comment %} <button id="submit-button" class="btn btn-success">Make Payment</button> {% endcomment %}
 						
@@ -214,15 +214,16 @@
 			"image": "https://example.com/your_logo",
 			"order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
 			"handler": function (response){
-				alert(response.razorpay_payment_id);
-				alert(response.razorpay_order_id);
-				alert(response.razorpay_signature);
+				var razorpay_payment_id = response.razorpay_payment_id;
+				alert(razorpay_payment_id);
+				document.getElementById('razorpay_payment_id').value = razorpay_payment_id;
 				document.getElementById('payment-form').submit();
+	
 			},
 			"prefill": {
 				"name": "name",
-				"email": email,
-				"contact": mobile,
+				"email": "email@gmail.com",
+				"contact": "+919000090000",
 			},
 			"notes": {
 				"address": "Razorpay Corporate Office"

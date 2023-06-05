@@ -49,7 +49,8 @@ class BookedSeat(models.Model):
     price=models.IntegerField(default=None)
     date = models.CharField(max_length=20)
     show_time = models.CharField(max_length=255, default='')
-    payment_id=models.CharField(max_length=100)
+    payment_order_id=models.CharField(max_length=100,default=None)
+    payment_id=models.CharField(max_length=100,default=None,null=True)
     booked_date = models.DateField(default=get_default_booked_date)
     booked_time = models.TimeField(default=get_default_booked_time)
     

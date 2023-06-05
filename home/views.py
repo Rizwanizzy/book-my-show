@@ -19,6 +19,8 @@ from django.http import JsonResponse
 from Book_my_show.settings import KEY,SECRET
 from django.core.mail import send_mail
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
 
@@ -226,27 +228,31 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
     
 
 client = razorpay.Client(auth=(KEY, SECRET))
+@csrf_exempt
 def payment(request):
     if 'admin' in request.session:
         return redirect('admin_home')
     if 'theatre' in request.session:
         return redirect('theatre_home')
     if 'user' in request.session:
+        payment_order_id = None
+        razorpay_payment_id = None
         DATA = {
             "amount": 5000,
             "currency": "INR",
             "receipt": "receipt#1",
             "payment_capture":'1',
             }
-        payment_order=client.order.create(data=DATA)
-        payment_order_id=payment_order['id']
+        payment_order = client.order.create(data=DATA)
+        payment_order_id = payment_order['id']
         context={
                 'api_key':KEY,
+                'razorpay_payment_id': razorpay_payment_id,
                 'order_id':payment_order_id,
                 }
         if request.method == 'POST':
+            razorpay_payment_id = request.POST.get('razorpay_payment_id')
             selected_seats_list = request.POST.get('selected_seats')
-            
             selected_seats = str(selected_seats_list)[1:-1]
             formatted_seats = ', '.join(selected_seats.replace("'", "").split(", "))
             print('selected_seats',selected_seats)
@@ -279,10 +285,10 @@ def payment(request):
                 screen=screen_name,
                 user=request.user,email=email,movie=movie_title,movie_poster=movie_poster,phone=mobile,
                 theatre=theatre,booked_seats=selected_seats,count=seat_count,
-                price=grand_total,date=selected_date,show_time=time,payment_id=payment_id
+                price=grand_total,date=selected_date,show_time=time,payment_order_id=payment_order_id,payment_id=razorpay_payment_id
             )
             booked.save()
-            booked_details=BookedSeat.objects.get(payment_id=payment_id)
+            booked_details=BookedSeat.objects.get(payment_order_id=payment_order_id)
             subject = 'Booking Confirmation'
             message = f'Thank you for your payment. Your booking has been confirmed.\n\n'
             message += f'Booking Details:\n'

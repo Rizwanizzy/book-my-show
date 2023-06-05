@@ -9,7 +9,9 @@ from admin_dashboard.models import *
 from home.models import UserProfile
 from users.models import *
 from django.http import JsonResponse
+from Book_my_show.settings import KEY,SECRET
 from home.forms import *
+import razorpay,json
 # Create your views here.
 
 def theatre_home(request): 
@@ -148,13 +150,41 @@ def update_cancellation_request(request):
         cancellation_request = BookingCancellationRequest.objects.get(id=request_id)
         cancellation_request.status = status
         cancellation_request.save()
-        print('booking_id',cancellation_request.booking.id)
-        print('status:',status)
+        print('booking_id', cancellation_request.booking.id)
+        print('status:', status)
+        
         if status == 'accepted':
             booking_id = cancellation_request.booking.id
             booked_seat = BookedSeat.objects.get(id=booking_id)
-            booked_seat.booked_seats=""
+            booked_seat.booked_seats = ""
             booked_seat.save()
+
+            try:
+                client = razorpay.Client(auth=(KEY, SECRET))
+                paymentId = cancellation_request.booking.payment_id
+                refund = client.payment.refund(paymentId, {
+                    "amount": int(cancellation_request.booking.price) * 100,
+                    "speed": "normal",
+                    "notes": {
+                        "notes_key_1": "Beam me up Scotty.",
+                        "notes_key_2": "Engage"
+                    },
+                    "receipt": f"Receipt No. {booking_id}"
+                })
+
+                if refund['status'] == 'processed':
+                    # Refund successful
+                    # Add your code here for any additional actions, such as updating the booking or notifying the user
+                    print('Refund response:', json.dumps(refund, indent=4))
+                    print('Refund processed successfully')
+                else:
+                    # Refund failed
+                    # Handle the refund failure scenario
+                    print('Refund response:', json.dumps(refund, indent=4))
+                    print('Refund failed')
+            except Exception as e:
+                print('Error occurred during refund:', str(e))
+
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})
 

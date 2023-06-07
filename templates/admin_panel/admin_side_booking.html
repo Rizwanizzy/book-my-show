@@ -41,7 +41,6 @@
                                 <th scope="col">Payment ID</th>
                                 <th scope="col">Theatre Sale</th>
                                 <th scope="col">Booked</th>
-                                <th scope="col">Status</th>
                                 
                             </tr>
                         </thead>
@@ -54,14 +53,13 @@
                                 <td>{{sale_report.theatre_sale_report.booking.movie}}</td>
                                 <td>{{sale_report.theatre_sale_report.booking.theatre}}</td>
                                 <td>{{sale_report.theatre_sale_report.booking.screen}}</td>
-                                <td>{% if sale_report.theatre_sale_report.booking.booked_seats %}{{sale_report.theatre_sale_report.booking.booked_seats}} {% else %}Deselected{% endif %}</td>
+                                <td>{% if sale_report.theatre_sale_report.booking.booked_seats %}{{sale_report.theatre_sale_report.booking.booked_seats}} {% else %}Cancelled{% endif %}</td>
                                 <td>{{sale_report.theatre_sale_report.booking.show_time}}</td>
                                 <td>{{sale_report.theatre_sale_report.booking.date}}</td>
                                 <td>{{sale_report.admin_earnings}}</td>
                                 <td>{{sale_report.theatre_sale_report.booking.payment_id}}</td>
                                 <td>{{sale_report.theatre_sale_report.theatre_earnings}}</td>
                                 <td>{{sale_report.theatre_sale_report.booking.booked_date}}</td>
-                                <td>Pending</td>
                                 {% comment %} <td><button type="button" class="btn btn-warning">Block</button>
                                     <button type="button" class="btn btn-danger">Delete</button></td> {% endcomment %}
                             </tr>

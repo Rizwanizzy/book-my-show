@@ -1,3 +1,4 @@
+import calendar
 from django.shortcuts import render,redirect
 from django.contrib import auth
 from .models import *
@@ -7,6 +8,12 @@ from theatre.models import *
 from home.models import *
 from users.models import *
 from home.forms import *
+from datetime import date, timedelta
+from django.db.models import Sum
+from django.utils import timezone
+import decimal
+from datetime import date, timedelta, datetime
+from django.db.models.functions import ExtractMonth
 # Create your views here.
 
 
@@ -16,7 +23,75 @@ def admin_home(request):
     if 'theatre' in request.session:
         return redirect('theatre_home')
     if 'admin' in request.session:
-        return render(request,'admin_panel/admin_home.html')
+        # Get today's date
+        today = date.today()
+
+        # Get the start and end dates for the current month
+        start_of_month = today.replace(day=1)
+        end_of_month = start_of_month.replace(month=start_of_month.month+1) - timedelta(days=1)
+
+        theatres=UserProfile.objects.filter(is_theatre=True)
+
+        # Create an empty dictionary to store the sale reports for each theatre
+        theatre_sale_reports = {}
+
+        # Iterate over the theatres
+        for theatre in theatres:
+            # Get the sale reports for the theatre for the current month
+            theatre_reports = Admin_Sale_Report.objects.filter(
+                theatre_sale_report__booking__booked_date__range=(start_of_month, end_of_month),
+                theatre_sale_report__booking__theatre=theatre
+            )
+
+            # Add the theatre's sale reports to the dictionary
+            theatre_sale_reports[theatre.user] = theatre_reports
+            
+        sales_data = []
+        revenue_data = []
+        days_of_week = []
+
+        for i in range(7):
+            # Get the date for the corresponding day of the week
+            day = today - timedelta(days=today.weekday()) + timedelta(days=i)
+            days_of_week.append(day.strftime('%a'))
+
+            day_total_price = sum(report.theatre_sale_report.booking.price for report in Admin_Sale_Report.objects.filter(theatre_sale_report__date_added=day))
+            day_total_revenue = sum(report.admin_earnings for report in Admin_Sale_Report.objects.filter(theatre_sale_report__date_added=day))
+            
+            today_total_price = sum(report.theatre_sale_report.booking.price for report in Admin_Sale_Report.objects.filter(theatre_sale_report__date_added=today))
+            today_total_revenue = sum(report.admin_earnings for report in Admin_Sale_Report.objects.filter(theatre_sale_report__date_added=today))
+
+            sales_data.append(day_total_price)
+            revenue_data.append(day_total_revenue)
+            
+        sale_reports = Admin_Sale_Report.objects.all()
+
+        month_total_price = Admin_Sale_Report.objects.filter(theatre_sale_report__date_added__range=(start_of_month, end_of_month)
+        ).aggregate(total_price=Sum('theatre_sale_report__booking__price'))['total_price'] or 0.00
+
+        month_total_revenue = Admin_Sale_Report.objects.filter(theatre_sale_report__date_added__range=(start_of_month, end_of_month)
+        ).aggregate(total_price=Sum('admin_earnings'))['total_price'] or 0.00
+
+        print('sales_data:',sales_data,'revenue_data:',revenue_data,'days_of_week:',days_of_week)
+
+        revenue_data = [float(value) if isinstance(value, decimal.Decimal) else value for value in revenue_data]
+        context={
+            
+            'sale_reports':sale_reports,
+            'theatre_sale_reports': theatre_sale_reports,
+            'day_total_price':day_total_price,
+            'month_total_price':month_total_price,
+            'day_total_revenue':day_total_revenue,
+            'month_total_revenue':month_total_revenue,
+            'sales_data': sales_data,
+            'revenue_data': revenue_data,
+            'days_of_week': days_of_week,
+            'today_total_price':today_total_price,
+            'today_total_revenue':today_total_revenue,
+            
+        }
+        print('today_total_price:',day_total_price,'today_total_revenue:',day_total_revenue)
+        return render(request,'admin_panel/admin_home.html',context)
     else:
         return redirect('home')
     

@@ -12,6 +12,11 @@ from django.http import JsonResponse
 from Book_my_show.settings import KEY,SECRET
 from home.forms import *
 import razorpay,json
+from decimal import Decimal
+from datetime import date, timedelta
+from django.db.models import Sum
+from django.utils import timezone
+import decimal
 # Create your views here.
 
 def theatre_home(request): 
@@ -20,7 +25,76 @@ def theatre_home(request):
     if 'admin' in request.session:
         return redirect('admin_home')
     if 'theatre' in request.session:
-        return render(request,'theatre/theatre_home.html')
+        # Get today's date
+        today = date.today()
+
+        # Get the start and end dates for the current month
+        start_of_month = today.replace(day=1)
+        end_of_month = start_of_month.replace(month=start_of_month.month+1) - timedelta(days=1)
+
+        # Calculate the total sale price for today
+        today_total_price = Theatre_Sale_Report.objects.filter(
+            name=request.user,
+            date_added__year=today.year,
+            date_added__month=today.month,
+            date_added__day=today.day
+        ).aggregate(total_price=Sum('booking__price'))['total_price'] or 0.00
+
+        today_total_revenue = Theatre_Sale_Report.objects.filter(
+            name=request.user,
+            date_added__year=today.year,
+            date_added__month=today.month,
+            date_added__day=today.day
+        ).aggregate(total_price=Sum('theatre_earnings'))['total_price'] or 0.00
+
+        # Calculate the sales and revenue data for each day of the week
+        sales_data = []
+        revenue_data = []
+        days_of_week = []
+
+        for i in range(7):
+            # Get the date for the corresponding day of the week
+            day = today - timedelta(days=today.weekday()) + timedelta(days=i)
+            days_of_week.append(day.strftime('%a'))
+
+            # Calculate the total sale price for the day
+            day_total_price = Theatre_Sale_Report.objects.filter(
+                name=request.user,
+                date_added__year=day.year,
+                date_added__month=day.month,
+                date_added__day=day.day
+            ).aggregate(total_price=Sum('booking__price'))['total_price'] or 0.00
+            sales_data.append(day_total_price)
+
+            # Calculate the total revenue for the day
+            day_total_revenue = Theatre_Sale_Report.objects.filter(
+                name=request.user,
+                date_added__year=day.year,
+                date_added__month=day.month,
+                date_added__day=day.day).aggregate(total_price=Sum('theatre_earnings'))['total_price'] or 0.00
+            revenue_data.append(day_total_revenue)
+
+        sale_reports=Theatre_Sale_Report.objects.filter(name=request.user)
+
+        # Calculate the total sale price for this month
+        month_total_price = Theatre_Sale_Report.objects.filter(name=request.user,date_added__range=(start_of_month, end_of_month)
+        ).aggregate(total_price=Sum('booking__price'))['total_price'] or 0.00
+
+        month_total_revenue = Theatre_Sale_Report.objects.filter(name=request.user,date_added__range=(start_of_month, end_of_month)
+        ).aggregate(total_price=Sum('theatre_earnings'))['total_price'] or 0.00
+        print('sales_data:',sales_data,'revenue_data:',revenue_data,'days_of_week:',days_of_week)
+        revenue_data = [float(value) if isinstance(value, decimal.Decimal) else value for value in revenue_data]
+        context={
+            'sale_reports':sale_reports,
+            'today_total_price':today_total_price,
+            'month_total_price':month_total_price,
+            'today_total_revenue':today_total_revenue,
+            'month_total_revenue':month_total_revenue,
+            'sales_data': sales_data,
+            'revenue_data': revenue_data,
+            'days_of_week': days_of_week
+        }
+        return render(request,'theatre/theatre_home.html',context)
     else:
         return redirect('home')
 
@@ -157,8 +231,24 @@ def update_cancellation_request(request):
         if status == 'accepted':
             booking_id = cancellation_request.booking.id
             booked_seat = BookedSeat.objects.get(id=booking_id)
+            # Retrieve the original booking details
+            original_theatre_price = booked_seat.price
+            original_theatre_earnings = original_theatre_price * Decimal('0.85')
+            original_admin_earnings = original_theatre_price * Decimal('0.15')
+            
+            # Update the booked seats
             booked_seat.booked_seats = ""
             booked_seat.save()
+
+             # Update theatre sale report
+            theatre_sale_report = Theatre_Sale_Report.objects.get(booking=booked_seat)
+            theatre_sale_report.theatre_earnings -= original_theatre_earnings
+            theatre_sale_report.save()
+
+            # Update admin sale report
+            admin_sale_report = Admin_Sale_Report.objects.get(theatre_sale_report=theatre_sale_report)
+            admin_sale_report.admin_earnings -= original_admin_earnings
+            admin_sale_report.save()
 
             try:
                 client = razorpay.Client(auth=(KEY, SECRET))

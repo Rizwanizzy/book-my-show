@@ -29,8 +29,6 @@
                                 <th scope="col">Payment ID</th>
                                 <th scope="col">Sale Amount</th>
                                 <th scope="col">Booked</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Actions</th>
                                 
                             </tr>
                         </thead>
@@ -42,14 +40,12 @@
                                 {% comment %} <td>{{booking.email}}</td> {% endcomment %}
                                 <td>{{sale_report.booking.movie}}</td>
                                 <td>{{sale_report.booking.screen}}</td>
-                                <td>{% if sale_report.booking.booked_seats %}{{sale_report.booking.booked_seats}}{% else %}Deselected{% endif %}</td>
+                                <td>{% if sale_report.booking.booked_seats %}{{sale_report.booking.booked_seats}}{% else %}Cancelled{% endif %}</td>
                                 <td>{{sale_report.booking.show_time}}</td>
                                 <td>{{sale_report.booking.date}}</td>
                                 <td>{{sale_report.booking.payment_id}}</td>
                                 <td>{{sale_report.theatre_earnings}}</td>
                                 <td>{{sale_report.booking.booked_date}}</td>
-                                <td>Pending</td>  
-                                <td><button type="button" class="btn btn-warning">Cancel</button></td>
                                 
                             </tr>
                             {% endfor %}
@@ -60,7 +56,9 @@
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
     // Calculate the total sum of sale amounts
     var totalSum = Array.from(document.querySelectorAll("#sale-table-body td:nth-child(9)"))
         .map(td => parseFloat(td.innerText))

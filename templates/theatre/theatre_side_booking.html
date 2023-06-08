@@ -15,6 +15,18 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Booking Details</h6>
                 <div class="table-responsive">
+                    <form action="{% url 'theatre_side_booking' %}" method="GET">
+                        <div class="date-filter" style="float:right;">
+                            <!-- Add the filter form -->
+                              <div class="mb-3" style="display:flex;align-items: center;display:flex">
+                                <label for="start_date" class="form-label">From:</label>&nbsp;
+                                <input type="date" style="height:30px;margin-right:10px" id="start_date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                                <label for="end_date" class="form-label">To:</label>&nbsp;
+                                <input type="date" style="height:30px;margin-right:10px" id="end_date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                                <button id="filter-button" type="submit"  class="btn btn-primary">Filter</button>
+                              </div>
+                        </div>
+                    </form>
                     <table class="table" style="text-align:center ; width:160%">
                         <thead>
                             <tr>
@@ -51,13 +63,31 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                </div>
+                </div><br>
+                <form method="GET" action="{% url 'theatre_generate_excel' %}">
+                    <input type="hidden" id="start_date_input" name="start_date" value="{{ start_date }}">
+                    <input type="hidden" id="end_date_input" name="end_date" value="{{ end_date }}">
+                    <button type="submit" class="btn btn-success" style="float:right">Download Excel</button>
+                </form>   <br>
             </div>
         </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+    var startDateInput = document.getElementById("start_date");
+    var endDateInput = document.getElementById("end_date");
+
+    startDateInput.addEventListener("change", function() {
+        startDateInputSecondForm.value = startDateInput.value;
+      });
+      
+      endDateInput.addEventListener("change", function() {
+        endDateInputSecondForm.value = endDateInput.value;
+      });
+    
+      
 
     // Calculate the total sum of sale amounts
     var totalSum = Array.from(document.querySelectorAll("#sale-table-body td:nth-child(9)"))

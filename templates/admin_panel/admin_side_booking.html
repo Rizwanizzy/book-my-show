@@ -3,9 +3,13 @@
 {% block admin_page %}
 
 <!-- Table Start -->
+
 <style>
     .center-align{
         float:left;
+    }
+    #total-sum-row{
+      float:left;
     }
 </style>
 <div class="container-fluid pt-4 px-2" style="min-height:80vh;margin-left:-20px">
@@ -14,17 +18,34 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">Booking Details</h6>
                 <div class="table-responsive">
-                    <div class="filter-container">
-                        <label for="theatre-filter">Filter by Theatre:</label>
-                        <select id="theatre-filter">
-                          <option value="">All Theatres</option>
-                          {% for theatre in theatres  %}
-                          <option value="{{theatre.user}}">{{theatre.user.username}}</option>
-                          {% endfor %}
-                          <!-- Add more options for each theatre -->
-                        </select>
+                    <form method="GET" action="{% url 'admin_side_booking' %}">
+                      <div class="" style="display:flex;justify-content: space-between;">
+                        <div class="filter-container">
+                            <label for="theatre-filter">Filter by Theatre:</label>
+                            <select id="theatre-filter" name="theatre_filter">
+                              <option value="">All Theatres</option>
+                              {% for theatre in theatres %}
+                                <option value="{{ theatre.user }}"
+                                  {% if theatre.user == request.GET.theatre_filter %}
+                                    selected="selected"
+                                  {% endif %}
+                                >{{ theatre.user.username }}</option>
+                              {% endfor %}
+                              <!-- Add more options for each theatre -->
+                            </select>                            
+                        </div>
+                        <div class="date-filter" style="float:right;">
+                            <!-- Add the filter form -->
+                              <div class="mb-3" style="display:flex;align-items: center;display:flex">
+                                <label for="start_date" class="form-label">From:</label>&nbsp;
+                                <input type="date" style="height:30px;margin-right:10px" id="start_date" name="start_date" class="form-control" value="{{ request.GET.start_date }}">
+                                <label for="end_date" class="form-label">To:</label>&nbsp;
+                                <input type="date" style="height:30px;margin-right:10px" id="end_date" name="end_date" class="form-control" value="{{ request.GET.end_date }}">
+                                <button id="filter-button" type="submit"  class="btn btn-primary">Filter</button>
+                              </div>
+                        </div>
                       </div>
-                      
+                    </form>
                     <table class="table" style="text-align:center ; width:185%">
                         <thead>
                             <tr>
@@ -43,115 +64,174 @@
                                 <th scope="col">Booked</th>
                                 
                             </tr>
-                        </thead>
-                        <tbody id="sale-table-body">
-                            {% for sale_report in admin_sale_report %}
-                            <tr data-theatre="{{ sale_report.theatre_sale_report.booking.theatre }}">
-                                <th scope="row">{{sale_report.theatre_sale_report.booking.booking_id}}</th>
-                                <td>{{sale_report.theatre_sale_report.booking.user}}</td>
-                                {% comment %} <td>{{booking.email}}</td> {% endcomment %}
-                                <td>{{sale_report.theatre_sale_report.booking.movie}}</td>
-                                <td>{{sale_report.theatre_sale_report.booking.theatre}}</td>
-                                <td>{{sale_report.theatre_sale_report.booking.screen}}</td>
-                                <td>{% if sale_report.theatre_sale_report.booking.booked_seats %}{{sale_report.theatre_sale_report.booking.booked_seats}} {% else %}Cancelled{% endif %}</td>
-                                <td>{{sale_report.theatre_sale_report.booking.show_time}}</td>
-                                <td>{{sale_report.theatre_sale_report.booking.date}}</td>
-                                <td>{{sale_report.admin_earnings}}</td>
-                                <td>{{sale_report.theatre_sale_report.booking.payment_id}}</td>
-                                <td>{{sale_report.theatre_sale_report.theatre_earnings}}</td>
-                                <td>{{sale_report.theatre_sale_report.booking.booked_date}}</td>
-                                {% comment %} <td><button type="button" class="btn btn-warning">Block</button>
-                                    <button type="button" class="btn btn-danger">Delete</button></td> {% endcomment %}
+                            {% if start_date and end_date %}
+                            <tr>
+                                <th colspan="12" style="">
+                                    Showing results from {{ start_date }} to {{ end_date }}
+                                </th>
                             </tr>
-                            {% endfor %}
-                        </tbody>
+                            {% endif %}
+                        </thead>
+                        <div id="sale-details">
+                            <tbody id="sale-table-body">
+                                {% for sale_report in admin_sale_report %}
+                                  {% with booking=sale_report.theatre_sale_report.booking %}
+                                      {% if not start_date or not end_date or booking.booked_date >= start_date and booking.booked_date <= end_date %}
+                                          <tr data-theatre="{{ booking.theatre }}">
+                                            <th scope="row">{{sale_report.theatre_sale_report.booking.booking_id}}</th>
+                                            <td>{{sale_report.theatre_sale_report.booking.user}}</td>
+                                            {% comment %} <td>{{booking.email}}</td> {% endcomment %}
+                                            <td>{{sale_report.theatre_sale_report.booking.movie}}</td>
+                                            <td>{{sale_report.theatre_sale_report.booking.theatre}}</td>
+                                            <td>{{sale_report.theatre_sale_report.booking.screen}}</td>
+                                            <td>{% if sale_report.theatre_sale_report.booking.booked_seats %}{{sale_report.theatre_sale_report.booking.booked_seats}} {% else %}Cancelled{% endif %}</td>
+                                            <td>{{sale_report.theatre_sale_report.booking.show_time}}</td>
+                                            <td>{{sale_report.theatre_sale_report.booking.date}}</td>
+                                            <td>{{sale_report.admin_earnings}}</td>
+                                            <td>{{sale_report.theatre_sale_report.booking.payment_id}}</td>
+                                            <td>{{sale_report.theatre_sale_report.theatre_earnings}}</td>
+                                            <td class="date-cell">{{ sale_report.theatre_sale_report.booking.booked_date|date:"Y-m-d" }}</td>
+                                            {% comment %} <td><button type="button" class="btn btn-warning">Block</button>
+                                                <button type="button" class="btn btn-danger">Delete</button></td> {% endcomment %}
+                                        </tr>
+                                      {% endif %}
+                                  {% endwith %}
+                                {% endfor %}
+                            </tbody>
+                          </div>
                     </table>
-                </div>
+                  
+                </div><br>
+                <form method="GET" action="{% url 'generate_excel' %}">
+                  <input type="hidden" id="selected_theatre_input" name="theatre_filter" value="{{ selected_theatre }}">
+                  <input type="hidden" id="start_date_input" name="start_date" value="{{ start_date }}">
+                  <input type="hidden" id="end_date_input" name="end_date" value="{{ end_date }}">
+                  <button type="submit" class="btn btn-success" style="float:right">Download Excel</button>
+                </form>                           
             </div>
         </div>
     </div>
 </div>
 <!-- Table End -->
-
 <script>
-    // Calculate and update the total sum of admin sale and theatre sale
-    function updateTotalSum() {
-      // Recalculate the total sum for the displayed rows
-      var adminSaleSum = 0;
-      var theatreSaleSum = 0;
+
+// Get the input fields from the first form
+var theatreFilterInput = document.getElementById("theatre-filter");
+var startDateInput = document.getElementById("start_date");
+var endDateInput = document.getElementById("end_date");
+
+// Get the input fields from the second form
+var selectedTheatreInput = document.getElementById("selected_theatre_input");
+var startDateInputSecondForm = document.getElementById("start_date_input");
+var endDateInputSecondForm = document.getElementById("end_date_input");
+
+// Update the hidden input fields in the second form when the values in the first form change
+theatreFilterInput.addEventListener("change", function() {
+  selectedTheatreInput.value = theatreFilterInput.value;
+});
+
+startDateInput.addEventListener("change", function() {
+  startDateInputSecondForm.value = startDateInput.value;
+});
+
+endDateInput.addEventListener("change", function() {
+  endDateInputSecondForm.value = endDateInput.value;
+});
+
+
+// Get the selected theatre value
+var selectedTheatre = document.getElementById('theatre-filter').value;
+
+// Add an event listener to the filter button
+document.getElementById('filter-button').addEventListener('click', function(event) {
+  // Get the selected theatre value
+  var selectedTheatre = document.getElementById('theatre-filter').value;
+
+  // Get the start date and end date values
+  var startDate = document.getElementById('start_date').value;
+  var endDate = document.getElementById('end_date').value;
+
+  // Update the selected attribute of the theatre options based on the selectedTheatre value
+  var theatreOptions = document.querySelectorAll('#theatre-filter option');
+  for (var i = 0; i < theatreOptions.length; i++) {
+    if (theatreOptions[i].value === selectedTheatre) {
+      theatreOptions[i].selected = true;
+    } else {
+      theatreOptions[i].selected = false;
+    }
+  }
+
+  // Append the form values to the form action URL
+  var form = document.getElementById('filter-form');
+  form.action = form.action + '?theatre_filter=' + encodeURIComponent(selectedTheatre) + '&start_date=' + encodeURIComponent(startDate) + '&end_date=' + encodeURIComponent(endDate);
+});
+
+// After filtering the table, set the selected value of the theatre filter
+document.getElementById('theatre-filter').value = selectedTheatre;
+
+    document.getElementById('start_date').addEventListener('change', updateTotalSum);
+    document.getElementById('end_date').addEventListener('change', updateTotalSum);
+
+   // Define the function to update the total sum of admin sale and theatre sale
+   function updateTotalSum() {
+
+    // Get the selected theatre value
+    var selectedTheatre = document.getElementById('theatre-filter').value;
   
-      // Get the visible rows based on the filter
-      var rows = document.querySelectorAll("#sale-table-body tr");
-      rows.forEach(function(row) {
-        if (row.style.display !== "none") {
-          var adminSale = parseFloat(row.querySelector("td:nth-child(9)").innerText);
-          var theatreSale = parseFloat(row.querySelector("td:nth-child(11)").innerText);
-          adminSaleSum += adminSale;
-          theatreSaleSum += theatreSale;
-        }
-      });
+    // Get all rows in the table
+    var rows = document.querySelectorAll("#sale-table-body tr");
   
-      // Remove the existing total sum row, if present
-      var existingTotalSumRow = document.getElementById("total-sum-row");
-      if (existingTotalSumRow) {
-        existingTotalSumRow.remove();
+    var adminSaleSum = 0;
+    var theatreSaleSum = 0;
+  
+    // Iterate over rows
+    for (var i = 0; i < rows.length; i++) {
+      var row = rows[i];
+  
+      // Get the theatre value from the corresponding cell
+      var theatreCell = row.querySelector("td:nth-child(2)");
+      var theatre = theatreCell.innerText.trim();
+  
+      // Get the admin sale and theatre sale values from the corresponding cells
+      var adminSaleCell = row.querySelector("td:nth-child(9)");
+      var theatreSaleCell = row.querySelector("td:nth-child(11)");
+  
+      // Parse the values as floats
+      var adminSale = parseFloat(adminSaleCell.textContent) || 0;
+      var theatreSale = parseFloat(theatreSaleCell.textContent) || 0;
+  
+      // Check if the row matches the selected theatre or no theatre is selected
+      if (theatre === selectedTheatre || selectedTheatre === "") {
+        // Accumulate the sums for matching rows
+        adminSaleSum += adminSale;
+        theatreSaleSum += theatreSale;
       }
+    }
   
-      // Create a new row for the total sums
-      var totalSumRow = document.createElement("tr");
+    console.log("Admin Sale Sum:", adminSaleSum);
+    console.log("Theatre Sale Sum:", theatreSaleSum);
+  
+    // Update the total sum row
+    var totalSumRow = document.getElementById("total-sum-row");
+  
+    if (!totalSumRow) {
+      // Create a new row for the total sums if it doesn't exist
+      totalSumRow = document.createElement("tr");
       totalSumRow.id = "total-sum-row";
-      totalSumRow.classList.add("center-align");
-      totalSumRow.innerHTML = `<td colspan="9"></td>
-                               <td><strong>Total Admin Sale:</strong> ${adminSaleSum.toFixed(2)}/-</td>
+      totalSumRow.innerHTML = `<td colspan="7"></td>
+                               <td><strong>Total Admin Sale:</strong> <span id="admin-sale-sum"></span></td>
                                <td></td>
-                               <td><strong>Total Theatre Sale:</strong> ${theatreSaleSum.toFixed(2)}/-</td>`;
+                               <td><strong>Total Theatre Sale:</strong> <span id="theatre-sale-sum"></span></td>`;
   
-      // Append the new row to the table body
       document.getElementById("sale-table-body").appendChild(totalSumRow);
     }
   
-    // Handle filter change event
-    document.getElementById("theatre-filter").addEventListener("change", function() {
-      var selectedTheatre = this.value;
-  
-      // Hide all rows initially
-      var rows = document.querySelectorAll("#sale-table-body tr");
-      rows.forEach(function(row) {
-        row.style.display = "none";
-      });
-  
-      // Show rows matching the selected theatre or show all if no theatre is selected
-      if (selectedTheatre) {
-        var filteredRows = document.querySelectorAll("#sale-table-body tr[data-theatre='" + selectedTheatre + "']");
-        filteredRows.forEach(function(row) {
-          row.style.display = "";
-        });
-      } else {
-        rows.forEach(function(row) {
-          row.style.display = "";
-        });
-      }
-  
-      // Update the total sum
-      updateTotalSum();
-    });
-  
-    // Reset the filter and update the total sum when selecting "All Theatres"
-    document.getElementById("theatre-filter").addEventListener("change", function() {
-        var selectedTheatre = this.value;
-        if (selectedTheatre === "") {
-        // Show all rows
-        var rows = document.querySelectorAll("#sale-table-body tr");
-        rows.forEach(function(row) {
-            row.style.display = "";
-        });
-    
-        // Update the total sum
-        updateTotalSum();
-        }
-    });
-    // Calculate and update the total sum initially
-    updateTotalSum();
+    // Update the admin sale and theatre sale values in the total sum row
+    totalSumRow.querySelector("#admin-sale-sum").innerText = adminSaleSum.toFixed(2) + '/-';
+    totalSumRow.querySelector("#theatre-sale-sum").innerText = theatreSaleSum.toFixed(2) + '/-';
+  }
+  updateTotalSum();
+ 
   </script>
           
 

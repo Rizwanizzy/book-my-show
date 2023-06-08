@@ -11,8 +11,13 @@ from home.forms import *
 from datetime import date, timedelta
 from django.db.models import Sum
 from django.utils import timezone
-import decimal
+import decimal,uuid
 from datetime import date, timedelta, datetime
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font
+import openpyxl
 from django.db.models.functions import ExtractMonth
 # Create your views here.
 
@@ -94,6 +99,7 @@ def admin_home(request):
         return render(request,'admin_panel/admin_home.html',context)
     else:
         return redirect('home')
+
     
 def admin_profile(request):
     user = User.objects.get(username=request.user)
@@ -262,7 +268,131 @@ def admin_side_booking(request):
     bookings=BookedSeat.objects.all().order_by('-id')
     admin_sale_report=Admin_Sale_Report.objects.all().order_by('-id')
     theatres=UserProfile.objects.filter(is_theatre=True)
-    return render(request,'admin_panel/admin_side_booking.html',{'admin_sale_report':admin_sale_report,'theatres':theatres})
+
+    if request.method=='GET':
+        selected_theatre = request.GET.get('theatre_filter')
+        # Filter by date range
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+    
+        print('selected_theatre',selected_theatre,'start_date',start_date,'end_date',end_date)
+        if start_date and end_date:
+            # Convert the start_date and end_date strings to datetime objects
+            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+        else:
+            # Set default values for start_date and end_date
+            today = datetime.now().date()
+            start_date = today - timedelta(days=7)  # Default start_date is 7 days ago
+            end_date = today 
+
+        if selected_theatre:
+            admin_sale_report = admin_sale_report.filter(theatre_sale_report__booking__theatre=selected_theatre)
+        if start_date and end_date:
+            admin_sale_report = admin_sale_report.filter(theatre_sale_report__booking__booked_date__gte=start_date, theatre_sale_report__booking__booked_date__lte=end_date)
+
+    context={
+        'admin_sale_report':admin_sale_report,
+        'theatres':theatres,
+        'selected_theatre':selected_theatre,
+        'start_date': start_date,
+        'end_date': end_date,
+        }
+    print('start_date',start_date,'end_date',end_date)
+    return render(request,'admin_panel/admin_side_booking.html',context)
+
+def generate_excel(request):
+    # Retrieve the filter parameters from the request
+    if request.method=='GET':
+        selected_theatre = request.GET.get('theatre_filter')
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        print('selected_theatre:',selected_theatre,'start_date:',start_date,'end_date',end_date)
+
+        # Apply the filters to the queryset
+        admin_sale_report = Admin_Sale_Report.objects.all()
+
+        if selected_theatre:
+            admin_sale_report = admin_sale_report.filter(theatre_sale_report__booking__theatre=selected_theatre)
+
+        if start_date and end_date:
+            # Convert the start_date and end_date strings to datetime objects
+            start_date = datetime.strptime(start_date, '%B %d, %Y').date()
+            end_date = datetime.strptime(end_date, '%B %d, %Y').date()
+
+            admin_sale_report = admin_sale_report.filter(theatre_sale_report__booking__booked_date__range=[start_date, end_date])
+
+        # Create a new Excel workbook
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+
+        # Write headers
+        headers = [
+            "Booking ID",
+            "Username",
+            "Movie",
+            "Theatre",
+            "Screen",
+            "Seats",
+            "Show",
+            "Date",
+            "Admin Sale",
+            "Payment ID",
+            "Theatre Sale",
+            "Booked"
+        ]
+        for col_num, header in enumerate(headers, 1):
+            column_letter = get_column_letter(col_num)
+            sheet[column_letter + '1'] = header
+            sheet[column_letter + '1'].font = Font(bold=True)
+
+        # Write data rows
+        row_num = 2
+        for sale_report in admin_sale_report:
+            booking = sale_report.theatre_sale_report.booking
+
+            row = [
+                str(booking.booking_id),
+                booking.user,
+                booking.movie,
+                booking.theatre,
+                booking.screen,
+                booking.booked_seats if booking.booked_seats else "Cancelled",
+                booking.show_time,
+                booking.date,
+                sale_report.admin_earnings,
+                booking.payment_id,
+                sale_report.theatre_sale_report.theatre_earnings,
+                f'{booking.booked_date.strftime("%Y-%m-%d")}',
+            ]
+
+            for col_num, cell_value in enumerate(row, 1):
+                column_letter = get_column_letter(col_num)
+                sheet[column_letter + str(row_num)] = cell_value
+
+            row_num += 1
+
+        # Add total sums row
+        total_sum_row = [
+            '', '', '', '', '', '', '', '',
+            'Total Admin Sale: ' + str(admin_sale_report.aggregate(admin_sale_sum=Sum('admin_earnings'))["admin_sale_sum"]) + '/-',
+            '', '',
+            'Total Theatre Sale:' + str(admin_sale_report.aggregate(theatre_sale_sum=Sum('theatre_sale_report__theatre_earnings'))["theatre_sale_sum"])+'/-'
+        ]
+
+        for col_num, cell_value in enumerate(total_sum_row, 1):
+            column_letter = get_column_letter(col_num)
+            sheet[column_letter + str(row_num)] = cell_value
+            sheet[column_letter + str(row_num)].font = Font(bold=True)
+
+        # Save the workbook and return it as a response
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=admin_sale_report.xlsx'
+        workbook.save(response)
+
+        return response
+
+
 
 def admin_cancellation_requests(request):
     cancellation_requests = BookingCancellationRequest.objects.all().order_by('-id')

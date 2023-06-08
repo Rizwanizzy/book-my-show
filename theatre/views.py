@@ -13,10 +13,15 @@ from Book_my_show.settings import KEY,SECRET
 from home.forms import *
 import razorpay,json
 from decimal import Decimal
-from datetime import date, timedelta
+from datetime import date, timedelta,datetime
 from django.db.models import Sum
 from django.utils import timezone
 import decimal
+from django.http import HttpResponse
+from openpyxl import Workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font
+import openpyxl
 # Create your views here.
 
 def theatre_home(request): 
@@ -211,7 +216,112 @@ def delete_screen(request,id):
 def theatre_side_booking(request):
     bookings=BookedSeat.objects.filter(theatre=request.user).order_by('-id')
     theatre_sale_report=Theatre_Sale_Report.objects.filter(name=request.user).order_by('-id')
-    return render(request,'theatre/theatre_side_booking.html',{'theatre_sale_report':theatre_sale_report})
+
+    if request.method=='GET':
+        # Filter by date range
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+
+        print('start_date',start_date,'end_date',end_date)
+        if start_date and end_date:
+            # Convert the start_date and end_date strings to datetime objects
+            start_date = date.fromisoformat(start_date)
+            end_date = date.fromisoformat(end_date)
+        else:
+            # Set default values for start_date and end_date
+            today = date.today()
+            start_date = today - timedelta(days=7)  # Default start_date is 7 days ago
+            end_date = today
+        if start_date and end_date:
+            theatre_sale_report = Theatre_Sale_Report.objects.filter(name=request.user,booking__booked_date__gte=start_date, booking__booked_date__lte=end_date).order_by('-id')
+    context={
+        'theatre_sale_report':theatre_sale_report,
+        'start_date': start_date,
+        'end_date': end_date,
+        }
+    print('start_date',start_date,'end_date',end_date)
+    return render(request,'theatre/theatre_side_booking.html',context)
+
+def theatre_generate_excel(request):
+    if request.method=='GET':
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        print('start_date:',start_date,'end_date',end_date)
+
+        # Apply the filters to the queryset
+        theatre_sale_report = Theatre_Sale_Report.objects.filter(name=request.user)
+
+        if start_date and end_date:
+            # Convert the start_date and end_date strings to datetime objects
+            start_date = datetime.strptime(start_date, '%B %d, %Y').date()
+            end_date = datetime.strptime(end_date, '%B %d, %Y').date()
+
+            theatre_sale_report = theatre_sale_report.filter(booking__booked_date__range=[start_date, end_date])
+
+        # Create a new Excel workbook
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+
+        # Write headers
+        headers = [
+            "Booking ID",
+            "Username",
+            "Movie",
+            "Screen",
+            "Seats",
+            "Show",
+            "Date",
+            "Admin Sale",
+            "Payment ID",
+            "Theatre Sale",
+            "Booked"
+        ]
+        for col_num, header in enumerate(headers, 1):
+            column_letter = get_column_letter(col_num)
+            sheet[column_letter + '1'] = header
+            sheet[column_letter + '1'].font = Font(bold=True)
+
+        # Write data rows
+        row_num = 2
+        for sale_report in theatre_sale_report:
+            booking = sale_report.booking
+
+            row = [
+                str(booking.booking_id),
+                booking.user,
+                booking.movie,
+                booking.screen,
+                booking.booked_seats if booking.booked_seats else "Cancelled",
+                booking.show_time,
+                booking.date,
+                sale_report.theatre_earnings,
+                booking.payment_id,
+                sale_report.theatre_earnings,
+                f'{booking.booked_date.strftime("%Y-%m-%d")}',
+            ]
+
+            for col_num, cell_value in enumerate(row, 1):
+                column_letter = get_column_letter(col_num)
+                sheet[column_letter + str(row_num)] = cell_value
+
+            row_num += 1
+
+        # Add total sums row
+        total_sum_row = [
+            'Total Theatre Sale:' + str(theatre_sale_report.aggregate(theatre_sale_sum=Sum('theatre_earnings'))["theatre_sale_sum"])+'/-'
+        ]
+
+        for col_num, cell_value in enumerate(total_sum_row, 1):
+            column_letter = get_column_letter(col_num)
+            sheet[column_letter + str(row_num)] = cell_value
+            sheet[column_letter + str(row_num)].font = Font(bold=True)
+
+        # Save the workbook and return it as a response
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=admin_sale_report.xlsx'
+        workbook.save(response)
+
+        return response
 
 def cancellation_requests(request):  
     user=UserProfile.objects.get(user=request.user)

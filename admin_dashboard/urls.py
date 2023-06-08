@@ -17,6 +17,7 @@ urlpatterns = [
     path('block_theatre/<int:id>/', views.block_theatre,name='block_theatre'),
     path('unblock_theatre/<int:id>/', views.unblock_theatre,name='unblock_theatre'),
     path('admin_side_booking', views.admin_side_booking,name='admin_side_booking'),
+    path('generate_excel/', views.generate_excel, name='generate_excel'),
     path('admin_cancellation_requests',views.admin_cancellation_requests,name='admin_cancellation_requests'),
     path('admin_logout/', views.admin_logout, name='admin_logout'),
 

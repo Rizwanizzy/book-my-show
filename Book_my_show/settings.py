@@ -37,9 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'admin_dashboard',
+    'admin_dashboard','chatapp',
     'home','theatre','users',
     'django.contrib.humanize',
+    'room','channels',
 ]
 
 MIDDLEWARE = [
@@ -68,12 +69,20 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'users.context_processor.user_profile_details',
                 'theatre.context_processor.theatre_profile_details',
+                'admin_dashboard.context_processor.admin_side_messages',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'Book_my_show.wsgi.application'
+ASGI_APPLICATIOn = 'Book_my_show.asgi.application'
+
+CHANNEL_LAYERS={
+    'default':{
+        'BACKEND':'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 
 # Database

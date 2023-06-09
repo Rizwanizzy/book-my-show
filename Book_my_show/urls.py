@@ -24,4 +24,7 @@ urlpatterns = [
     path('users/',include('users.urls')),
     path('admin_dashboard/',include('admin_dashboard.urls')),
     path('theatre/',include('theatre.urls')),
+    path('chatapp/',include('chatapp.urls')),
+    path('room/',include('room.urls')),
+    
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

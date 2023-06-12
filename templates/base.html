@@ -361,7 +361,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     </li>
 					<li class=""><a href="{% url 'cinemas' %}" >Cinemas</a>
 					</li>
-					<li class="dropdown w3_megamenu-fw"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Plays<b class="caret"></b></a>
+					{% comment %} <li class="dropdown w3_megamenu-fw"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Plays<b class="caret"></b></a>
                         <ul class="dropdown-menu half3">
                             <li class="w3_megamenu-content withoutdesc">
                                 <div class="row">
@@ -410,8 +410,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                                 </div>
                             </li>
                         </ul>
-					</li>
-					<li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Sports<b class="caret"></b></a>
+					</li> {% endcomment %}
+					{% comment %} <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Sports<b class="caret"></b></a>
 							 <ul class="dropdown-menu half3">
                             <li class="w3_megamenu-content withoutdesc">
                                 <div class="row">
@@ -453,22 +453,22 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                             </li>
                         </ul>
                        <!-- end dropdown-menu -->
-					</li>
+					</li> {% endcomment %}
 					<li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Pages<b class="caret"></b></a>
 							 <ul class="dropdown-menu" role="menu">
 
-	<li><a href="about.html">About</a></li>
-	<li><a href="blog.html">Blog</a></li>
-	<li><a href="404.html">404</a></li>
-	<li><a href="contact.html">Contact us</a></li>
-	<li><a href="faq.html">FAQs</a></li>
-	<li><a href="about.html">Current Openings</a></li>
-                            <li class="dropdown-submenu">
-                                <a href="#">News</a>
-								<ul class="dropdown-menu">
-																	<li><a href="press.html">Press Release</a></li>
-	<li><a href="public-relations.html">Public Relations</a></li>
-	<li><a href="press.html">Press Coverage</a></li>
+							<li><a href="about.html">About</a></li>
+							<li><a href="blog.html">Blog</a></li>
+							<li><a href="404.html">404</a></li>
+							<li><a href="contact.html">Contact us</a></li>
+							<li><a href="faq.html">FAQs</a></li>
+							<li><a href="about.html">Current Openings</a></li>
+													<li class="dropdown-submenu">
+														<a href="#">News</a>
+														<ul class="dropdown-menu">
+																							<li><a href="press.html">Press Release</a></li>
+							<li><a href="public-relations.html">Public Relations</a></li>
+							<li><a href="press.html">Press Coverage</a></li>
 								</ul><!-- end dropdown-menu -->
                             </li><!-- end dropdown-submenu -->
                         </ul>

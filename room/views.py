@@ -28,7 +28,7 @@ def admin_chat_view(request, id):
         chat_message.save()
         return redirect('admin_chat', id=id)
 
-    chat_messages = ChatMessage.objects.filter(sender=admin, recipient=user) | ChatMessage.objects.filter(sender=user, recipient=admin)
+    chat_messages = ChatMessage.objects.filter(sender=admin, recipient=user)| ChatMessage.objects.filter(sender=user, recipient=admin)
     return render(request, "room/admin_chat.html", {'chat_messages': chat_messages, 'user_id': user})
 
 

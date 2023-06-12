@@ -185,6 +185,7 @@
 				<p><span>Seat Info:</span> {% for seat in selected_seats %} {{seat}} , {% endfor %}</p>
 				<p><span>Qty:</span> {{seat_count}}</p>
 				<h4><span>Total :</span>Rs. {{total_price}}</h4>
+
 				<p>+ (Internet handling fees : Rs. 42.00 (incl. of Service Tax))</p>
 				<h5>Grand Total : Rs. {{ grand_total }}</h5>
 
@@ -206,8 +207,9 @@
 	 	var total={{grand_total}}*100;
 		var email = document.getElementById("email-input").value;
 		var mobile = document.getElementById("mobile-input").value;
+		var key="{{api_key}}";
 		var options = {
-			"key": "rzp_test_Uzu8dsz4QYiWYJ", // Enter the Key ID generated from the Dashboard
+			"key": key, // Enter the Key ID generated from the Dashboard
 			"name": "Book My Show",
 			"amount":total,
 			"description": "Thank you for your booking",
@@ -215,7 +217,6 @@
 			"order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
 			"handler": function (response){
 				var razorpay_payment_id = response.razorpay_payment_id;
-				alert(razorpay_payment_id);
 				document.getElementById('razorpay_payment_id').value = razorpay_payment_id;
 				document.getElementById('payment-form').submit();
 	

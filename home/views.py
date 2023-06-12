@@ -16,11 +16,15 @@ import razorpay
 from django.db.models import Q
 import json
 from django.http import JsonResponse
-from Book_my_show.settings import KEY,SECRET
+from Book_my_show.settings import KEY,SECRET,account_sid,auth_token,whatsapp_number
 from django.core.mail import send_mail
 from django.conf import settings
 from decimal import Decimal
 from django.views.decorators.csrf import csrf_exempt
+from twilio.rest import Client
+from twilio.base.exceptions import TwilioRestException
+
+
 
 
 # Create your views here.
@@ -220,6 +224,7 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
                 'seat_count': seat_count,
                 'total_price': total_price,
                 'grand_total':grand_total,
+                'api_key':KEY,
             }
             return render(request,'home/payment.html',items)
         else:
@@ -229,6 +234,7 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
     
 
 client = razorpay.Client(auth=(KEY, SECRET))
+client_twilio = Client(account_sid, auth_token)
 @csrf_exempt
 def payment(request):
     if 'admin' in request.session:
@@ -238,6 +244,7 @@ def payment(request):
     if 'user' in request.session:
         payment_order_id = None
         razorpay_payment_id = None
+        
         DATA = {
             "amount": 5000,
             "currency": "INR",
@@ -252,74 +259,89 @@ def payment(request):
                 'order_id':payment_order_id,
                 }
         if request.method == 'POST':
-            razorpay_payment_id = request.POST.get('razorpay_payment_id')
-            selected_seats_list = request.POST.get('selected_seats')
-            selected_seats = str(selected_seats_list)[1:-1]
-            formatted_seats = ', '.join(selected_seats.replace("'", "").split(", "))
-            print('selected_seats',selected_seats)
-            theatre = request.POST.get('theatre_name')
-            screen = request.POST.get('screen_name')
-            movie_title = request.POST.get('movie_title')
-            email = request.POST.get('email')
-            mobile = request.POST.get('mobile')
-            time = request.POST.get('time')
-            selected_date = request.POST.get('selected_date')
-            payment_id = payment_order_id
-            print('payment_id',payment_id)
-            seat_list = [seat.strip("' ") for seat in selected_seats.split(",")]
-            seat_count = len(seat_list)
-            print('seat_count',seat_count)
-            price_str = (request.POST.get('total_price'))
-            price=float(price_str)
-            screen_id=request.POST.get('screen_id')
-            total_price=0
-            grand_total=0
-            total_price=price
-            tax=42.00
-            grand_total=total_price+tax
-            screen_id=Screen.objects.get(id=screen_id_selected)
-            screen=Screen.objects.get(id=screen_id_selected)
-            screen_name=screen.name.split(' - ')[0]
-            movie=Movies.objects.get(title=movie_title)
-            movie_poster=movie.image
-            booked = BookedSeat(
-                screen=screen_name,
-                user=request.user,email=email,movie=movie_title,movie_poster=movie_poster,phone=mobile,
-                theatre=theatre,booked_seats=selected_seats,count=seat_count,
-                price=grand_total,date=selected_date,show_time=time,payment_order_id=payment_order_id,payment_id=razorpay_payment_id
-            )
-            booked.save()
-            
-            theatre_price=Decimal(grand_total)
-            theatre_earnings = theatre_price * Decimal('0.85')
-            admin_earnings = theatre_price * Decimal('0.15')
-            theatre_sale_report=Theatre_Sale_Report(name=theatre,booking=booked,theatre_earnings=theatre_earnings)
-            theatre_sale_report.save()
-            
-            superuser = User.objects.get(is_superuser=True)
-            admin_sale_report=Admin_Sale_Report(name=superuser,theatre_sale_report=theatre_sale_report,admin_earnings=admin_earnings)
-            admin_sale_report.save()
+            try:
+                razorpay_payment_id = request.POST.get('razorpay_payment_id')
+                selected_seats_list = request.POST.get('selected_seats')
+                selected_seats = str(selected_seats_list)[1:-1]
+                formatted_seats = ', '.join(selected_seats.replace("'", "").split(", "))
+                print('selected_seats',selected_seats)
+                theatre = request.POST.get('theatre_name')
+                screen = request.POST.get('screen_name')
+                movie_title = request.POST.get('movie_title')
+                email = request.POST.get('email')
+                mobile = request.POST.get('mobile')
+                time = request.POST.get('time')
+                selected_date = request.POST.get('selected_date')
+                payment_id = payment_order_id
+                print('payment_id',payment_id)
+                seat_list = [seat.strip("' ") for seat in selected_seats.split(",")]
+                seat_count = len(seat_list)
+                print('seat_count',seat_count)
+                price_str = (request.POST.get('total_price'))
+                price=float(price_str)
+                screen_id=request.POST.get('screen_id')
+                total_price=0
+                grand_total=0
+                total_price=price
+                tax=42.00
+                grand_total=total_price+tax
+                screen_id=Screen.objects.get(id=screen_id_selected)
+                screen=Screen.objects.get(id=screen_id_selected)
+                screen_name=screen.name.split(' - ')[0]
+                movie=Movies.objects.get(title=movie_title)
+                movie_poster=movie.image
+                print('api_key:',KEY)
+                booked = BookedSeat(
+                    screen=screen_name,
+                    user=request.user,email=email,movie=movie_title,movie_poster=movie_poster,phone=mobile,
+                    theatre=theatre,booked_seats=selected_seats,count=seat_count,
+                    price=grand_total,date=selected_date,show_time=time,payment_order_id=payment_order_id,payment_id=razorpay_payment_id
+                )
+                booked.save()
+                
+                theatre_price=Decimal(grand_total)
+                theatre_earnings = theatre_price * Decimal('0.85')
+                admin_earnings = theatre_price * Decimal('0.15')
+                theatre_sale_report=Theatre_Sale_Report(name=theatre,booking=booked,theatre_earnings=theatre_earnings)
+                theatre_sale_report.save()
+                
+                superuser = User.objects.get(is_superuser=True)
+                admin_sale_report=Admin_Sale_Report(name=superuser,theatre_sale_report=theatre_sale_report,admin_earnings=admin_earnings)
+                admin_sale_report.save()
 
-            booked_details=BookedSeat.objects.get(payment_order_id=payment_order_id)
-            subject = 'Booking Confirmation'
-            message = f'Thank you for your payment. Your booking has been confirmed.\n\n'
-            message += f'Booking Details:\n'
-            message += f'Booking ID: {booked_details.booking_id}\n'
-            message += f'Movie: {booked_details.movie}\n'
-            message += f'Screen: {booked_details.screen}\n'
-            message += f'Theatre: {booked_details.theatre}\n'
-            message += f'Booked Seats: {booked_details.booked_seats}\n'
-            message += f'Total Seats: {booked_details.count}\n'
-            message += f'Price: {booked_details.price}\n'
-            message += f'Date: {booked_details.date}\n'
-            message += f'Time: {booked_details.show_time}\n'
-            message += f'Payment ID: {booked_details.payment_id}\n'
-            message += '\nThank you for choosing our service. Enjoy the show!'
-            email_host_user = settings.EMAIL_HOST_USER
-            from_email = email_host_user
-            recipient_list = [booked_details.email]
-            send_mail(subject,message,from_email,recipient_list,fail_silently=False)
-            return render(request,'home/payment_successful.html',{'booked_details':booked_details})
+                booked_details=BookedSeat.objects.get(payment_order_id=payment_order_id)
+                subject = 'Booking Confirmation'
+                message = f'Thank you for your payment. Your booking has been confirmed.\n\n'
+                message += f'Booking Details:\n'
+                message += f'Booking ID: {booked_details.booking_id}\n'
+                message += f'Movie: {booked_details.movie}\n'
+                message += f'Screen: {booked_details.screen}\n'
+                message += f'Theatre: {booked_details.theatre}\n'
+                message += f'Booked Seats: {booked_details.booked_seats}\n'
+                message += f'Total Seats: {booked_details.count}\n'
+                message += f'Price: {booked_details.price}\n'
+                message += f'Date: {booked_details.date}\n'
+                message += f'Time: {booked_details.show_time}\n'
+                message += f'Payment ID: {booked_details.payment_id}\n'
+                message += '\nThank you for choosing our service. Enjoy the show!'
+                email_host_user = settings.EMAIL_HOST_USER
+                from_email = email_host_user
+                recipient_list = [booked_details.email]
+                recipient_mobile=[booked_details.phone]
+                recipient_mobile = [f"+91{number}" for number in recipient_mobile]
+                recipient_mobile = ','.join(recipient_mobile)
+                print('after payment emai:',recipient_list,'mobile:',recipient_mobile,'message:',message)
+                send_mail(subject,message,from_email,recipient_list,fail_silently=False)
+                message=client_twilio.messages.create(body=message,from_='whatsapp:'+whatsapp_number,to='whatsapp:'+recipient_mobile)
+                return render(request,'home/payment_successful.html',{'booked_details':booked_details})
+            except TwilioRestException as e:
+                # Handle Twilio exception
+                error_message = str(e)
+                return render(request, 'home/payment.html', {'error_message': error_message})
+            except Exception as e:
+                # Handle other exceptions
+                error_message = str(e)
+                return render(request, 'home/payment.html', {'error_message': error_message})
         else:
             return render(request, 'home/payment.html',context)
     else:

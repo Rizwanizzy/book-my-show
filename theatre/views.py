@@ -145,6 +145,8 @@ def add_screen(request):
             rows=request.POST.get('rows')
             columns=request.POST.get('columns')
             show_times = request.POST.getlist('show_times')
+            added_show_times = request.POST.getlist('added_show_times')
+            show_times += added_show_times
             movies=Movies.objects.get(id=movies_id)
             screen=Screen.objects.create(theatre=theatre,name=name,
                                          price1=price1,price2=price2,

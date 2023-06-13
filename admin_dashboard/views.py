@@ -150,6 +150,10 @@ def add_movie(request):
         if request.method=='POST':
             title=request.POST.get('title')
             description=request.POST.get('description') or None
+            cast=request.POST.get('cast')
+            writers=request.POST.get('writers')
+            director=request.POST.get('director')
+            year=request.POST.get('year')
             genre=request.POST.get('genre') or None
             image=request.FILES.get('image')
             poster=request.FILES.get('poster')
@@ -158,7 +162,10 @@ def add_movie(request):
             trailer=request.POST.get('trailer')
             runtime=request.POST.get('runtime') or None
             language = All_Languages.objects.get(id=language_id)
-            movie=Movies.objects.create(title=title,description=description,genre=genre,image=image,poster=poster,release_date=release_date,language=language,trailer=trailer,runtime=runtime)
+            movie=Movies.objects.create(title=title,description=description,genre=genre,
+                                        cast=cast,director=director,writers=writers,year=year,
+                                        image=image,poster=poster,release_date=release_date,
+                                        language=language,trailer=trailer,runtime=runtime)
             movie.save()
             return redirect('admin_movies')
         else:
@@ -176,19 +183,26 @@ def update_movie(request,id):
     if 'admin' in request.session:
         movies=Movies.objects.get(id=id)
         if request.method=='POST':
-                title=request.POST.get('title')
-                description=request.POST.get('description') or None
-                genre=request.POST.get('genre') or None
-                image=request.FILES.get('image')
-                poster=request.FILES.get('poster')
-                release_date=request.POST.get('release_date')
-                language_id=request.POST.get('language')
-                trailer=request.POST.get('trailer')
-                runtime=request.POST.get('runtime') or None
-                language = All_Languages.objects.get(id=language_id)
-                movie=Movies(id=id,title=title,description=description,genre=genre,image=image,poster=poster,release_date=release_date,language=language,trailer=trailer,runtime=runtime)
-                movie.save()
-                return redirect('admin_movies')
+            title=request.POST.get('title')
+            description=request.POST.get('description') or None
+            cast=request.POST.get('cast')
+            writers=request.POST.get('writers')
+            director=request.POST.get('director')
+            year=request.POST.get('year')
+            genre=request.POST.get('genre') or None
+            image=request.FILES.get('image')
+            poster=request.FILES.get('poster')
+            release_date=request.POST.get('release_date')
+            language_id=request.POST.get('language')
+            trailer=request.POST.get('trailer')
+            runtime=request.POST.get('runtime') or None
+            language = All_Languages.objects.get(id=language_id)
+            movie=Movies(id=id,title=title,description=description,genre=genre,
+                         cast=cast,writers=writers,director=director,year=year,
+                         image=image,poster=poster,release_date=release_date,
+                         language=language,trailer=trailer,runtime=runtime)
+            movie.save()
+            return redirect('admin_movies')
         else:
             languages=All_Languages.objects.all()
             print('image url',movies.image)

@@ -6,5 +6,4 @@ class MovieAdmin(admin.ModelAdmin):
     list_display=('title','genre','release_date','language','runtime')
 
 admin.site.register(All_Languages)
-admin.site.register(All_Comments)
 admin.site.register(Movies,MovieAdmin)

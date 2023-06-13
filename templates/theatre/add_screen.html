@@ -68,6 +68,12 @@
                                                 
                                             {% endfor %}
                                         </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">ADD SHOW TIMES</label><br>
+                                            <input type="time" class="form-control" id="show_time" name="show_time" placeholder="Add Show Time">
+                                            <button type="button" class="btn btn-primary" id="add_show_time">Add</button>
+                                        </div>
+                                        <div id="added_show_times"></div>
                                     </div>
                                 </div>
                                 <div align="center">
@@ -81,5 +87,44 @@
                 </div>
             </div>
         <!-- Form End -->
+        <script>
+            $(document).ready(function() {
+                var showTimes = [];
+        
+                $("#add_show_time").click(function() {
+                    var showTime = $("#show_time").val();
+                    if (showTime) {
+                        showTimes.push(showTime);
+                        $("#added_show_times").append(
+                            '<div class="added-show-time">' +
+                            '<input type="hidden" name="added_show_times" value="' + showTime + '">' +
+                            '<span>' + showTime + '</span>' +
+                            '<button type="button" class="btn btn-link remove-show-time">Remove</button>' +
+                            '</div>'
+                        );
+                        $("#show_time").val('');
+                    }
+                });
+        
+                $(document).on('click', '.remove-show-time', function() {
+                    var showTime = $(this).siblings('input[name="added_show_times"]').val();
+                    showTimes = showTimes.filter(function(time) {
+                        return time !== showTime;
+                    });
+                    $(this).parent('.added-show-time').remove();
+                });
+        
+                // Before form submission, populate the hidden field with the selected show times
+                $("form").submit(function() {
+                    showTimes.forEach(function(time) {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'show_times',
+                            value: time
+                        }).appendTo($(this));
+                    });
+                });
+            });
+        </script>
 
 {% endblock %}

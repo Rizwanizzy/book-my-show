@@ -11,14 +11,15 @@ class All_Languages(models.Model):
     def __str__(self):
         return self.language
 
-class All_Comments(models.Model):
-    comments=models.TextField()
-
 
 
 class Movies(models.Model):
     title=models.CharField(max_length=50)
     description=models.TextField(blank=True,null=True)
+    cast=models.CharField(max_length=50,blank=True,null=True)
+    director=models.CharField(max_length=50,null=True)
+    writers=models.CharField(max_length=50,null=True)
+    year=models.IntegerField(null=True)
     genre=models.CharField(max_length=50,blank=True,null=True)
     image=models.ImageField(upload_to="movie_images",blank=True)
     poster=models.ImageField(upload_to="movie_images",blank=True)
@@ -26,11 +27,10 @@ class Movies(models.Model):
     language=models.ForeignKey(All_Languages,on_delete=models.CASCADE)
     trailer=models.URLField(max_length=300,blank=True)
     runtime=models.DurationField(blank=True,null=True)
-    rating=models.DecimalField(max_digits=3, decimal_places=1,null=True,blank=True)
-    comments=models.ForeignKey(All_Comments,on_delete=models.CASCADE,null=True,blank=True)
 
     def __str__(self):
         return self.title
-    
+
+
     
 

@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 import razorpay
 from django.db.models import Q
 import json
+from datetime import date
 from django.http import JsonResponse
 from Book_my_show.settings import KEY,SECRET,account_sid,auth_token,whatsapp_number
 from django.core.mail import send_mail
@@ -67,6 +68,9 @@ def home(request):
             phone=request.POST['phone']
             password = request.POST['password']
             is_theatre=request.POST.get('type')=='theatre'
+            if ' ' in username:
+                messages.info(request, 'Username cannot contain white spaces')
+                return redirect('home')
             if User.objects.filter(username=username).exists():
                 messages.info(request, 'username is taken')
                 return redirect('home')
@@ -84,7 +88,11 @@ def home(request):
     movies=Movies.objects.all()
     banners=Movies.objects.all()[:4]
     now_playing=Movies.objects.all()[:3]
-    return render(request,'home/home.html',{'movies':movies,'banners':banners,'now':now_playing})
+    current_date = date.today()
+    coming_soon=Movies.objects.filter(Q(release_date__gte=current_date))[:3]
+    context={'movies':movies,'banners':banners,
+             'now':now_playing,'coming_soon':coming_soon}
+    return render(request,'home/home.html',context)
 
 def search(request):
     if request.method == 'POST':
@@ -98,9 +106,14 @@ def search(request):
             for i in cinemas:
                 return list_movies(request,i.id)
         else:
-            return redirect('home')
+            return render(request,'home/page_not_fount.html')
+        
+def all_movies(request):
+    movies=Movies.objects.all()
+    return render(request,'home/all_movies.html',{'movies':movies})
 
-
+def about(request):
+    return render(request,'home/about.html')
 
 def movie(request,id):
     if 'admin' in request.session:
@@ -109,7 +122,12 @@ def movie(request,id):
         return redirect('theatre_home')
     if 'user' in request.session:
         mov=Movies.objects.get(id=id)
-        return render(request,'home/movie.html',{'mov':mov})
+        total_minutes = mov.runtime.total_seconds() // 60
+    
+        # Extract the hours and minutes
+        hours = total_minutes // 60
+        minutes = total_minutes % 60
+        return render(request,'home/movie.html',{'mov':mov,'hours': hours,'minutes':minutes})
     else:
         return redirect('home')
 

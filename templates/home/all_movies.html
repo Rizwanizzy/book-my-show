@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- AddThis Smart Layers END -->
+    
+    <div class="container-fluid">
+        <div class="review-slider">
+            <div class="movie-grid">
+                {% for i in movies %}
+                <div class="movie-item">
+                    <a href="{% url 'movie' i.id %}"><img src="{{i.image.url}}" alt=""/></a>
+                    <div class="slide-title">
+                        <h4>{{i.title}}<br>{{i.release_date}}</h4>
+                    </div>
+                    
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .container-fluid {
+		padding-right: 15px;
+		padding-left: 15px;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.movie-grid {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		grid-gap: 20px;
+	}
+
+	.movie-item {
+		text-align: center;
+	}
+
+	.movie-item img {
+		max-width: 100%;
+	}
+
+	@media screen and (max-width: 768px) {
+		.movie-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	@media screen and (max-width: 480px) {
+		.movie-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>
+
+{% endblock %}

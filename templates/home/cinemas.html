@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block content %}
-
-	<div class="cinemas-list" style="height: 100%;padding: 1.5rem;">
+	{% if cinemas %}
+	<div class="cinemas-list" style="min-height: 50rem;padding: 1.5rem;">
 		<h3>Cinemas List</h3>
 			
 				{% for cinema in cinemas %}
@@ -23,8 +23,15 @@
 					</div>
 				</div>
 				{% endfor %}
+			
 		<div class="clearfix"></div>
 	</div>
+	{% else %}
+		<div class="error-page">
+			<h2>Error 404 - Not Found</h2>
+			<p>No cinemas are currently available.</p>
+			<a href="{% url 'home' %}">Go Back To Home Page</a>
+		</div>
+	{% endif %}
 </div>
 {% endblock %}
-		

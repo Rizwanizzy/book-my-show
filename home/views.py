@@ -350,16 +350,18 @@ def payment(request):
                 recipient_mobile = ','.join(recipient_mobile)
                 print('after payment emai:',recipient_list,'mobile:',recipient_mobile,'message:',message)
                 send_mail(subject,message,from_email,recipient_list,fail_silently=False)
+                print('mail sended successfully')
                 message=client_twilio.messages.create(body=message,from_='whatsapp:'+whatsapp_number,to='whatsapp:'+recipient_mobile)
+                print('sms sended successfully')
                 return render(request,'home/payment_successful.html',{'booked_details':booked_details})
             except TwilioRestException as e:
                 # Handle Twilio exception
                 error_message = str(e)
-                return render(request, 'home/payment.html', {'error_message': error_message})
+                return render(request,'home/payment_successful.html',{'booked_details':booked_details,'error_message': error_message})
             except Exception as e:
                 # Handle other exceptions
                 error_message = str(e)
-                return render(request, 'home/payment.html', {'error_message': error_message})
+                return render(request,'home/payment_successful.html',{'booked_details':booked_details,'error_message': error_message})
         else:
             return render(request, 'home/payment.html',context)
     else:

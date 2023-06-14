@@ -59,12 +59,22 @@
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">SHOW TIMES</label><br>
-                                            {% for show in shows %}
-                                                <input type="checkbox" name="show_times" value="{{ show.id }}" {% if show in screens.show_times.all %}checked{% endif %}>
-                                                <label>{{ show.time }}</label><br>
+                                            {% for show_time in selected_show_times %}
+                                                <div class="show-time-group">
+                                                    <input type="checkbox" name="existing_show_times[]" value="{{ show_time.id }}" checked>
+                                                    <label>{{ show_time.time }}</label>
+                                                    <button type="button" class="btn btn-link remove-show-time">Remove</button><br>
+                                                </div>
                                             {% endfor %}
-
                                         </div>
+                                        
+
+                                        <div class="mb-3">
+                                            <div id="show-times-container">
+                                            </div>
+                                            <button type="button" class="btn btn-primary" id="add-show-time">Add Show Time</button>
+                                        </div>
+     
                                     </div>
                                 </div>
                                 <div align="center">
@@ -80,5 +90,30 @@
                 </div>
             </div>
         <!-- Form End -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        console.log("Document ready!");
+
+        // Add show time input field and remove button
+        $("#add-show-time").on('click', function() {
+            var inputHtml = '<div class="show-time-group">' +
+                '<input type="time" class="form-control" name="show_times[]" required>' +
+                '<button type="button" class="btn btn-link remove-show-time">Remove</button>' +
+                '</div>';
+            $("#show-times-container").append(inputHtml);
+        });
+
+        // Remove show time entry
+        $(document).on('click', '.remove-show-time', function() {
+            $(this).closest('.show-time-group').remove();
+        });
+
+        // Submit the form
+        $("#submit-form").on('click', function() {
+            $("form").submit();
+        });
+    });
+</script>
 
 {% endblock %}

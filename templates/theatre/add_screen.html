@@ -10,15 +10,16 @@
     }
 </style>
         <!-- Form Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-xl-7" style="margin-left:13%">
-                        <div class="bg-light rounded h-100 p-4" style="width:100%">
-                            <h6 class="mb-4">Add Screen</h6>
-                            <form action="" method="post" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div style="display:flex">
-                                    <div class="col-sm-12 col-xl-6" style="margin-right:1rem">
+        <div class="container-fluid pt-4 px-4">
+          <div class="row g-4">
+              <div class="col-sm-12 col-xl-7" style="margin-left:13%">
+                  <div class="bg-light rounded h-100 p-4" style="width:100%">
+                      <h6 class="mb-4">Add Screen</h6>
+                      <form action="" method="post" enctype="multipart/form-data">
+                          {% csrf_token %}
+                          <div style="display:flex">
+                              <div class="col-sm-12 col-xl-6" style="margin-right:1rem">
+                                  <!-- Your existing form fields -->
                                         <div class="mb-3">
                                             <label for="exampleInputEmail1" class="form-label">NAME</label>
                                             <input type="text" class="form-control" id="title" name="name" placeholder="Screen Name"
@@ -60,71 +61,53 @@
                                                 aria-describedby="emailHelp">
                                         </div>
                                         <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">SHOW TIMES</label><br>
-                                            {% for show in shows %}
-                                                <input type="checkbox" name="show_times" value="{{ show.id }}">
-                                                
-                                                <label>{{ show.time }}</label><br>
-                                                
-                                            {% endfor %}
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="exampleInputEmail1" class="form-label">ADD SHOW TIMES</label><br>
-                                            <input type="time" class="form-control" id="show_time" name="show_time" placeholder="Add Show Time">
-                                            <button type="button" class="btn btn-primary" id="add_show_time">Add</button>
-                                        </div>
-                                        <div id="added_show_times"></div>
-                                    </div>
+                                          <label for="exampleInputEmail1" class="form-label">SHOW TIMES</label>
+                                          <div id="show-times-container">
+                                              <div class="show-time-group mb-2">
+                                                  <input type="time" class="form-control" name="show_times[]" required>
+                                                  <button type="button" class="btn btn-link remove-show-time">Remove</button>
+                                              </div>
+                                          </div>
+                                          <button type="button" class="btn btn-primary" id="add-show-time">Add Show Time</button>
+                                      </div>
+
+                                    <!-- Your existing form fields -->
+
                                 </div>
-                                <div align="center">
-                                    <button type="submit" class="btn btn-primary">ADD</button>
-                                    <a href="{% url 'theatre_screen' %}" class="btn btn-danger">CANCEL</a>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div align="center">
+                                <button type="button" class="btn btn-primary" id="submit-form">ADD</button>
+                                <a href="{% url 'theatre_screen' %}" class="btn btn-danger">CANCEL</a>
+                            </div>
+                        </form>
                     </div>
-                    
                 </div>
             </div>
+        </div>
+
         <!-- Form End -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script>
-            $(document).ready(function() {
-                var showTimes = [];
-        
-                $("#add_show_time").click(function() {
-                    var showTime = $("#show_time").val();
-                    if (showTime) {
-                        showTimes.push(showTime);
-                        $("#added_show_times").append(
-                            '<div class="added-show-time">' +
-                            '<input type="hidden" name="added_show_times" value="' + showTime + '">' +
-                            '<span>' + showTime + '</span>' +
-                            '<button type="button" class="btn btn-link remove-show-time">Remove</button>' +
-                            '</div>'
-                        );
-                        $("#show_time").val('');
-                    }
-                });
-        
-                $(document).on('click', '.remove-show-time', function() {
-                    var showTime = $(this).siblings('input[name="added_show_times"]').val();
-                    showTimes = showTimes.filter(function(time) {
-                        return time !== showTime;
-                    });
-                    $(this).parent('.added-show-time').remove();
-                });
-        
-                // Before form submission, populate the hidden field with the selected show times
-                $("form").submit(function() {
-                    showTimes.forEach(function(time) {
-                        $('<input>').attr({
-                            type: 'hidden',
-                            name: 'show_times',
-                            value: time
-                        }).appendTo($(this));
-                    });
-                });
-            });
-        </script>
+          $(document).ready(function() {
+            console.log("Document ready!");
+              $("#add-show-time").on('click', function() {
+                  $("#show-times-container").append(
+                      '<div class="show-time-group mb-2">' +
+                      '<input type="time" class="form-control" name="show_times[]" required>' +
+                      '<button type="button" class="btn btn-link remove-show-time">Remove</button>' +
+                      '</div>'
+                  );
+              });
+      
+              $(document).on('click', '.remove-show-time', function() {
+                  $(this).closest('.show-time-group').remove();
+              });
+      
+              $("#submit-form").on('click', function() {
+                  $("form").submit();
+              });
+          });
+      </script>
 
 {% endblock %}

@@ -136,7 +136,7 @@ def add_screen(request):
     if 'theatre' in request.session:
         if request.method=='POST':
             # print('logged in username:',request.user)
-            theatre=UserProfile.objects.get(user=request.user)
+            
             name=request.POST.get('name')
             price1=request.POST.get('price1')
             price2=request.POST.get('price2') or None
@@ -144,60 +144,88 @@ def add_screen(request):
             movies_id=request.POST.get('movie')
             rows=request.POST.get('rows')
             columns=request.POST.get('columns')
-            show_times = request.POST.getlist('show_times')
-            added_show_times = request.POST.getlist('added_show_times')
-            show_times += added_show_times
+            show_times = request.POST.getlist('show_times[]')
+            
+            theatre=UserProfile.objects.get(user=request.user)
             movies=Movies.objects.get(id=movies_id)
             screen=Screen.objects.create(theatre=theatre,name=name,
                                          price1=price1,price2=price2,
                                          price3=price3,movies=movies,
                                          total_seat_rows=rows,total_seat_columns=columns)
-            for show_time_id in show_times:
-                show_time = Show_Time.objects.get(id=show_time_id)
-                screen.show_times.add(show_time)
+            for show_time_str in show_times:
+                show_time_obj = Show_Time.objects.create(time=show_time_str)
+                screen.show_times.add(show_time_obj)
             screen.save()
             return redirect('theatre_screen')
         else:
             movies=Movies.objects.all()
-            shows=Show_Time.objects.all()
-            return render(request,'theatre/add_screen.html',{'movies':movies,'shows':shows})
+            # shows=Show_Time.objects.all()
+            return render(request,'theatre/add_screen.html',{'movies':movies})
     else:
         return redirect('home')
 
 
-def update_screen(request,id):
+def update_screen(request, id):
     if 'user' in request.session:
-            return redirect('home')
+        return redirect('home')
     if 'admin' in request.session:
         return redirect('admin_home')
     if 'theatre' in request.session:
-        screen=Screen.objects.get(id=id)
-        if request.method=='POST':
-            theatre=UserProfile.objects.get(user=request.user)
-            name=request.POST.get('name')
-            price1=request.POST.get('price1')
-            price2=request.POST.get('price2') or None
-            price3=request.POST.get('price3') or None
-            movies_id=request.POST.get('movie')
-            rows=request.POST.get('rows')
-            columns=request.POST.get('columns')
-            show_times = request.POST.getlist('show_times')
-            movies=Movies.objects.get(id=movies_id)
-            screen=Screen(id=id,theatre=theatre,name=name,
-                          price1=price1,price2=price2,
-                          price3=price3,movies=movies,
-                          total_seat_rows=rows,total_seat_columns=columns)
-            for show_time_id in show_times:
+        screen = Screen.objects.get(id=id)
+        if request.method == 'POST':
+            theatre = UserProfile.objects.get(user=request.user)
+            name = request.POST.get('name')
+            price1 = request.POST.get('price1')
+            price2 = request.POST.get('price2') or None
+            price3 = request.POST.get('price3') or None
+            movies_id = request.POST.get('movie')
+            rows = request.POST.get('rows')
+            columns = request.POST.get('columns')
+            existing_show_times = request.POST.getlist('existing_show_times[]')
+            movies = Movies.objects.get(id=movies_id)
+
+            # Update existing screen details
+            screen.theatre = theatre
+            screen.name = name
+            screen.price1 = price1
+            screen.price2 = price2
+            screen.price3 = price3
+            screen.movies = movies
+            screen.total_seat_rows = rows
+            screen.total_seat_columns = columns
+
+            # Remove deselected show_times from the screen
+            deselected_show_times = screen.show_times.exclude(id__in=existing_show_times)
+            for show_time in deselected_show_times:
+                screen.show_times.remove(show_time)
+
+            # Add the selected show_times to the screen
+            for show_time_id in existing_show_times:
                 show_time = Show_Time.objects.get(id=show_time_id)
                 screen.show_times.add(show_time)
-            screen.save()
+
+            # Create new show_times and add them to the screen
+            new_show_times = request.POST.getlist('show_times[]')
+            for show_time_str in new_show_times:
+                show_time_obj = Show_Time.objects.create(time=show_time_str)
+                screen.show_times.add(show_time_obj)
+
             return redirect('theatre_screen')
         else:
             movies = Movies.objects.all()
-            shows = Show_Time.objects.all()
-            return render(request,'theatre/update_screen.html',{'screens':screen,'movies':movies,'shows':shows})
+            selected_show_times = screen.show_times.all()
+            available_show_times = Show_Time.objects.exclude(id__in=selected_show_times.values_list('id', flat=True))
+            return render(request, 'theatre/update_screen.html', {
+                'screens': screen,
+                'movies': movies,
+                'available_show_times': available_show_times,
+                'selected_show_times': selected_show_times
+            })
     else:
         return redirect('home')
+
+
+
         
 def delete_screen(request,id):
     if 'user' in request.session:

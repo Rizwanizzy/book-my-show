@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from theatre.models import *
 from .models import *
 from home.forms import UserProfileForm
+from django.core.paginator import Paginator
 
 # Create your views here.
 def user_profile(request):
@@ -67,7 +68,10 @@ def bookings(request):
     booking_details=BookedSeat.objects.filter(user=user).order_by('-id')
     booking_ids = booking_details.values_list('id', flat=True)
     cancel_requests = BookingCancellationRequest.objects.filter(booking__in=booking_ids)
-
+    items_per_page = 3
+    paginator = Paginator(booking_details, items_per_page)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
     if request.method == 'POST':
         # Assuming you have form inputs for the booking_cancellation_request fields
         theatre = request.POST.get('theatre')
@@ -78,7 +82,7 @@ def bookings(request):
         booking = BookedSeat.objects.get(id=request.POST.get('booking_id'))
         
         update_booking_cancellation_request(booking, theatre, user, reason, status)
-    return render(request,'users/bookings.html',{'booking_details':booking_details,'cancel_requests':cancel_requests})
+    return render(request,'users/bookings.html',{'booking_details':booking_details,'cancel_requests':cancel_requests,'page':page})
 
 def cancel_booking(request):
     if request.method == 'POST':

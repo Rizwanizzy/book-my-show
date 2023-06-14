@@ -22,6 +22,7 @@ from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font
 import openpyxl
+from django.core.paginator import Paginator
 # Create your views here.
 
 def theatre_home(request): 
@@ -110,7 +111,11 @@ def theatre_movies(request):
         return redirect('admin_home')
     if 'theatre' in request.session:
         movies=Movies.objects.all()
-        return render(request,'theatre/theatre_movies.html',{'movies':movies})
+        items_per_page = 4
+        paginator = Paginator(movies, items_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request,'theatre/theatre_movies.html',{'movies':movies,'page':page})
     else:
         return redirect('home')
     
@@ -123,8 +128,12 @@ def theatre_screen(request):
         # screens=Screen.objects.filter(theatre_id=request.user.id)
         user_profile=UserProfile.objects.get(user=request.user)
         screens=Screen.objects.filter(theatre=user_profile)
+        items_per_page = 4
+        paginator = Paginator(screens, items_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
         print('theatre_id',request.user.id)
-        return render(request,'theatre/theatre_screen.html',{'screens':screens})
+        return render(request,'theatre/theatre_screen.html',{'screens':screens,'page':page})
     else:
         return redirect('home')
 
@@ -264,10 +273,15 @@ def theatre_side_booking(request):
             end_date = today
         if start_date and end_date:
             theatre_sale_report = Theatre_Sale_Report.objects.filter(name=request.user,booking__booked_date__gte=start_date, booking__booked_date__lte=end_date).order_by('-id')
+    items_per_page = 13
+    paginator = Paginator(theatre_sale_report, items_per_page)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
     context={
         'theatre_sale_report':theatre_sale_report,
         'start_date': start_date,
         'end_date': end_date,
+        'page':page
         }
     print('start_date',start_date,'end_date',end_date)
     return render(request,'theatre/theatre_side_booking.html',context)

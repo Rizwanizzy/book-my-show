@@ -19,6 +19,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.styles import Font
 import openpyxl
 from django.db.models.functions import ExtractMonth
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -129,14 +130,18 @@ def admin_profile(request):
         return render(request, 'admin_panel/admin_profile.html', {'form':form,'user':user})
 
 
-def admin_movies(requset):
-    if 'user' in requset.session:
+def admin_movies(request):
+    if 'user' in request.session:
         return redirect('home')
-    if 'theatre' in requset.session:
+    if 'theatre' in request.session:
         return redirect('theatre_home')
-    if 'admin' in requset.session:
+    if 'admin' in request.session:
         movies=Movies.objects.all()
-        return render(requset,'admin_panel/admin_movies.html',{'movies':movies})
+        items_per_page = 4
+        paginator = Paginator(movies, items_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request,'admin_panel/admin_movies.html',{'movies':movies,'page':page})
     else:
         return redirect('home')
     
@@ -233,7 +238,11 @@ def admin_theatres(request):
         return redirect('theatre_home')
     if 'admin' in request.session:
         theatre=UserProfile.objects.filter(is_theatre=True).order_by('id')
-        return render(request,'admin_panel/admin_theatres.html',{'theatres':theatre})
+        items_per_page = 12
+        paginator = Paginator(theatre, items_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request,'admin_panel/admin_theatres.html',{'theatres':theatre,'page':page})
     else:
         return redirect('home')
     
@@ -260,7 +269,11 @@ def admin_users(request):
         return redirect('theatre_home')
     if 'admin' in request.session:
         users=User.objects.filter(userprofile__is_theatre=False).order_by('id')
-        return render(request,'admin_panel/admin_users.html',{'users':users})
+        items_per_page = 12
+        paginator = Paginator(users, items_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request,'admin_panel/admin_users.html',{'users':users,'page':page})
     else:
         return redirect('home')
     
@@ -304,13 +317,17 @@ def admin_side_booking(request):
             admin_sale_report = admin_sale_report.filter(theatre_sale_report__booking__theatre=selected_theatre)
         if start_date and end_date:
             admin_sale_report = admin_sale_report.filter(theatre_sale_report__booking__booked_date__gte=start_date, theatre_sale_report__booking__booked_date__lte=end_date)
-
+    items_per_page = 12
+    paginator = Paginator(admin_sale_report, items_per_page)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
     context={
         'admin_sale_report':admin_sale_report,
         'theatres':theatres,
         'selected_theatre':selected_theatre,
         'start_date': start_date,
         'end_date': end_date,
+        'page':page,
         }
     print('start_date',start_date,'end_date',end_date)
     return render(request,'admin_panel/admin_side_booking.html',context)

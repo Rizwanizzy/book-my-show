@@ -24,7 +24,7 @@ from decimal import Decimal
 from django.views.decorators.csrf import csrf_exempt
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-
+from django.core.paginator import Paginator
 
 
 
@@ -110,7 +110,11 @@ def search(request):
         
 def all_movies(request):
     movies=Movies.objects.all()
-    return render(request,'home/all_movies.html',{'movies':movies})
+    items_per_page = 10
+    paginator = Paginator(movies, items_per_page)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request,'home/all_movies.html',{'movies':movies,'page':page})
 
 def about(request):
     return render(request,'home/about.html')
@@ -140,7 +144,11 @@ def cinemas(request):
     if 'user' in request.session:
         screens = Screen.objects.all()
         cinemas = UserProfile.objects.filter(user__is_active=True,screen__in=screens, is_theatre=True).distinct()
-        return render(request,'home/cinemas.html',{'cinemas':cinemas})
+        items_per_page = 6
+        paginator = Paginator(cinemas, items_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request,'home/cinemas.html',{'cinemas':cinemas,'page':page})
     else:
         return redirect('home')
 
@@ -157,7 +165,11 @@ def list_movies(request,id):
             date_range.append(current_date)
             current_date += timedelta(days=1)
         screens=Screen.objects.filter(theatre=id)
-        return render(request,'home/list_movies.html',{'screens':screens,'date_range':date_range})
+        items_per_page = 3
+        paginator = Paginator(screens, items_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request,'home/list_movies.html',{'screens':screens,'date_range':date_range,'page':page})
     else:
         return redirect('home')
 
@@ -176,7 +188,11 @@ def theatre_choose(request,id):
             date_range.append(current_date)
             current_date += timedelta(days=1)
         theatre=Screen.objects.filter(movies_id=id,theatre__user__is_active=True)
-        return render(request,'home/theatre_choose.html',{'mov':mov,'theatres':theatre,'date_range':date_range})
+        items_per_page = 5
+        paginator = Paginator(theatre, items_per_page)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request,'home/theatre_choose.html',{'mov':mov,'theatres':theatre,'date_range':date_range,'page':page})
     else:
         return redirect('home')
 
@@ -232,6 +248,7 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
             total_price=price*seat_count
             tax=42.00
             grand_total=total_price+tax
+            theatre_details=UserProfile.objects.get(user__username=theatre)
             items={
                 'selected_seats': selected_seats,
                 'theatre': theatre,
@@ -243,6 +260,7 @@ def seat_selection(request, theatre_id, screen_id, show_time_id, selected_date):
                 'total_price': total_price,
                 'grand_total':grand_total,
                 'api_key':KEY,
+                'theatre_details':theatre_details,
             }
             return render(request,'home/payment.html',items)
         else:

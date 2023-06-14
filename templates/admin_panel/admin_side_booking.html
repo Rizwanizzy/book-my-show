@@ -46,6 +46,7 @@
                         </div>
                       </div>
                     </form>
+
                     <table class="table" style="text-align:center ; width:185%">
                         <thead>
                             <tr>
@@ -74,7 +75,7 @@
                         </thead>
                         <div id="sale-details">
                             <tbody id="sale-table-body">
-                                {% for sale_report in admin_sale_report %}
+                              {% for sale_report in page %}
                                   {% with booking=sale_report.theatre_sale_report.booking %}
                                       {% if not start_date or not end_date or booking.booked_date >= start_date and booking.booked_date <= end_date %}
                                           <tr data-theatre="{{ booking.theatre }}">
@@ -102,6 +103,37 @@
                     </table>
                   
                 </div><br>
+
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination justify-content-center">
+                    {% if page.has_previous %}
+                      <li class="page-item">
+                          <a class="page-link" href="?page={{ page.previous_page_number }}" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                      </li>
+                    {% endif %}
+                    {% for num in page.paginator.page_range %}
+                      {% if page.number == num %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{num}}</a></li>
+                      {% else %}
+                        <li class="page-item"><a class="page-link" href="?page={{ num }}">{{num}}</a></li>
+                      {% endif %}
+                    {% endfor %}
+                    {% if page.has_next %}
+                      <li class="page-item">
+                        
+                        <a class="page-link" href="?page={{ page.next_page_number }}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                        
+                      </li>
+                    {% endif %}
+                  </ul>
+                </nav>
+
                 <form method="GET" action="{% url 'generate_excel' %}">
                   <input type="hidden" id="selected_theatre_input" name="theatre_filter" value="{{ selected_theatre }}">
                   <input type="hidden" id="start_date_input" name="start_date" value="{{ start_date }}">

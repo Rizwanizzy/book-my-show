@@ -178,8 +178,8 @@
 				<h6><span>Movie-Name:</span>{{movie_title}}</h6>
 				<p><span>Theatre:</span> {{theatre}} </p>
 				<p><span>Screen:</span> {{screen}} </p>
-				<p><span>Lake:</span> Kerala</p>
-				<p><span>Location:</span> Trivandrum, Trivandrum</p>
+				<p><span>Location:</span> {{theatre_details.location}}</p>
+				<p><span>Address:</span> {{theatre_details.address}}</p>
 				<p><span>Date:</span> {{selected_date}}</p>
 				<p><span>Time:</span> {{time}}</p>
 				<p><span>Seat Info:</span> {% for seat in selected_seats %} {{seat}} , {% endfor %}</p>

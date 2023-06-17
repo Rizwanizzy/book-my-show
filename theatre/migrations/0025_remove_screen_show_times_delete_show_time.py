@@ -4,17 +4,16 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0024_alter_screen_show_times'),
+        ("theatre", "0024_alter_screen_show_times"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='screen',
-            name='show_times',
+            model_name="screen",
+            name="show_times",
         ),
         migrations.DeleteModel(
-            name='Show_Time',
+            name="Show_Time",
         ),
     ]

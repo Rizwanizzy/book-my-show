@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0034_alter_screen_total_seat_columns'),
+        ("theatre", "0034_alter_screen_total_seat_columns"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='screen',
-            name='total_seat_columns',
+            model_name="screen",
+            name="total_seat_columns",
             field=models.IntegerField(default=None),
         ),
     ]

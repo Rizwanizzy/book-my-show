@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0011_alter_screen_theatre_delete_theatre'),
+        ("theatre", "0011_alter_screen_theatre_delete_theatre"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='screen',
-            name='price2',
+            model_name="screen",
+            name="price2",
             field=models.IntegerField(blank=True),
         ),
         migrations.AlterField(
-            model_name='screen',
-            name='price3',
+            model_name="screen",
+            name="price3",
             field=models.IntegerField(blank=True),
         ),
     ]

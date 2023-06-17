@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0036_remove_screen_unavailable_seats_bookedseat'),
+        ("theatre", "0036_remove_screen_unavailable_seats_bookedseat"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='bookedseat',
-            name='date',
+            model_name="bookedseat",
+            name="date",
             field=models.CharField(max_length=20),
         ),
     ]

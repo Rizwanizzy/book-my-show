@@ -5,16 +5,19 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0004_userprofile_profile_image'),
-        ('users', '0002_bookingcancellationrequest_reason'),
+        ("home", "0004_userprofile_profile_image"),
+        ("users", "0002_bookingcancellationrequest_reason"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='bookingcancellationrequest',
-            name='theatre',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='home.userprofile'),
+            model_name="bookingcancellationrequest",
+            name="theatre",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="home.userprofile",
+            ),
         ),
     ]

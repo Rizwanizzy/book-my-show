@@ -25,7 +25,7 @@
 					<li>: <b><i>₹</i><span id="total"></span></b></li>
 				</ul>
 				<div class="clear"></div>
-				<form method="post" action="">
+				<form id="booking-form" method="post" action="">
 					{% csrf_token %}
 					<ul id="selected-seats" class="" style="display:flex;width:100%"></ul>
 					
@@ -40,8 +40,10 @@
 					<input type="hidden" name="seat_count" value="{{ seat_count }}">
 					<input type="hidden" type"number" name="total_price" value="{{ theatres.price1 }}">
 					<input type="hidden" name="screen_id" value="{{ screen_id }}">
-					<button id="book_now_button" type="submit" class="checkout-button">Book Now</button>
-					
+					<button id="book-now-button" type="submit" class="checkout-button">Book Now</button>
+				
+					<!-- Hidden input field for selected seats -->
+					<input type="hidden" name="seats" id="selected-seats-input">					
 				</form>
 			</div>
 			<div style="clear:both"></div>
@@ -58,22 +60,38 @@
 				// Function to update seat count and total price
 				
 				function updateBookingDetails(count, total) {
-					$('#seat-count').val(count);
 					$('#counter').text(count);
-					$('#total-price').val(total);
-
-					var bookNowButton = $('#book_now_button');
-					if (selectedSeats.length > 0) {
-						bookNowButton.prop('disabled', false);
+					$('#total').text(total);
+					
+					var bookNowButton = $('#book-now-button');
+					if (count > 0) {
+						bookNowButton.show();  // Show the button if seats are selected
 					} else {
-						bookNowButton.prop('disabled', true);
+						bookNowButton.hide();  // Hide the button if no seats are selected
 					}
-				  }
+				}
+
+				  // Update selected seats input field
+				function updateSelectedSeatsInput() {
+					var selectedSeatsQueryParam = selectedSeats.join(',');
+
+					// Update the value of the hidden input field
+					$('#selected-seats-input').val(selectedSeatsQueryParam);
+				}
 
 				$(document).ready(function() {
 				var $cart = $('#selected-seats');
 				var $counter = $('#counter');
 				var $total = $('#total');
+
+				// Handle form submission
+				$('#booking-form').on('submit', function(e) {
+					// Check if no seats are selected
+					if (selectedSeats.length === 0) {
+						e.preventDefault(); // Prevent form submission
+						alert('Please select at least one seat.'); // Display an alert to the user
+					}
+				});
 
 				var seatingChart = [];
 				for (var row = 1; row <= rows; row++) {
@@ -110,6 +128,7 @@
 						selectedSeats.push(seatId);
 						$counter.text(selectedSeats.length);
 						$total.text(recalculateTotal());
+						updateSelectedSeatsInput();
 						return 'selected';
 					} else if (this.status() == 'selected') {
 						$('#cart-item-' + this.settings.id).remove();
@@ -119,6 +138,7 @@
 						});
 						$counter.text(selectedSeats.length);
 						$total.text(recalculateTotal());
+						updateSelectedSeatsInput();
 						return 'available';
 					} else if (this.status() == 'unavailable') {
 						return 'unavailable';

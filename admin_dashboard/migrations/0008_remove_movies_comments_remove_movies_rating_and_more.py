@@ -4,36 +4,38 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('admin_dashboard', '0007_alter_movies_description_alter_movies_genre_and_more'),
+        (
+            "admin_dashboard",
+            "0007_alter_movies_description_alter_movies_genre_and_more",
+        ),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='movies',
-            name='comments',
+            model_name="movies",
+            name="comments",
         ),
         migrations.RemoveField(
-            model_name='movies',
-            name='rating',
+            model_name="movies",
+            name="rating",
         ),
         migrations.AddField(
-            model_name='movies',
-            name='cast',
+            model_name="movies",
+            name="cast",
             field=models.CharField(blank=True, max_length=50, null=True),
         ),
         migrations.AddField(
-            model_name='movies',
-            name='director',
+            model_name="movies",
+            name="director",
             field=models.CharField(max_length=50, null=True),
         ),
         migrations.AddField(
-            model_name='movies',
-            name='writers',
+            model_name="movies",
+            name="writers",
             field=models.CharField(max_length=50, null=True),
         ),
         migrations.DeleteModel(
-            name='All_Comments',
+            name="All_Comments",
         ),
     ]

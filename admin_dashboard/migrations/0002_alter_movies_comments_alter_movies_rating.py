@@ -5,20 +5,23 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('admin_dashboard', '0001_initial'),
+        ("admin_dashboard", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='movies',
-            name='comments',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='admin_dashboard.all_comments'),
+            model_name="movies",
+            name="comments",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="admin_dashboard.all_comments",
+            ),
         ),
         migrations.AlterField(
-            model_name='movies',
-            name='rating',
+            model_name="movies",
+            name="rating",
             field=models.DecimalField(decimal_places=1, max_digits=3, null=True),
         ),
     ]

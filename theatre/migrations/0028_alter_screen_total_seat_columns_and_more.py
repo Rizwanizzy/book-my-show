@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0027_screen_total_seat_columns_screen_total_seat_rows_and_more'),
+        ("theatre", "0027_screen_total_seat_columns_screen_total_seat_rows_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='screen',
-            name='total_seat_columns',
+            model_name="screen",
+            name="total_seat_columns",
             field=models.IntegerField(default=None, null=True),
         ),
         migrations.AlterField(
-            model_name='screen',
-            name='total_seat_rows',
+            model_name="screen",
+            name="total_seat_rows",
             field=models.IntegerField(default=None, null=True),
         ),
     ]

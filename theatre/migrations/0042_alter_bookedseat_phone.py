@@ -5,15 +5,16 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0041_bookedseat_movie_bookedseat_price'),
+        ("theatre", "0041_bookedseat_movie_bookedseat_price"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='bookedseat',
-            name='phone',
-            field=phonenumber_field.modelfields.PhoneNumberField(default=None, max_length=128, null=True, region=None),
+            model_name="bookedseat",
+            name="phone",
+            field=phonenumber_field.modelfields.PhoneNumberField(
+                default=None, max_length=128, null=True, region=None
+            ),
         ),
     ]

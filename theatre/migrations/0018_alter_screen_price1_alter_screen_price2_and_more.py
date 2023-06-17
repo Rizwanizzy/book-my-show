@@ -4,25 +4,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0017_alter_screen_price1_alter_screen_price2_and_more'),
+        ("theatre", "0017_alter_screen_price1_alter_screen_price2_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='screen',
-            name='price1',
+            model_name="screen",
+            name="price1",
             field=models.DecimalField(decimal_places=2, max_digits=6),
         ),
         migrations.AlterField(
-            model_name='screen',
-            name='price2',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=6, null=True),
+            model_name="screen",
+            name="price2",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=6, null=True
+            ),
         ),
         migrations.AlterField(
-            model_name='screen',
-            name='price3',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=6, null=True),
+            model_name="screen",
+            name="price3",
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=6, null=True
+            ),
         ),
     ]

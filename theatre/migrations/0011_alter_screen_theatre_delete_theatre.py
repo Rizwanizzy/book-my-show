@@ -5,19 +5,20 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('home', '0001_initial'),
-        ('theatre', '0010_alter_theatre_user'),
+        ("home", "0001_initial"),
+        ("theatre", "0010_alter_theatre_user"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='screen',
-            name='theatre',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.userprofile'),
+            model_name="screen",
+            name="theatre",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="home.userprofile"
+            ),
         ),
         migrations.DeleteModel(
-            name='Theatre',
+            name="Theatre",
         ),
     ]

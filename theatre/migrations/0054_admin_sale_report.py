@@ -5,19 +5,35 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0053_rename_earnings_theatre_sale_report_theatre_earnings'),
+        ("theatre", "0053_rename_earnings_theatre_sale_report_theatre_earnings"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Admin_Sale_Report',
+            name="Admin_Sale_Report",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default=None, max_length=255)),
-                ('admin_earnings', models.DecimalField(decimal_places=2, default=0.0, max_digits=10)),
-                ('theatre_sale_report', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='theatre.theatre_sale_report')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(default=None, max_length=255)),
+                (
+                    "admin_earnings",
+                    models.DecimalField(decimal_places=2, default=0.0, max_digits=10),
+                ),
+                (
+                    "theatre_sale_report",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="theatre.theatre_sale_report",
+                    ),
+                ),
             ],
         ),
     ]

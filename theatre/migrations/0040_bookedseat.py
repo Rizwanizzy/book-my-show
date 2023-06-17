@@ -7,28 +7,53 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0039_delete_bookedseat'),
+        ("theatre", "0039_delete_bookedseat"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BookedSeat',
+            name="BookedSeat",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('booking_id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('user', models.CharField(default=None, max_length=255)),
-                ('email', models.EmailField(max_length=50)),
-                ('phone', phonenumber_field.modelfields.PhoneNumberField(default=None, max_length=128, null=True, region=None, unique=True)),
-                ('theatre', models.CharField(default=None, max_length=255)),
-                ('screen', models.CharField(default=None, max_length=255)),
-                ('booked_seats', models.CharField(default=None, max_length=255)),
-                ('date', models.CharField(max_length=20)),
-                ('show_time', models.CharField(default='', max_length=255)),
-                ('payment_id', models.CharField(max_length=100)),
-                ('booked_date', models.DateField(default=theatre.models.get_default_booked_date)),
-                ('booked_time', models.TimeField(default=theatre.models.get_default_booked_time)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "booking_id",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                ("user", models.CharField(default=None, max_length=255)),
+                ("email", models.EmailField(max_length=50)),
+                (
+                    "phone",
+                    phonenumber_field.modelfields.PhoneNumberField(
+                        default=None,
+                        max_length=128,
+                        null=True,
+                        region=None,
+                        unique=True,
+                    ),
+                ),
+                ("theatre", models.CharField(default=None, max_length=255)),
+                ("screen", models.CharField(default=None, max_length=255)),
+                ("booked_seats", models.CharField(default=None, max_length=255)),
+                ("date", models.CharField(max_length=20)),
+                ("show_time", models.CharField(default="", max_length=255)),
+                ("payment_id", models.CharField(max_length=100)),
+                (
+                    "booked_date",
+                    models.DateField(default=theatre.models.get_default_booked_date),
+                ),
+                (
+                    "booked_time",
+                    models.TimeField(default=theatre.models.get_default_booked_time),
+                ),
             ],
         ),
     ]

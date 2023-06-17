@@ -5,23 +5,35 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0035_alter_screen_total_seat_columns'),
+        ("theatre", "0035_alter_screen_total_seat_columns"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='screen',
-            name='unavailable_seats',
+            model_name="screen",
+            name="unavailable_seats",
         ),
         migrations.CreateModel(
-            name='BookedSeat',
+            name="BookedSeat",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('booked_seats', models.CharField(default=None, max_length=255)),
-                ('date', models.DateField()),
-                ('screen', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='theatre.screen')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("booked_seats", models.CharField(default=None, max_length=255)),
+                ("date", models.DateField()),
+                (
+                    "screen",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="theatre.screen"
+                    ),
+                ),
             ],
         ),
     ]

@@ -4,22 +4,21 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0031_alter_screen_total_seat_columns_and_more'),
+        ("theatre", "0031_alter_screen_total_seat_columns_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='screen',
-            name='total_seat_columns',
+            model_name="screen",
+            name="total_seat_columns",
         ),
         migrations.RemoveField(
-            model_name='screen',
-            name='total_seat_rows',
+            model_name="screen",
+            name="total_seat_rows",
         ),
         migrations.RemoveField(
-            model_name='screen',
-            name='unavailable_seats',
+            model_name="screen",
+            name="unavailable_seats",
         ),
     ]

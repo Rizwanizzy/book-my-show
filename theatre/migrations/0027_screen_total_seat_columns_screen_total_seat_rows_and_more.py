@@ -4,25 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0026_show_time_screen_show_times'),
+        ("theatre", "0026_show_time_screen_show_times"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='screen',
-            name='total_seat_columns',
+            model_name="screen",
+            name="total_seat_columns",
             field=models.IntegerField(default=None),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='total_seat_rows',
+            model_name="screen",
+            name="total_seat_rows",
             field=models.IntegerField(default=None),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='unavailable_seats',
+            model_name="screen",
+            name="unavailable_seats",
             field=models.CharField(default=None, max_length=255),
         ),
     ]

@@ -4,15 +4,17 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('admin_dashboard', '0008_remove_movies_comments_remove_movies_rating_and_more'),
+        (
+            "admin_dashboard",
+            "0008_remove_movies_comments_remove_movies_rating_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='movies',
-            name='year',
+            model_name="movies",
+            name="year",
             field=models.IntegerField(null=True),
         ),
     ]

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('admin_dashboard', '0003_alter_movies_comments_alter_movies_rating'),
+        ("admin_dashboard", "0003_alter_movies_comments_alter_movies_rating"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='movies',
-            name='poster',
-            field=models.ImageField(blank=True, upload_to='movie_images'),
+            model_name="movies",
+            name="poster",
+            field=models.ImageField(blank=True, upload_to="movie_images"),
         ),
     ]

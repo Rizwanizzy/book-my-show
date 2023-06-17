@@ -41,6 +41,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 			        });
 			    });
 </script>
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -66,7 +67,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<div class="main-content">
 	<div class="header">
 		<div class="logo" style="width:25%;margin-left:10px">
-			<a href="{% url 'home' %}"><img src="{% static 'images/bookmyshow-logo.webp' %}" style="width:41%" alt=""></a>
+			<a href="{% url 'home' %}"><img src="{% static 'images/book_my_tickets.png' %}" style="width:47%" alt=""></a>
 		</div>
 		<div class="search">
 			
@@ -74,7 +75,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				{% csrf_token %}
 				<div class="search2">
 					<i class="fa fa-search"></i>
-					<input type="text" id="search-input" name="search_query" value="Search for a movie, play, event, sport or more" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search for a Movie, Theatre, event, sport or more';}"/>
+					<input type="text" id="search-input" name="search_query" value="Search for a movie , Cinema" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Search for a Movie, Theatre, event, sport or more';}"/>
 					
 				</div>
 				&nbsp;<button type="submit" class="btn btn-primary">Search</button>
@@ -402,78 +403,34 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<div class="f-mov-list">
 					<h4>Latest Movies</h4>
 					<ul>
-						<li><a href="now-showing.html">Now Showing</a></li>
-						<li><a href="comming-soon.html">Coming Soon</a></li>
-						<li><a href="celebrities.html">Movie Celebrities</a></li>
+						<li><a href="{% url 'all_movies' %}">Now Showing</a></li>
+						<li><a href="{% url 'home' %}">Coming Soon</a></li>
 					</ul>
 					<div class="clearfix"></div>
 				</div>
-				<div class="f-mov-list">
-					<h4>Movie Reviews</h4>
-					<ul>
-						<li><a href="404.html" target="target_blank">Entertainment News</a></li>
-						<li><a href="blog.html" target="target_blank">Rajeev Masand</a></li>
-						<li><a href="blog.html" target="target_blank">Film Reviews</a></li>
-						<li><a href="write-us.html" target="target_blank">Guest Blogging</a></li>
-					</ul>
-					<div class="clearfix"></div>
-				</div>
-				<div class="f-mov-list">
-					<h4>Movie Trailers</h4>
-					<ul>
-						<li><a href="trailers-now-showing.html">Now Showing</a></li>
-						<li><a href="trailers-comming-soon.html">Coming Soon</a></li>						
-					</ul>
-					<div class="clearfix"></div>
-				</div>
-				</div>
+				
+			</div>
 			<div class="col-md-3 footer-left">
 				<div class="f-mov-list">
-					<h4>Cinemas & Regions</h4>
+					<h4>Cinemas & Chat</h4>
 					<ul>
-						<li><a href="regions.html">All Regions</a></li>
-						<li><a href="cinema-chain.html">Cinema Chains</a></li>
-						<li><a href="cinemas.html">Cinemas</a></li>						
+						<li><a href="{% url 'cinemas' %}">Cinemas</a></li>		
+						<li><a href="{% url 'chat-page' %}">Chat with us</a></li>					
 					</ul>
 					<div class="clearfix"></div>
 				</div>
-				<div class="f-mov-list">
-					<h4>Movies by Language</h4>
-					<ul>
-						<li><a href="movies.html">Hindi</a></li>
-						<li><a href="movies.html">English</a></li>
-						<li><a href="movies.html">Marathi</a></li>
-						<li><a href="movies.html">Bengali</a></li>
-						<li><a href="movies.html">Tamil</a></li>
-						<li><a href="movies.html">Telugu</a></li>
-						<li><a href="movies.html">Malayalam</a></li>
-						<li><a href="movies.html">Bhojpuri</a></li>
-						<li><a href="movies.html">Kannada</a></li>					
-					</ul>
-					<div class="clearfix"></div>
-				</div>
-				</div>
+				
+			</div>
 			<div class="col-md-3 footer-left">
 				<div class="f-mov-list">
-					<h4>Exclusives</h4>
+					<h4>Personal</h4>
 					<ul>
-						<li><a href="donate.html">Book A Smile</a></li>
-						<li><a href="vochers.html">Corporate Vouchers</a></li>
-						<li><a href="gift-cards.html">Gift Cards</a></li>
+						<li><a href="{% url 'user_profile' %}">Profile</a></li>
+						<li><a href="{% url 'bookings' %}">Bookings</a></li>
 					</ul>
 					<div class="clearfix"></div>					
 				</div>	
-				<div class="f-mov-list">
-					<h4>Help</h4>
-					<ul>
-						<li><a href="site-map.html">Sitemap</a></li>
-						<li><a href="feed-back.html">Feedback</a></li>
-						<li><a href="faq.html">FAQs</a></li>
-						<li><a href="terms-and-conditions.html">Terms and Conditions</a></li>
-						<li><a href="privacy-policy.html">Privacy Policy</a></li>
-					</ul>
-					<div class="clearfix"></div>
-				</div>			
+						
 			</div>
 			<div class="col-md-3 footer-left">
 				<div class="f-mov-list">
@@ -482,17 +439,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<li><a href="movies.html">Action</a></li>
 						<li><a href="movies.html">Romance</a></li>
 						<li><a href="movies.html">Comedy</a></li>
-						<li><a href="movies.html">Adult</a></li>
-						<li><a href="movies.html">Adventure</a></li>
-						<li><a href="movies.html">Classic</a></li>
-						<li><a href="movies.html">Crime</a></li>
-						<li><a href="movies.html">Drama</a></li>
-						<li><a href="movies.html">Family </a></li>
-						<li><a href="movies.html">Fantasy</a></li>
-						<li><a href="movies.html">Musical</a></li>
-						<li><a href="movies.html">Mystery</a></li>
-						<li><a href="movies.html">Suspense</a></li>
-						<li><a href="movies.html">Thriller</a></li>
+						
 					</ul>
 					<div class="clearfix"></div>
 				</div>
@@ -523,14 +470,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					<a href="support.html"><i class="fa fa-question"></i>24/7 Customer Care</a>
 				</div>
 					<div class="clearfix"></div>
-			</div>
+				</div>
 			</div>
 			<div class="clearfix"></div>
 			</div>
 			<div class="clearfix"></div>
 		</div>
+			<div class="copy-rights text-center">
+				<p></p>
+			</div>
 	</div>
-</div>
 
 	
 	<script type="text/javascript">

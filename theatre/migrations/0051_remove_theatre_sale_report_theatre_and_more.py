@@ -4,19 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0050_remove_theatre_sale_report_name_and_more'),
+        ("theatre", "0050_remove_theatre_sale_report_name_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='theatre_sale_report',
-            name='theatre',
+            model_name="theatre_sale_report",
+            name="theatre",
         ),
         migrations.AddField(
-            model_name='theatre_sale_report',
-            name='name',
+            model_name="theatre_sale_report",
+            name="name",
             field=models.CharField(default=None, max_length=255),
         ),
     ]

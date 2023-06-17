@@ -5,15 +5,16 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0006_alter_screen_theatre'),
+        ("theatre", "0006_alter_screen_theatre"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='screen',
-            name='theatre',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='theatre.theatre'),
+            model_name="screen",
+            name="theatre",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to="theatre.theatre"
+            ),
         ),
     ]

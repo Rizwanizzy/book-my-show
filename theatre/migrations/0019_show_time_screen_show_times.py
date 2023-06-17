@@ -5,22 +5,33 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('theatre', '0018_alter_screen_price1_alter_screen_price2_and_more'),
+        ("theatre", "0018_alter_screen_price1_alter_screen_price2_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Show_Time',
+            name="Show_Time",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('time', models.TimeField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("time", models.TimeField()),
             ],
         ),
         migrations.AddField(
-            model_name='screen',
-            name='show_times',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='theatre.show_time'),
+            model_name="screen",
+            name="show_times",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="theatre.show_time",
+            ),
         ),
     ]

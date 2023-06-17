@@ -5,16 +5,17 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('admin_dashboard', '0005_alter_movies_image'),
-        ('theatre', '0008_alter_screen_movies_alter_screen_theatre'),
+        ("admin_dashboard", "0005_alter_movies_image"),
+        ("theatre", "0008_alter_screen_movies_alter_screen_theatre"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='screen',
-            name='movies',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='admin_dashboard.movies'),
+            model_name="screen",
+            name="movies",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="admin_dashboard.movies"
+            ),
         ),
     ]

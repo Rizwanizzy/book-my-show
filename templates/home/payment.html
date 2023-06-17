@@ -178,8 +178,8 @@
 				<h6><span>Movie-Name:</span>{{movie_title}}</h6>
 				<p><span>Theatre:</span> {{theatre}} </p>
 				<p><span>Screen:</span> {{screen}} </p>
-				<p><span>Location:</span> {{theatre_details.location}}</p>
-				<p><span>Address:</span> {{theatre_details.address}}</p>
+				<p><span>Location:</span> {{ theatre_details.location|default:"None" }}</p>
+				<p><span>Address:</span> {{theatre_details.address|default:"None" }}</p>
 				<p><span>Date:</span> {{selected_date}}</p>
 				<p><span>Time:</span> {{time}}</p>
 				<p><span>Seat Info:</span> {% for seat in selected_seats %} {{seat}} , {% endfor %}</p>
@@ -204,48 +204,53 @@
 
 		<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 		<script>
-	 	var total={{grand_total}}*100;
-		var email = document.getElementById("email-input").value;
-		var mobile = document.getElementById("mobile-input").value;
-		var key="{{api_key}}";
-		var options = {
-			"key": key, // Enter the Key ID generated from the Dashboard
-			"name": "Book My Show",
-			"amount":total,
-			"description": "Thank you for your booking",
-			"image": "https://example.com/your_logo",
-			"order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-			"handler": function (response){
+			var total = {{grand_total}} * 100;
+			var key = "{{api_key}}";
+			var options = {
+			  "key": key,
+			  "name": "Book My Show",
+			  "amount": total,
+			  "description": "Thank you for your booking",
+			  "image": "https://example.com/your_logo",
+			  "order_id": "{{order_id}}",
+			  "handler": function(response) {
 				var razorpay_payment_id = response.razorpay_payment_id;
 				document.getElementById('razorpay_payment_id').value = razorpay_payment_id;
 				document.getElementById('payment-form').submit();
-	
-			},
-			"prefill": {
+			  },
+			  "prefill": {
 				"name": "name",
 				"email": "email@gmail.com",
 				"contact": "+919000090000",
-			},
-			"notes": {
+			  },
+			  "notes": {
 				"address": "Razorpay Corporate Office"
-			},
-			"theme": {
+			  },
+			  "theme": {
 				"color": "#3399cc"
-			}
-		};
-		var rzp1 = new Razorpay(options);
-		rzp1.on('payment.failed', function (response){
-				alert(response.error.code);
-				alert(response.error.description);
-		});
-
-		document.getElementById('submit-button').onclick = function(e){
-
-			e.preventDefault();
-			rzp1.open();
-		
-		};
-		
-		</script>
+			  }
+			};
+		  
+			var rzp1 = new Razorpay(options);
+			rzp1.on('payment.failed', function(response) {
+			  alert(response.error.code);
+			  alert(response.error.description);
+			});
+		  
+			document.getElementById('submit-button').onclick = function(e) {
+			  e.preventDefault();
+		  
+			  var emailInput = document.getElementById('email-input');
+			  var mobileInput = document.getElementById('mobile-input');
+		  
+			  // Check if the email and mobile input fields are empty
+			  if (emailInput.value.trim() === '' || mobileInput.value.trim() === '') {
+				alert('Please enter your email and mobile number before making a payment.');
+				return; // Stop further execution
+			  }
+		  
+			  rzp1.open();
+			};
+		  </script>
 		
 	{% endblock %}

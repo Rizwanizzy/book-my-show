@@ -5,21 +5,44 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('theatre', '0044_bookedseat_movie_poster'),
+        ("theatre", "0044_bookedseat_movie_poster"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BookingCancellationRequest',
+            name="BookingCancellationRequest",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('declined', 'Declined')], max_length=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('booking', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='theatre.bookedseat')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("pending", "Pending"),
+                            ("accepted", "Accepted"),
+                            ("declined", "Declined"),
+                        ],
+                        max_length=10,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "booking",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="theatre.bookedseat",
+                    ),
+                ),
             ],
         ),
     ]

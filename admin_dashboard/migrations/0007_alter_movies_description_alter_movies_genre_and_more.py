@@ -4,25 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('admin_dashboard', '0006_auto_20230512_1157'),
+        ("admin_dashboard", "0006_auto_20230512_1157"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='movies',
-            name='description',
+            model_name="movies",
+            name="description",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='movies',
-            name='genre',
+            model_name="movies",
+            name="genre",
             field=models.CharField(blank=True, max_length=50, null=True),
         ),
         migrations.AlterField(
-            model_name='movies',
-            name='runtime',
+            model_name="movies",
+            name="runtime",
             field=models.DurationField(blank=True, null=True),
         ),
     ]

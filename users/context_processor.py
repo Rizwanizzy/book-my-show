@@ -9,7 +9,7 @@ def user_profile_details(request):
         user = User.objects.get(username=request.user)
         try:
             user_profile = UserProfile.objects.get(user=user)
-            context={'user_profile':user_profile}
+            context = {"user_profile": user_profile}
         except ObjectDoesNotExist:
             pass
     return context
